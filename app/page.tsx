@@ -121,7 +121,23 @@ function MainContent() {
 }
 
 function AppLayout() {
-  const { authUser } = useIMS();
+  const { authUser, isInitialized } = useIMS();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !isInitialized) {
+    return (
+      <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center font-sans">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-10 w-10 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin" />
+          <p className="text-xs text-slate-400 font-semibold animate-pulse">Initializing Portal Session...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!authUser) {
     return <LoginScreen />;

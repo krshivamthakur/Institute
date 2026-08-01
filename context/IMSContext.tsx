@@ -47,6 +47,7 @@ import {
 interface IMSContextType {
   // Navigation & Authentication Context
   authUser: AuthUser | null;
+  isInitialized: boolean;
   login: (idOrEmail: string, password: string) => { success: boolean; error?: string };
   logout: () => void;
   currentRole: UserRole;
@@ -100,21 +101,34 @@ interface IMSContextType {
 const IMSContext = createContext<IMSContextType | undefined>(undefined);
 
 export function IMSProvider({ children }: { children: ReactNode }) {
-  // User Authentication State
-  const [authUser, setAuthUser] = useState<AuthUser | null>(() => {
+  // User Authentication State (Default: null for SSR safety)
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [systemSettings, setSystemSettings] = useState<SystemSettings>(INITIAL_SYSTEM_SETTINGS);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  // Client-side hydration sync for saved localStorage state
+  useEffect(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('aura_ims_auth_user');
-      if (saved) {
+      const savedUser = localStorage.getItem('aura_ims_auth_user');
+      if (savedUser) {
         try {
-          return JSON.parse(saved);
+          setAuthUser(JSON.parse(savedUser));
         } catch (e) {
           console.error('Failed to parse saved auth user', e);
         }
       }
+
+      const savedSettings = localStorage.getItem('aura_ims_system_settings');
+      if (savedSettings) {
+        try {
+          setSystemSettings({ ...INITIAL_SYSTEM_SETTINGS, ...JSON.parse(savedSettings) });
+        } catch (e) {
+          console.error('Failed to parse saved settings', e);
+        }
+      }
     }
-    // Default initial user: Super Admin
-    return PRESET_USERS[0];
-  });
+    setIsInitialized(true);
+  }, []);
 
   const currentRole: UserRole = authUser ? authUser.role : 'Student';
 
@@ -281,21 +295,6 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     addAuditLog('LEAD_ADD', `Recorded new enquiry from ${lead.studentName}`);
   };
 
-  // System Settings State & Persistence
-  const [systemSettings, setSystemSettings] = useState<SystemSettings>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('aura_ims_system_settings');
-      if (saved) {
-        try {
-          return { ...INITIAL_SYSTEM_SETTINGS, ...JSON.parse(saved) };
-        } catch (e) {
-          console.error('Failed to parse saved settings', e);
-        }
-      }
-    }
-    return INITIAL_SYSTEM_SETTINGS;
-  });
-
   const updateSystemSettings = (newFields: Partial<SystemSettings>) => {
     setSystemSettings((prev) => {
       const updated = { ...prev, ...newFields };
@@ -323,6 +322,7 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     <IMSContext.Provider
       value={{
         authUser,
+        isInitialized,
         login,
         logout,
         currentRole,

@@ -114,7 +114,8 @@ export function TeacherManagement() {
           <h3 className="text-sm font-bold text-white flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-emerald-400" /> Monthly Payroll Calculator & Disbursement
           </h3>
-          <table className="w-full text-left text-xs text-slate-300">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs text-slate-300">
             <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
               <tr>
                 <th className="p-3">Faculty Name</th>
@@ -147,6 +148,7 @@ export function TeacherManagement() {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

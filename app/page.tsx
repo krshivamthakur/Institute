@@ -41,6 +41,8 @@ import { IntegrationsModule } from '@/components/modules/IntegrationsModule';
 import { MultiBranchModule } from '@/components/modules/MultiBranchModule';
 import { SettingsModule } from '@/components/modules/SettingsModule';
 
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav';
+
 function MainContent() {
   const { activeModule } = useIMS();
 
@@ -114,7 +116,7 @@ function MainContent() {
   };
 
   return (
-    <div className="flex-1 p-4 sm:p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+    <div className="flex-1 p-3 sm:p-6 pb-20 lg:pb-6 overflow-y-auto max-w-7xl mx-auto w-full">
       {renderModuleView()}
     </div>
   );
@@ -152,6 +154,7 @@ function AppLayout() {
       </div>
       <AiBotDrawer />
       <MobilePreviewModal />
+      <MobileBottomNav />
     </div>
   );
 }

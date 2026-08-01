@@ -72,7 +72,12 @@ export function AiBotDrawer() {
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 glass-panel-glow border-l border-slate-700 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+    <>
+      <div
+        onClick={() => setIsAiBotOpen(false)}
+        className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-40 animate-in fade-in duration-200"
+      />
+      <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 glass-panel-glow border-l border-slate-700 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
       {/* Header */}
       <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/80">
         <div className="flex items-center gap-2.5">
@@ -155,5 +160,6 @@ export function AiBotDrawer() {
         </form>
       </div>
     </div>
-  );
+  </>
+);
 }

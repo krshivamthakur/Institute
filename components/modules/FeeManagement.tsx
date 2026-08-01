@@ -266,7 +266,7 @@ export function FeeManagement() {
       </div>
 
       {/* Transactions History */}
-      <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden shadow-xl">
+      <div className="rounded-2xl glass-panel border border-slate-800 overflow-x-auto shadow-xl">
         <div className="p-4 border-b border-slate-800 flex items-center justify-between">
           <h3 className="font-bold text-sm text-white">Recent Payment Transactions</h3>
           <span className="text-xs text-emerald-400 font-bold">● Payment Gateways Active</span>

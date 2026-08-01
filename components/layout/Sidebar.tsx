@@ -39,6 +39,7 @@ import {
   Eye,
   Layers,
   Settings,
+  X,
 } from 'lucide-react';
 
 interface ModuleNavItem {
@@ -113,7 +114,7 @@ const ROLE_ALLOWED_MODULES: Record<UserRole, string[]> = {
 };
 
 export function Sidebar() {
-  const { currentRole, activeModule, setActiveModule } = useIMS();
+  const { currentRole, activeModule, setActiveModule, isMobileMenuOpen, setIsMobileMenuOpen } = useIMS();
 
   // Filter modules strictly based on current authenticated user role
   const allowedModuleIds = ROLE_ALLOWED_MODULES[currentRole] || MASTER_MODULE_ITEMS.map((m) => m.id);
@@ -121,62 +122,104 @@ export function Sidebar() {
 
   const categories = ['Main', 'Academics & LMS', 'Operations', 'Finance & HR', 'Portals', 'AI & System'] as const;
 
-  return (
-    <aside className="w-64 glass-panel border-r border-slate-800/80 flex flex-col h-[calc(100vh-65px)] sticky top-[65px] z-30 text-slate-200 select-none">
-      {/* Navigation Links Grouped by Category */}
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-        {categories.map((cat) => {
-          const items = activeModuleItems.filter((item) => item.category === cat);
-          if (items.length === 0) return null;
+  const handleModuleClick = (moduleId: string) => {
+    setActiveModule(moduleId);
+    setIsMobileMenuOpen(false);
+  };
 
-          return (
-            <div key={cat} className="space-y-1">
-              <h3 className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-                <span>{cat}</span>
-                <span className="text-[9px] text-slate-400 font-normal">({items.length})</span>
-              </h3>
-              <div className="space-y-1">
-                {items.map((item) => {
-                  const Icon = item.icon;
-                  const isActive = activeModule === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setActiveModule(item.id)}
-                      className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition duration-150 group ${
-                        isActive
-                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-semibold ring-1 ring-white/20'
-                          : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <Icon
-                          className={`h-4 w-4 shrink-0 transition ${
-                            isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'
-                          }`}
-                        />
-                        <span className="truncate">{item.label}</span>
-                      </div>
+  const navContent = (
+    <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+      {categories.map((cat) => {
+        const items = activeModuleItems.filter((item) => item.category === cat);
+        if (items.length === 0) return null;
 
-                      {item.badge ? (
-                        <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                          {item.badge}
-                        </span>
-                      ) : (
-                        <ChevronRight
-                          className={`h-3 w-3 text-slate-600 transition ${
-                            isActive ? 'text-white opacity-100' : 'opacity-0 group-hover:opacity-100'
-                          }`}
-                        />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+        return (
+          <div key={cat} className="space-y-1">
+            <h3 className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+              <span>{cat}</span>
+              <span className="text-[9px] text-slate-400 font-normal">({items.length})</span>
+            </h3>
+            <div className="space-y-1">
+              {items.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeModule === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => handleModuleClick(item.id)}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition duration-150 group ${
+                      isActive
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-semibold ring-1 ring-white/20'
+                        : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <Icon
+                        className={`h-4 w-4 shrink-0 transition ${
+                          isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'
+                        }`}
+                      />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+
+                    {item.badge ? (
+                      <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                        {item.badge}
+                      </span>
+                    ) : (
+                      <ChevronRight
+                        className={`h-3 w-3 text-slate-600 transition ${
+                          isActive ? 'text-white opacity-100' : 'opacity-0 group-hover:opacity-100'
+                        }`}
+                      />
+                    )}
+                  </button>
+                );
+              })}
             </div>
-          );
-        })}
-      </div>
-    </aside>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop Sticky Sidebar */}
+      <aside className="hidden lg:flex w-64 glass-panel border-r border-slate-800/80 flex-col h-[calc(100vh-65px)] sticky top-[65px] z-30 text-slate-200 select-none">
+        {navContent}
+      </aside>
+
+      {/* Mobile Off-Canvas Drawer Backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          onClick={() => setIsMobileMenuOpen(false)}
+          className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 lg:hidden animate-in fade-in duration-200"
+        />
+      )}
+
+      {/* Mobile Slide-Over Drawer */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] glass-panel-glow border-r border-slate-700 shadow-2xl flex flex-col text-slate-200 select-none transition-transform duration-300 ease-in-out lg:hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-white uppercase tracking-wider">Navigation Menu</span>
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono">
+              {currentRole}
+            </span>
+          </div>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        {navContent}
+      </aside>
+    </>
   );
 }

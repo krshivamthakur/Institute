@@ -55,26 +55,28 @@ export function ReportsModule() {
 
       <div className="p-6 rounded-2xl glass-panel border border-slate-800 space-y-4">
         <h3 className="font-bold text-white text-sm">Previewing Generated {reportCategory} Data</h3>
-        <table className="w-full text-left text-xs text-slate-300">
-          <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
-            <tr>
-              <th className="p-3">Student Name</th>
-              <th className="p-3">Batch</th>
-              <th className="p-3">Attendance</th>
-              <th className="p-3">Fee Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-800">
-            {students.map((s) => (
-              <tr key={s.id}>
-                <td className="p-3 font-bold text-white">{s.name}</td>
-                <td className="p-3 text-slate-300">{s.classBatch}</td>
-                <td className="p-3 font-bold text-emerald-400">{s.attendancePct}%</td>
-                <td className="p-3 font-bold text-purple-300">{s.feeStatus}</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs text-slate-300">
+            <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
+              <tr>
+                <th className="p-3">Student Name</th>
+                <th className="p-3">Batch</th>
+                <th className="p-3">Attendance</th>
+                <th className="p-3">Fee Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-slate-800">
+              {students.map((s) => (
+                <tr key={s.id}>
+                  <td className="p-3 font-bold text-white">{s.name}</td>
+                  <td className="p-3 text-slate-300">{s.classBatch}</td>
+                  <td className="p-3 font-bold text-emerald-400">{s.attendancePct}%</td>
+                  <td className="p-3 font-bold text-purple-300">{s.feeStatus}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

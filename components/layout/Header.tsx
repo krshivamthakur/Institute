@@ -16,6 +16,8 @@ import {
   Sparkles,
   LogOut,
   User as UserIcon,
+  Menu,
+  X,
 } from 'lucide-react';
 
 export function Header() {
@@ -30,6 +32,8 @@ export function Header() {
     setIsAiBotOpen,
     isMobilePreviewOpen,
     setIsMobilePreviewOpen,
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
     notifications,
     markNotificationAsRead,
     systemSettings,
@@ -81,18 +85,26 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 px-4 py-3 text-slate-100 shadow-lg">
-      <div className="flex items-center justify-between gap-4">
-        {/* Left: Brand logo & Title */}
-        <div className="flex items-center gap-3 min-w-max">
+    <header className="sticky top-0 z-40 w-full glass-panel border-b border-slate-800/80 px-3 sm:px-4 py-2.5 sm:py-3 text-slate-100 shadow-lg">
+      <div className="flex items-center justify-between gap-2 sm:gap-4">
+        {/* Left: Mobile Menu Button & Brand logo */}
+        <div className="flex items-center gap-2 sm:gap-3 min-w-max">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 transition lg:hidden"
+            title="Toggle Navigation Menu"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5 text-blue-400" /> : <Menu className="h-5 w-5" />}
+          </button>
+
           {renderHeaderLogo()}
           <div>
-            <div className="flex items-center gap-2">
-              <h1 className="font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <h1 className="font-bold text-sm sm:text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
                 {renderProjectTitle()}
               </h1>
-              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                Enterprise v4.2
+              <span className="text-[9px] sm:text-[10px] uppercase font-extrabold tracking-wider px-1.5 sm:px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 hidden xs:inline-block">
+                Enterprise
               </span>
             </div>
             <p className="text-xs text-slate-400 hidden sm:block">

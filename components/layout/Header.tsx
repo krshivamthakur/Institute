@@ -147,7 +147,7 @@ export function Header() {
           {/* AI Assistant Button */}
           <button
             onClick={() => setIsAiBotOpen(!isAiBotOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-indigo-600/30 hover:from-purple-600/50 hover:to-indigo-600/50 border border-purple-500/40 text-purple-200 text-xs font-medium transition shadow-md shadow-purple-900/20"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-indigo-600/30 hover:from-purple-600/50 hover:to-indigo-600/50 border border-purple-500/40 text-purple-200 text-xs font-medium transition shadow-md shadow-purple-900/20"
           >
             <Bot className="h-4 w-4 text-purple-400 animate-pulse" />
             <span className="hidden sm:inline">EduBot AI</span>
@@ -157,7 +157,7 @@ export function Header() {
           {/* Mobile App Simulator Button */}
           <button
             onClick={() => setIsMobilePreviewOpen(!isMobilePreviewOpen)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 text-xs font-medium transition"
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 text-xs font-medium transition"
             title="Preview Mobile Apps (Student/Parent/Teacher)"
           >
             <Smartphone className="h-4 w-4 text-emerald-400" />
@@ -165,7 +165,7 @@ export function Header() {
           </button>
 
           {/* Notifications Center Button */}
-          <div className="relative">
+          <div className="relative hidden md:block">
             <button
               onClick={() => setIsNotifOpen(!isNotifOpen)}
               className="relative p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 transition"

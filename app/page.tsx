@@ -1,65 +1,149 @@
-import Image from "next/image";
+'use client';
+
+import React from 'react';
+import { IMSProvider, useIMS } from '@/context/IMSContext';
+import { Header } from '@/components/layout/Header';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { AiBotDrawer } from '@/components/layout/AiBotDrawer';
+import { MobilePreviewModal } from '@/components/layout/MobilePreviewModal';
+import { LoginScreen } from '@/components/auth/LoginScreen';
+
+// Module Components
+import { DashboardModule } from '@/components/modules/DashboardModule';
+import { StudentManagement } from '@/components/modules/StudentManagement';
+import { TeacherManagement } from '@/components/modules/TeacherManagement';
+import { CourseManagement } from '@/components/modules/CourseManagement';
+import { ClassManagement } from '@/components/modules/ClassManagement';
+import { AttendanceManagement } from '@/components/modules/AttendanceManagement';
+import { FeeManagement } from '@/components/modules/FeeManagement';
+import { ExamManagement } from '@/components/modules/ExamManagement';
+import { LMSModule } from '@/components/modules/LMSModule';
+import { LibraryManagement } from '@/components/modules/LibraryManagement';
+import { HostelManagement } from '@/components/modules/HostelManagement';
+import { TransportManagement } from '@/components/modules/TransportManagement';
+import { CommunicationModule } from '@/components/modules/CommunicationModule';
+import { ParentPortal } from '@/components/modules/ParentPortal';
+import { StudentPortal } from '@/components/modules/StudentPortal';
+import { FacultyPortal } from '@/components/modules/FacultyPortal';
+import { AdmissionManagement } from '@/components/modules/AdmissionManagement';
+import { CertificateManagement } from '@/components/modules/CertificateManagement';
+import { InventoryManagement } from '@/components/modules/InventoryManagement';
+import { FinanceModule } from '@/components/modules/FinanceModule';
+import { HRManagement } from '@/components/modules/HRManagement';
+import { CRMModule } from '@/components/modules/CRMModule';
+import { ReportsModule } from '@/components/modules/ReportsModule';
+import { NotificationsModule } from '@/components/modules/NotificationsModule';
+import { RBACModule } from '@/components/modules/RBACModule';
+import { AIFeaturesModule } from '@/components/modules/AIFeaturesModule';
+import { MobileAppPreviewModule } from '@/components/modules/MobileAppPreviewModule';
+import { SecurityModule } from '@/components/modules/SecurityModule';
+import { IntegrationsModule } from '@/components/modules/IntegrationsModule';
+import { MultiBranchModule } from '@/components/modules/MultiBranchModule';
+import { SettingsModule } from '@/components/modules/SettingsModule';
+
+function MainContent() {
+  const { activeModule } = useIMS();
+
+  const renderModuleView = () => {
+    switch (activeModule) {
+      case 'dashboard':
+        return <DashboardModule />;
+      case 'students':
+        return <StudentManagement />;
+      case 'teachers':
+        return <TeacherManagement />;
+      case 'courses':
+        return <CourseManagement />;
+      case 'classes':
+        return <ClassManagement />;
+      case 'attendance':
+        return <AttendanceManagement />;
+      case 'fees':
+        return <FeeManagement />;
+      case 'exams':
+        return <ExamManagement />;
+      case 'lms':
+        return <LMSModule />;
+      case 'library':
+        return <LibraryManagement />;
+      case 'hostel':
+        return <HostelManagement />;
+      case 'transport':
+        return <TransportManagement />;
+      case 'communication':
+        return <CommunicationModule />;
+      case 'parent-portal':
+        return <ParentPortal />;
+      case 'student-portal':
+        return <StudentPortal />;
+      case 'faculty-portal':
+        return <FacultyPortal />;
+      case 'admissions':
+        return <AdmissionManagement />;
+      case 'certificates':
+        return <CertificateManagement />;
+      case 'inventory':
+        return <InventoryManagement />;
+      case 'finance':
+        return <FinanceModule />;
+      case 'hr':
+        return <HRManagement />;
+      case 'crm':
+        return <CRMModule />;
+      case 'reports':
+        return <ReportsModule />;
+      case 'notifications':
+        return <NotificationsModule />;
+      case 'rbac':
+        return <RBACModule />;
+      case 'ai-features':
+        return <AIFeaturesModule />;
+      case 'mobile-preview':
+        return <MobileAppPreviewModule />;
+      case 'security':
+        return <SecurityModule />;
+      case 'integrations':
+        return <IntegrationsModule />;
+      case 'multi-branch':
+        return <MultiBranchModule />;
+      case 'settings':
+        return <SettingsModule />;
+      default:
+        return <DashboardModule />;
+    }
+  };
+
+  return (
+    <div className="flex-1 p-4 sm:p-6 overflow-y-auto max-w-7xl mx-auto w-full">
+      {renderModuleView()}
+    </div>
+  );
+}
+
+function AppLayout() {
+  const { authUser } = useIMS();
+
+  if (!authUser) {
+    return <LoginScreen />;
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-blue-500 selection:text-white">
+      <Header />
+      <div className="flex flex-1 relative">
+        <Sidebar />
+        <MainContent />
+      </div>
+      <AiBotDrawer />
+      <MobilePreviewModal />
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <IMSProvider>
+      <AppLayout />
+    </IMSProvider>
   );
 }

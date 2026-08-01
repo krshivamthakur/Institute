@@ -1,0 +1,323 @@
+// Prisma Database Schema for Aura Institute Management System (IMS)
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  DIRECTOR
+  PRINCIPAL
+  BRANCH_HEAD
+  ACADEMIC_COORDINATOR
+  ACCOUNTANT
+  HR
+  RECEPTIONIST
+  TEACHER
+  STUDENT
+  PARENT
+  LIBRARY_STAFF
+  TRANSPORT_MANAGER
+  HOSTEL_WARDEN
+}
+
+enum FeeStatus {
+  PAID
+  PARTIAL
+  OVERDUE
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  LEAVE
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         UserRole  @default(STUDENT)
+  branch       String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  student      Student?
+  teacher      Teacher?
+  auditLogs    AuditLog[]
+}
+
+model Student {
+  id                String       @id @default(uuid())
+  rollNo            String       @unique
+  name              String
+  email             String       @unique
+  phone             String
+  classBatch        String
+  branch            String
+  gender            String
+  dob               String
+  admissionDate     String
+  status            String       @default("Active")
+  parentName        String
+  parentPhone       String
+  attendancePct     Float        @default(100.0)
+  feeStatus         FeeStatus    @default(PAID)
+  feeDue            Float        @default(0.0)
+  gpa               Float        @default(0.0)
+  avatar            String?
+  aadharUploaded    Boolean      @default(true)
+  marksheetUploaded Boolean      @default(true)
+  photoUploaded     Boolean      @default(true)
+
+  userId            String?      @unique
+  user              User?        @relation(fields: [userId], references: [id])
+
+  attendanceRecords Attendance[]
+  feeTransactions   FeeTransaction[]
+  examResults       ExamResult[]
+  certificates      Certificate[]
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Teacher {
+  id                    String   @id @default(uuid())
+  empId                 String   @unique
+  name                  String
+  email                 String   @unique
+  phone                 String
+  department            String
+  designation           String
+  specializations       String   // JSON string of specializations
+  branch                String
+  salary                Float
+  status                String   @default("Active")
+  attendancePct         Float    @default(100.0)
+  rating                Float    @default(5.0)
+  joiningDate           String
+  avatar                String?
+
+  userId                String?  @unique
+  user                  User?    @relation(fields: [userId], references: [id])
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model Course {
+  id               String   @id @default(uuid())
+  code             String   @unique
+  title            String
+  department       String
+  durationMonths   Int
+  semesters        Int
+  fees             Float
+  activeBatches    Int
+  enrolledStudents Int      @default(0)
+  syllabusJson     String   // JSON formatted syllabus
+  createdAt        DateTime @default(now())
+}
+
+model ClassSchedule {
+  id          String   @id @default(uuid())
+  day         String
+  time        String
+  subject     String
+  classBatch  String
+  teacher     String
+  room        String
+  type        String   @default("Lecture")
+  meetingLink String?
+  createdAt   DateTime @default(now())
+}
+
+model Attendance {
+  id          String           @id @default(uuid())
+  date        String
+  studentId   String
+  studentName String
+  classBatch  String
+  status      AttendanceStatus @default(PRESENT)
+  timeIn      String?
+  method      String           @default("Manual")
+
+  student     Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt   DateTime         @default(now())
+}
+
+model FeeTransaction {
+  id            String    @id @default(uuid())
+  studentId     String
+  studentName   String
+  rollNo        String
+  classBatch    String
+  amount        Float
+  feeType       String
+  paymentMode   String
+  transactionId String    @unique
+  date          String
+  status        String    @default("Completed")
+
+  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+}
+
+model Exam {
+  id           String       @id @default(uuid())
+  examName     String
+  course       String
+  batch        String
+  date         String
+  subject      String
+  totalMarks   Float
+  passingMarks Float
+  published    Boolean      @default(false)
+
+  results      ExamResult[]
+  createdAt    DateTime     @default(now())
+}
+
+model ExamResult {
+  id            String   @id @default(uuid())
+  examId        String
+  studentId     String
+  studentName   String
+  rollNo        String
+  marksObtained Float
+  grade         String
+  rank          Int
+
+  exam          Exam     @relation(fields: [examId], references: [id], onDelete: Cascade)
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model LMSMaterial {
+  id            String   @id @default(uuid())
+  subject       String
+  classBatch    String
+  title         String
+  type          String   // Video, PDF Notes, Assignment, Quiz
+  author        String
+  date          String
+  url           String?
+  durationPages String?
+  createdAt     DateTime @default(now())
+}
+
+model Book {
+  id              String   @id @default(uuid())
+  isbn            String   @unique
+  title           String
+  author          String
+  category        String
+  copiesTotal     Int
+  copiesAvailable Int
+  rackLocation    String
+  status          String   @default("Available")
+  isDigital       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+}
+
+model HostelRoom {
+  id         String   @id @default(uuid())
+  block      String
+  roomNo     String
+  capacity   Int
+  occupied   Int      @default(0)
+  feePerTerm Float
+  status     String   @default("Available")
+  occupants  String   // JSON string of occupants
+  createdAt  DateTime @default(now())
+}
+
+model TransportRoute {
+  id               String   @id @default(uuid())
+  routeName        String
+  busNumber        String
+  driverName       String
+  driverPhone      String
+  capacity         Int
+  studentsAssigned Int      @default(0)
+  stopsJson        String   // JSON array of stops
+  latLongJson      String   // JSON location
+  status           String   @default("In Transit")
+  createdAt        DateTime @default(now())
+}
+
+model LeadEnquiry {
+  id               String   @id @default(uuid())
+  studentName      String
+  parentName       String
+  phone            String
+  email            String
+  interestedCourse String
+  source           String
+  status           String   @default("New")
+  counsellor       String
+  date             String
+  notes            String
+  createdAt        DateTime @default(now())
+}
+
+model Certificate {
+  id            String   @id @default(uuid())
+  certificateNo String   @unique
+  studentId     String
+  studentName   String
+  type          String
+  issueDate     String
+  purpose       String
+  issuedBy      String
+
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+}
+
+model InventoryItem {
+  id            String   @id @default(uuid())
+  assetCode     String   @unique
+  name          String
+  category      String
+  quantity      Int
+  unitPrice     Float
+  location      String
+  condition     String   @default("Good")
+  lastInspected String
+  createdAt     DateTime @default(now())
+}
+
+model FinancialRecord {
+  id          String   @id @default(uuid())
+  type        String   // Income | Expense
+  category    String
+  description String
+  amount      Float
+  date        String
+  paymentMode String
+  branch      String
+  gstAmount   Float    @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  timestamp String
+  user      String
+  role      String
+  action    String
+  details   String
+  ipAddress String
+
+  userId    String?
+  userRef   User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}

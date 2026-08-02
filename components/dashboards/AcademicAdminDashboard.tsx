@@ -17,11 +17,11 @@ import {
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 
 const CLASS_ATTENDANCE_DATA = [
-  { class: 'B.Tech CS - S4', pct: 94 },
-  { class: 'B.Tech CS - S6', pct: 88 },
-  { class: 'BCA - Sem 2', pct: 91 },
-  { class: 'MBA - Sem 1', pct: 96 },
-  { class: 'BBA - Sem 4', pct: 85 },
+  { class: 'B.Tech CS - Y2', pct: 94 },
+  { class: 'B.Tech CS - Y3', pct: 88 },
+  { class: 'BCA - Year 1', pct: 91 },
+  { class: 'MBA - Year 1', pct: 96 },
+  { class: 'BBA - Year 2', pct: 85 },
 ];
 
 export function AcademicAdminDashboard() {

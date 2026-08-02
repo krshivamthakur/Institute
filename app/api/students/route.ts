@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
       name: body.name,
       email: body.email,
       phone: body.phone,
-      classBatch: body.classBatch || 'B.Tech CS - Sem 4',
+      classBatch: body.classBatch || 'B.Tech CS - Year 2',
       branch: body.branch || 'Main Campus - New Delhi',
       gender: body.gender || 'Male',
       dob: body.dob || '2004-01-01',

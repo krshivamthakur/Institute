@@ -20,7 +20,7 @@ import {
 
 export function FacultyDashboard() {
   const { timetable, students, markAttendance, addAuditLog, setActiveModule } = useIMS();
-  const [selectedClass, setSelectedClass] = useState('B.Tech CS - Sem 4');
+  const [selectedClass, setSelectedClass] = useState('B.Tech CS - Year 2');
   const [attendanceTaken, setAttendanceTaken] = useState(false);
 
   const handleQuickAttendance = () => {
@@ -132,9 +132,9 @@ export function FacultyDashboard() {
                 onChange={(e) => setSelectedClass(e.target.value)}
                 className="w-full bg-slate-900 border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-purple-500"
               >
-                <option>B.Tech CS - Sem 4</option>
-                <option>B.Tech CS - Sem 6</option>
-                <option>BCA - Sem 2</option>
+                <option>B.Tech CS - Year 2</option>
+                <option>B.Tech CS - Year 3</option>
+                <option>BCA - Year 1</option>
               </select>
             </div>
 

@@ -99,7 +99,7 @@ export function ParentDashboard() {
               <Calendar className="h-5 w-5" />
             </div>
           </div>
-          <p className="text-3xl font-black text-white mt-2">B.Tech Sem 4</p>
+          <p className="text-3xl font-black text-white mt-2">B.Tech Year 2</p>
           <p className="text-[11px] text-slate-400 mt-1">Main Campus Delhi</p>
         </div>
       </div>

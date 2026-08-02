@@ -554,24 +554,24 @@ export const INITIAL_COURSES: Course[] = [
 ];
 
 export const INITIAL_TIMETABLE: TimetableSlot[] = [
-  { id: 'TT-1', day: 'Monday', time: '09:00 AM - 10:00 AM', subject: 'Data Structures', classBatch: 'B.Tech CS - Sem 4', teacher: 'Dr. Meenakshi Sundaram', room: 'Hall 301', type: 'Lecture', meetingLink: 'https://zoom.us/j/mock123' },
-  { id: 'TT-2', day: 'Monday', time: '10:15 AM - 11:15 AM', subject: 'Operating Systems', classBatch: 'B.Tech CS - Sem 4', teacher: 'Prof. Rajesh Khanna', room: 'Lab 402', type: 'Lab', meetingLink: 'https://meet.google.com/mock-abc' },
-  { id: 'TT-3', day: 'Tuesday', time: '11:30 AM - 12:30 PM', subject: 'Financial Analytics', classBatch: 'MBA - Sem 2', teacher: 'Dr. Kavita Reddy', room: 'Hall 105', type: 'Lecture', meetingLink: 'https://zoom.us/j/mock456' },
-  { id: 'TT-4', day: 'Wednesday', time: '02:00 PM - 03:30 PM', subject: 'Machine Learning Lab', classBatch: 'B.Tech CS - Sem 4', teacher: 'Dr. Meenakshi Sundaram', room: 'AI Innovation Lab', type: 'Lab' },
-  { id: 'TT-5', day: 'Thursday', time: '09:00 AM - 10:00 AM', subject: 'Database Systems', classBatch: 'B.Tech CS - Sem 4', teacher: 'Prof. Rajesh Khanna', room: 'Hall 301', type: 'Lecture' },
+  { id: 'TT-1', day: 'Monday', time: '09:00 AM - 10:00 AM', subject: 'Data Structures', classBatch: 'B.Tech CS - Year 2', teacher: 'Dr. Meenakshi Sundaram', room: 'Hall 301', type: 'Lecture', meetingLink: 'https://zoom.us/j/mock123' },
+  { id: 'TT-2', day: 'Monday', time: '10:15 AM - 11:15 AM', subject: 'Operating Systems', classBatch: 'B.Tech CS - Year 2', teacher: 'Prof. Rajesh Khanna', room: 'Lab 402', type: 'Lab', meetingLink: 'https://meet.google.com/mock-abc' },
+  { id: 'TT-3', day: 'Tuesday', time: '11:30 AM - 12:30 PM', subject: 'Financial Analytics', classBatch: 'MBA - Year 1', teacher: 'Dr. Kavita Reddy', room: 'Hall 105', type: 'Lecture', meetingLink: 'https://zoom.us/j/mock456' },
+  { id: 'TT-4', day: 'Wednesday', time: '02:00 PM - 03:30 PM', subject: 'Machine Learning Lab', classBatch: 'B.Tech CS - Year 2', teacher: 'Dr. Meenakshi Sundaram', room: 'AI Innovation Lab', type: 'Lab' },
+  { id: 'TT-5', day: 'Thursday', time: '09:00 AM - 10:00 AM', subject: 'Database Systems', classBatch: 'B.Tech CS - Year 2', teacher: 'Prof. Rajesh Khanna', room: 'Hall 301', type: 'Lecture' },
 ];
 
 export const INITIAL_ATTENDANCE: AttendanceRecord[] = [
-  { id: 'ATT-1', date: '2026-08-01', studentId: 'STU-1001', studentName: 'Aarav Sharma', classBatch: 'B.Tech CS - Sem 4', status: 'Present', timeIn: '08:55 AM', method: 'Biometric' },
-  { id: 'ATT-2', date: '2026-08-01', studentId: 'STU-1002', studentName: 'Ananya Verma', classBatch: 'B.Tech CS - Sem 4', status: 'Present', timeIn: '08:58 AM', method: 'QR Code' },
-  { id: 'ATT-3', date: '2026-08-01', studentId: 'STU-1003', studentName: 'Rohan Gupta', classBatch: 'B.Tech ECE - Sem 4', status: 'Absent', method: 'Manual' },
-  { id: 'ATT-4', date: '2026-08-01', studentId: 'STU-1004', studentName: 'Priya Patel', classBatch: 'MBA - Sem 2', status: 'Present', timeIn: '08:50 AM', method: 'QR Code' },
+  { id: 'ATT-1', date: '2026-08-01', studentId: 'STU-1001', studentName: 'Aarav Sharma', classBatch: 'B.Tech CS - Year 2', status: 'Present', timeIn: '08:55 AM', method: 'Biometric' },
+  { id: 'ATT-2', date: '2026-08-01', studentId: 'STU-1002', studentName: 'Ananya Verma', classBatch: 'B.Tech CS - Year 2', status: 'Present', timeIn: '08:58 AM', method: 'QR Code' },
+  { id: 'ATT-3', date: '2026-08-01', studentId: 'STU-1003', studentName: 'Rohan Gupta', classBatch: 'B.Tech ECE - Year 2', status: 'Absent', method: 'Manual' },
+  { id: 'ATT-4', date: '2026-08-01', studentId: 'STU-1004', studentName: 'Priya Patel', classBatch: 'MBA - Year 1', status: 'Present', timeIn: '08:50 AM', method: 'QR Code' },
 ];
 
 export const INITIAL_FEE_TRANSACTIONS: FeeTransaction[] = [
-  { id: 'TXN-9001', studentId: 'STU-1001', studentName: 'Aarav Sharma', rollNo: '2026-CS-001', classBatch: 'B.Tech CS - Sem 4', amount: 60000, feeType: 'Tuition Fee', paymentMode: 'Online (Razorpay)', transactionId: 'pay_N8zL90kQx12', date: '2026-07-15', status: 'Completed', receiptUrl: '#' },
-  { id: 'TXN-9002', studentId: 'STU-1002', studentName: 'Ananya Verma', rollNo: '2026-CS-002', classBatch: 'B.Tech CS - Sem 4', amount: 35000, feeType: 'Tuition Fee', paymentMode: 'UPI (PhonePe)', transactionId: 'T26071899120', date: '2026-07-20', status: 'Completed', receiptUrl: '#' },
-  { id: 'TXN-9003', studentId: 'STU-1004', studentName: 'Priya Patel', rollNo: '2026-MBA-008', classBatch: 'MBA - Sem 2', amount: 90000, feeType: 'Tuition Fee', paymentMode: 'Bank Transfer', transactionId: 'NEFT88912300', date: '2026-07-25', status: 'Completed', receiptUrl: '#' },
+  { id: 'TXN-9001', studentId: 'STU-1001', studentName: 'Aarav Sharma', rollNo: '2026-CS-001', classBatch: 'B.Tech CS - Year 2', amount: 60000, feeType: 'Tuition Fee', paymentMode: 'Online (Razorpay)', transactionId: 'pay_N8zL90kQx12', date: '2026-07-15', status: 'Completed', receiptUrl: '#' },
+  { id: 'TXN-9002', studentId: 'STU-1002', studentName: 'Ananya Verma', rollNo: '2026-CS-002', classBatch: 'B.Tech CS - Year 2', amount: 35000, feeType: 'Tuition Fee', paymentMode: 'UPI (PhonePe)', transactionId: 'T26071899120', date: '2026-07-20', status: 'Completed', receiptUrl: '#' },
+  { id: 'TXN-9003', studentId: 'STU-1004', studentName: 'Priya Patel', rollNo: '2026-MBA-008', classBatch: 'MBA - Year 1', amount: 90000, feeType: 'Tuition Fee', paymentMode: 'Bank Transfer', transactionId: 'NEFT88912300', date: '2026-07-25', status: 'Completed', receiptUrl: '#' },
 ];
 
 export const INITIAL_EXAMS: ExamRecord[] = [
@@ -579,7 +579,7 @@ export const INITIAL_EXAMS: ExamRecord[] = [
     id: 'EXM-101',
     examName: 'Mid-Term Examinations 2026',
     course: 'B.Tech Computer Science',
-    batch: 'B.Tech CS - Sem 4',
+    batch: 'B.Tech CS - Year 2',
     date: '2026-06-15',
     subject: 'Data Structures & Algorithms',
     totalMarks: 100,
@@ -594,10 +594,10 @@ export const INITIAL_EXAMS: ExamRecord[] = [
 ];
 
 export const INITIAL_LMS: LMSCourseMaterial[] = [
-  { id: 'LMS-1', subject: 'Data Structures', classBatch: 'B.Tech CS - Sem 4', title: 'Advanced Graph Algorithms & Dijkstra DFS/BFS', type: 'Video', author: 'Dr. Meenakshi Sundaram', date: '2026-07-28', durationOrPages: '45 mins', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
-  { id: 'LMS-2', subject: 'Data Structures', classBatch: 'B.Tech CS - Sem 4', title: 'Comprehensive Tree & Heap Notes (PDF)', type: 'PDF Notes', author: 'Dr. Meenakshi Sundaram', date: '2026-07-29', durationOrPages: '34 Pages' },
-  { id: 'LMS-3', subject: 'Operating Systems', classBatch: 'B.Tech CS - Sem 4', title: 'Process Scheduling & Deadlock Prevention Assignment', type: 'Assignment', author: 'Prof. Rajesh Khanna', date: '2026-08-01', submissionsCount: 28 },
-  { id: 'LMS-4', subject: 'Machine Learning', classBatch: 'B.Tech CS - Sem 4', title: 'Quick Quiz: Neural Networks & Backpropagation', type: 'Quiz', author: 'Dr. Meenakshi Sundaram', date: '2026-08-02', quizQuestionsCount: 10 },
+  { id: 'LMS-1', subject: 'Data Structures', classBatch: 'B.Tech CS - Year 2', title: 'Advanced Graph Algorithms & Dijkstra DFS/BFS', type: 'Video', author: 'Dr. Meenakshi Sundaram', date: '2026-07-28', durationOrPages: '45 mins', url: 'https://www.w3schools.com/html/mov_bbb.mp4' },
+  { id: 'LMS-2', subject: 'Data Structures', classBatch: 'B.Tech CS - Year 2', title: 'Comprehensive Tree & Heap Notes (PDF)', type: 'PDF Notes', author: 'Dr. Meenakshi Sundaram', date: '2026-07-29', durationOrPages: '34 Pages' },
+  { id: 'LMS-3', subject: 'Operating Systems', classBatch: 'B.Tech CS - Year 2', title: 'Process Scheduling & Deadlock Prevention Assignment', type: 'Assignment', author: 'Prof. Rajesh Khanna', date: '2026-08-01', submissionsCount: 28 },
+  { id: 'LMS-4', subject: 'Machine Learning', classBatch: 'B.Tech CS - Year 2', title: 'Quick Quiz: Neural Networks & Backpropagation', type: 'Quiz', author: 'Dr. Meenakshi Sundaram', date: '2026-08-02', quizQuestionsCount: 10 },
 ];
 
 export const INITIAL_BOOKS: Book[] = [

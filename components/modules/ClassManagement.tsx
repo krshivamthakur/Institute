@@ -17,7 +17,7 @@ export function ClassManagement() {
   // Form State
   const [newSlot, setNewSlot] = useState({
     subject: '',
-    classBatch: 'B.Tech CS - Sem 4',
+    classBatch: 'B.Tech CS - Year 2',
     teacher: 'Prof. Rajesh Kumar',
     room: 'Hall 101',
     time: '09:00 AM - 10:00 AM',
@@ -45,7 +45,7 @@ export function ClassManagement() {
     setIsAddModalOpen(false);
     setNewSlot({
       subject: '',
-      classBatch: 'B.Tech CS - Sem 4',
+      classBatch: 'B.Tech CS - Year 2',
       teacher: 'Prof. Rajesh Kumar',
       room: 'Hall 101',
       time: '09:00 AM - 10:00 AM',
@@ -199,9 +199,9 @@ export function ClassManagement() {
                     onChange={(e) => setNewSlot({ ...newSlot, classBatch: e.target.value })}
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white"
                   >
-                    <option value="B.Tech CS - Sem 4">B.Tech CS - Sem 4</option>
-                    <option value="B.Tech ECE - Sem 4">B.Tech ECE - Sem 4</option>
-                    <option value="MBA - Sem 2">MBA - Sem 2</option>
+                    <option value="B.Tech CS - Year 2">B.Tech CS - Year 2</option>
+                    <option value="B.Tech ECE - Year 2">B.Tech ECE - Year 2</option>
+                    <option value="MBA - Year 1">MBA - Year 1</option>
                   </select>
                 </div>
 

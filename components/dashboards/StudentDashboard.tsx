@@ -91,7 +91,7 @@ export function StudentDashboard() {
               <BookOpen className="h-5 w-5" />
             </div>
           </div>
-          <p className="text-3xl font-black text-white mt-2">Sem 4</p>
+          <p className="text-3xl font-black text-white mt-2">Year 2</p>
           <p className="text-[11px] text-slate-400 mt-1">B.Tech Computer Science</p>
         </div>
 

@@ -778,7 +778,7 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       name: targetLead.studentName,
       email: targetLead.email,
       phone: targetLead.phone,
-      classBatch: targetLead.interestedCourse || 'B.Tech CS - Sem 4',
+      classBatch: targetLead.interestedCourse || 'B.Tech CS - Year 2',
       branch: 'Main Campus - New Delhi',
       gender: 'Male',
       dob: '2004-01-01',

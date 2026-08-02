@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Aura IMS - Comprehensive Institute Management System",
-  description: "Enterprise multi-role, multi-branch Institute Management System (IMS) with AI features, LMS, Finance, HR, and Portals.",
+  title: "GVM IMS - Comprehensive Institute Management System",
+  description: "GVM multi-role, multi-branch Institute Management System (IMS) with AI features, LMS, Finance, HR, and Portals.",
 };
 
 export default function RootLayout({

@@ -18,6 +18,7 @@ import {
   FinancialEntry,
   NotificationItem,
   AuditLog,
+  SystemSettings,
   INITIAL_STUDENTS,
   INITIAL_TEACHERS,
   INITIAL_COURSES,
@@ -35,9 +36,10 @@ import {
   INITIAL_FINANCIALS,
   INITIAL_NOTIFICATIONS,
   INITIAL_AUDIT_LOGS,
+  INITIAL_SYSTEM_SETTINGS,
 } from '@/lib/ims-data';
 
-interface DatabaseSchema {
+export interface DatabaseSchema {
   students: Student[];
   teachers: Teacher[];
   courses: Course[];
@@ -55,10 +57,34 @@ interface DatabaseSchema {
   financials: FinancialEntry[];
   notifications: NotificationItem[];
   auditLogs: AuditLog[];
+  settings: SystemSettings;
 }
 
 const DB_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DB_DIR, 'aura-ims-db.json');
+
+function createInitialDb(): DatabaseSchema {
+  return {
+    students: INITIAL_STUDENTS,
+    teachers: INITIAL_TEACHERS,
+    courses: INITIAL_COURSES,
+    timetable: INITIAL_TIMETABLE,
+    attendance: INITIAL_ATTENDANCE,
+    feeTransactions: INITIAL_FEE_TRANSACTIONS,
+    exams: INITIAL_EXAMS,
+    lmsMaterials: INITIAL_LMS,
+    books: INITIAL_BOOKS,
+    hostelRooms: INITIAL_HOSTEL,
+    transportRoutes: INITIAL_TRANSPORT,
+    leads: INITIAL_LEADS,
+    certificates: INITIAL_CERTIFICATES,
+    inventoryItems: INITIAL_INVENTORY,
+    financials: INITIAL_FINANCIALS,
+    notifications: INITIAL_NOTIFICATIONS,
+    auditLogs: INITIAL_AUDIT_LOGS,
+    settings: INITIAL_SYSTEM_SETTINGS,
+  };
+}
 
 function ensureDbFile() {
   if (!fs.existsSync(DB_DIR)) {
@@ -66,26 +92,7 @@ function ensureDbFile() {
   }
 
   if (!fs.existsSync(DB_FILE)) {
-    const initialDb: DatabaseSchema = {
-      students: INITIAL_STUDENTS,
-      teachers: INITIAL_TEACHERS,
-      courses: INITIAL_COURSES,
-      timetable: INITIAL_TIMETABLE,
-      attendance: INITIAL_ATTENDANCE,
-      feeTransactions: INITIAL_FEE_TRANSACTIONS,
-      exams: INITIAL_EXAMS,
-      lmsMaterials: INITIAL_LMS,
-      books: INITIAL_BOOKS,
-      hostelRooms: INITIAL_HOSTEL,
-      transportRoutes: INITIAL_TRANSPORT,
-      leads: INITIAL_LEADS,
-      certificates: INITIAL_CERTIFICATES,
-      inventoryItems: INITIAL_INVENTORY,
-      financials: INITIAL_FINANCIALS,
-      notifications: INITIAL_NOTIFICATIONS,
-      auditLogs: INITIAL_AUDIT_LOGS,
-    };
-    fs.writeFileSync(DB_FILE, JSON.stringify(initialDb, null, 2), 'utf-8');
+    fs.writeFileSync(DB_FILE, JSON.stringify(createInitialDb(), null, 2), 'utf-8');
   }
 }
 
@@ -93,28 +100,15 @@ export function getDb(): DatabaseSchema {
   ensureDbFile();
   try {
     const raw = fs.readFileSync(DB_FILE, 'utf-8');
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw) as Partial<DatabaseSchema>;
+    return {
+      ...createInitialDb(),
+      ...parsed,
+      settings: parsed.settings || INITIAL_SYSTEM_SETTINGS,
+    } as DatabaseSchema;
   } catch (err) {
     console.error('Error reading DB file, returning initial datasets:', err);
-    return {
-      students: INITIAL_STUDENTS,
-      teachers: INITIAL_TEACHERS,
-      courses: INITIAL_COURSES,
-      timetable: INITIAL_TIMETABLE,
-      attendance: INITIAL_ATTENDANCE,
-      feeTransactions: INITIAL_FEE_TRANSACTIONS,
-      exams: INITIAL_EXAMS,
-      lmsMaterials: INITIAL_LMS,
-      books: INITIAL_BOOKS,
-      hostelRooms: INITIAL_HOSTEL,
-      transportRoutes: INITIAL_TRANSPORT,
-      leads: INITIAL_LEADS,
-      certificates: INITIAL_CERTIFICATES,
-      inventoryItems: INITIAL_INVENTORY,
-      financials: INITIAL_FINANCIALS,
-      notifications: INITIAL_NOTIFICATIONS,
-      auditLogs: INITIAL_AUDIT_LOGS,
-    };
+    return createInitialDb();
   }
 }
 

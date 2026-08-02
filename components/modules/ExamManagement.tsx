@@ -19,9 +19,17 @@ import {
 } from 'lucide-react';
 
 export function ExamManagement() {
-  const { currentRole, exams, students } = useIMS();
+  const { authUser, currentRole, exams, updateExam, students } = useIMS();
   const isPersonalScope = currentRole === 'Student' || currentRole === 'Parent';
-  const myStudent = students[0]; // Logged-in student / child context
+
+  const myStudent = currentRole === 'Parent'
+    ? (students.find(
+        (s) =>
+          s.id === authUser?.childStudentId ||
+          s.rollNo === authUser?.childStudentId ||
+          (authUser?.name && s.parentName.toLowerCase().includes(authUser.name.toLowerCase().replace('(parent)', '').trim()))
+      ) || students[0])
+    : (students.find((s) => s.id === authUser?.empIdOrRollNo || s.rollNo === authUser?.empIdOrRollNo) || students[0]);
 
   const [selectedExam, setSelectedExam] = useState(exams[0]);
   const [selectedStudentAdmitCard, setSelectedStudentAdmitCard] = useState<any | null>(null);
@@ -193,37 +201,112 @@ export function ExamManagement() {
 
         {/* Modal for Admit Card Print */}
         {showAdmitCardModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                <h3 className="font-bold text-sm text-white">Official Student Admit Card</h3>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 overflow-y-auto">
+            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-2xl w-full shadow-2xl printable-area my-auto">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
+                <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                  <Award className="h-4 w-4 text-amber-400" /> Candidate Examination Hall Ticket
+                </h3>
                 <button onClick={() => setShowAdmitCardModal(false)} className="text-slate-400 hover:text-white">
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
-              <div className="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/40 text-xs space-y-3">
-                <div className="text-center border-b border-slate-800 pb-2">
-                  <h4 className="font-extrabold text-sm text-white">AURA INSTITUTE OF TECHNOLOGY</h4>
-                  <p className="text-[10px] text-amber-300 font-bold uppercase">OFFICIAL EXAM ADMIT CARD - 2026</p>
+              {/* Hall Ticket Card Container matching exact user design */}
+              <div className="p-6 rounded-3xl bg-[#0a0f1d] border-2 border-amber-500/40 text-xs space-y-6 shadow-2xl">
+                {/* Header Row */}
+                <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
+                  <div>
+                    <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans">
+                      AURA INSTITUTE OF TECHNOLOGY
+                    </h3>
+                    <p className="text-xs font-bold text-amber-400 tracking-wider uppercase mt-0.5">
+                      MID-TERM EXAMINATIONS 2026 - CANDIDATE HALL TICKET
+                    </p>
+                  </div>
+                  <img
+                    src={student.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150'}
+                    alt={student.name}
+                    className="h-16 w-16 rounded-2xl object-cover border-2 border-amber-500/50 shadow-md"
+                  />
                 </div>
 
-                <div className="space-y-1 text-slate-300">
-                  <p><strong>Candidate Name:</strong> {student.name}</p>
-                  <p><strong>Roll Number:</strong> {student.rollNo}</p>
-                  <p><strong>Batch:</strong> {student.classBatch}</p>
-                  <p><strong>Exam Hall:</strong> Main Examination Hall 101</p>
-                  <p><strong>Reporting Time:</strong> 09:00 AM</p>
-                  <p><strong>Status:</strong> ELIGIBLE TO APPEAR</p>
+                {/* Candidate Info Grid */}
+                <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                  <div>
+                    <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Candidate Name:</span>
+                    <span className="text-sm font-extrabold text-white block">{student.name}</span>
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Roll Number:</span>
+                    <span className="text-sm font-extrabold text-amber-400 block font-mono">{student.rollNo}</span>
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Enrolled Course / Batch:</span>
+                    <span className="text-sm font-extrabold text-white block">{student.classBatch}</span>
+                  </div>
+
+                  <div>
+                    <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Assigned Examination Center:</span>
+                    <span className="text-sm font-extrabold text-blue-400 block">Main Campus Hall 101</span>
+                  </div>
+                </div>
+
+                {/* Examination Timings Section */}
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-xs font-extrabold text-amber-400 uppercase tracking-wider">
+                    Approved Examination Dates & Timings:
+                  </h4>
+
+                  <div className="rounded-xl border border-slate-800 overflow-hidden">
+                    <table className="w-full text-left text-xs">
+                      <thead className="bg-slate-900/90 text-slate-400 uppercase font-extrabold text-[10px] tracking-wider border-b border-slate-800">
+                        <tr>
+                          <th className="p-3">DATE</th>
+                          <th className="p-3">SUBJECT NAME</th>
+                          <th className="p-3">TIME SLOT</th>
+                          <th className="p-3 text-right">HALL NO</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800/60 bg-slate-950/60">
+                        <tr>
+                          <td className="p-3 font-mono font-bold text-amber-400">2026-06-15</td>
+                          <td className="p-3 font-extrabold text-white">Data Structures & Algorithms</td>
+                          <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                          <td className="p-3 text-right text-slate-300 font-medium">Main Exam Hall 101</td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 font-mono font-bold text-amber-400">2026-06-18</td>
+                          <td className="p-3 font-extrabold text-white">Operating Systems & Kernels</td>
+                          <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                          <td className="p-3 text-right text-slate-300 font-medium">Main Exam Hall 102</td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 font-mono font-bold text-amber-400">2026-06-21</td>
+                          <td className="p-3 font-extrabold text-white">Database Management Systems</td>
+                          <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                          <td className="p-3 text-right text-slate-300 font-medium">Main Exam Hall 101</td>
+                        </tr>
+                        <tr>
+                          <td className="p-3 font-mono font-bold text-amber-400">2026-06-24</td>
+                          <td className="p-3 font-extrabold text-white">Computer Networks & Security</td>
+                          <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                          <td className="p-3 text-right text-slate-300 font-medium">Lab Hall 204</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex justify-end no-print">
                 <button
                   onClick={() => window.print()}
-                  className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-600/30 transition"
                 >
-                  <Printer className="h-4 w-4" /> Print / Save Admit Card
+                  <Printer className="h-4 w-4" /> Download / Print Hall Ticket (PDF)
                 </button>
               </div>
             </div>
@@ -266,9 +349,19 @@ export function ExamManagement() {
                 selectedExam.id === e.id ? 'bg-amber-950/60 border-amber-500 shadow-lg' : 'glass-panel border-slate-800'
               }`}
             >
-              <div className="flex justify-between font-bold text-white">
+              <div className="flex justify-between items-center font-bold text-white">
                 <span>{e.examName}</span>
-                <span className="text-amber-400">{e.published ? 'Published ✓' : 'Draft'}</span>
+                <button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    updateExam(e.id, { published: !e.published });
+                  }}
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    e.published ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-400'
+                  }`}
+                >
+                  {e.published ? 'Published ✓' : 'Draft ✎'}
+                </button>
               </div>
               <p className="text-slate-400 mt-1">{e.subject} • {e.batch}</p>
               <p className="text-[10px] text-slate-500 mt-2">Date: {e.date}</p>
@@ -323,37 +416,112 @@ export function ExamManagement() {
 
       {/* Admit Card Modal for Admins */}
       {selectedStudentAdmitCard && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-              <h3 className="font-bold text-sm text-white">Official Examination Admit Card</h3>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4 overflow-y-auto">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-2xl w-full shadow-2xl printable-area my-auto">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
+              <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                <Award className="h-4 w-4 text-amber-400" /> Candidate Examination Hall Ticket
+              </h3>
               <button onClick={() => setSelectedStudentAdmitCard(null)} className="text-slate-400 hover:text-white">
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-950 border-2 border-amber-500/40 text-xs space-y-3">
-              <div className="text-center border-b border-slate-800 pb-2">
-                <h4 className="font-extrabold text-sm text-white">AURA INSTITUTE OF TECHNOLOGY</h4>
-                <p className="text-[10px] text-amber-300 font-bold uppercase">EXAMINATION ADMIT CARD - 2026</p>
+            {/* Hall Ticket Card Container matching exact user design */}
+            <div className="p-6 rounded-3xl bg-[#0a0f1d] border-2 border-amber-500/40 text-xs space-y-6 shadow-2xl">
+              {/* Header Row */}
+              <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
+                <div>
+                  <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans">
+                    AURA INSTITUTE OF TECHNOLOGY
+                  </h3>
+                  <p className="text-xs font-bold text-amber-400 tracking-wider uppercase mt-0.5">
+                    MID-TERM EXAMINATIONS 2026 - CANDIDATE HALL TICKET
+                  </p>
+                </div>
+                <img
+                  src={selectedStudentAdmitCard.avatar || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150'}
+                  alt={selectedStudentAdmitCard.studentName}
+                  className="h-16 w-16 rounded-2xl object-cover border-2 border-amber-500/50 shadow-md"
+                />
               </div>
 
-              <div className="space-y-1 text-slate-300">
-                <p><strong>Candidate Name:</strong> {selectedStudentAdmitCard.studentName}</p>
-                <p><strong>Roll Number:</strong> {selectedStudentAdmitCard.rollNo}</p>
-                <p><strong>Exam Name:</strong> {selectedExam.examName}</p>
-                <p><strong>Subject:</strong> {selectedExam.subject}</p>
-                <p><strong>Exam Date:</strong> {selectedExam.date}</p>
-                <p><strong>Exam Center:</strong> Main Examination Hall 101</p>
+              {/* Candidate Info Grid */}
+              <div className="grid grid-cols-2 gap-y-4 gap-x-6">
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Candidate Name:</span>
+                  <span className="text-sm font-extrabold text-white block">{selectedStudentAdmitCard.studentName}</span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Roll Number:</span>
+                  <span className="text-sm font-extrabold text-amber-400 block font-mono">{selectedStudentAdmitCard.rollNo}</span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Enrolled Course / Batch:</span>
+                  <span className="text-sm font-extrabold text-white block">{selectedStudentAdmitCard.classBatch || 'B.Tech CS - Sem 4'}</span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-400 block mb-0.5">Assigned Examination Center:</span>
+                  <span className="text-sm font-extrabold text-blue-400 block">Main Campus Hall 101</span>
+                </div>
+              </div>
+
+              {/* Examination Timings Section */}
+              <div className="space-y-3 pt-2">
+                <h4 className="text-xs font-extrabold text-amber-400 uppercase tracking-wider">
+                  Approved Examination Dates & Timings:
+                </h4>
+
+                <div className="rounded-xl border border-slate-800 overflow-hidden">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-900/90 text-slate-400 uppercase font-extrabold text-[10px] tracking-wider border-b border-slate-800">
+                      <tr>
+                        <th className="p-3">DATE</th>
+                        <th className="p-3">SUBJECT NAME</th>
+                        <th className="p-3">TIME SLOT</th>
+                        <th className="p-3 text-right">HALL NO</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/60 bg-slate-950/60">
+                      <tr>
+                        <td className="p-3 font-mono font-bold text-amber-400">2026-06-15</td>
+                        <td className="p-3 font-extrabold text-white">Data Structures & Algorithms</td>
+                        <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                        <td className="p-3 text-right text-slate-300 font-medium">Main Exam Hall 101</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono font-bold text-amber-400">2026-06-18</td>
+                        <td className="p-3 font-extrabold text-white">Operating Systems & Kernels</td>
+                        <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                        <td className="p-3 text-right text-slate-300 font-medium">Main Exam Hall 102</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono font-bold text-amber-400">2026-06-21</td>
+                        <td className="p-3 font-extrabold text-white">Database Management Systems</td>
+                        <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                        <td className="p-3 text-right text-slate-300 font-medium">Main Exam Hall 101</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-mono font-bold text-amber-400">2026-06-24</td>
+                        <td className="p-3 font-extrabold text-white">Computer Networks & Security</td>
+                        <td className="p-3 font-mono text-slate-300">09:30 AM - 12:30 PM</td>
+                        <td className="p-3 text-right text-slate-300 font-medium">Lab Hall 204</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex justify-end no-print">
               <button
                 onClick={() => window.print()}
-                className="px-4 py-2 rounded-xl bg-amber-600 text-white font-bold text-xs flex items-center gap-1.5"
+                className="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-extrabold text-xs flex items-center gap-2 shadow-lg shadow-amber-600/30 transition"
               >
-                <Printer className="h-4 w-4" /> Download / Print Admit Card
+                <Printer className="h-4 w-4" /> Download / Print Hall Ticket (PDF)
               </button>
             </div>
           </div>

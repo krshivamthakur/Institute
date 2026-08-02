@@ -27,10 +27,17 @@ import {
 } from 'lucide-react';
 
 export function StudentManagement() {
-  const { currentRole, students, addStudent, updateStudent, issueCertificate } = useIMS();
+  const { authUser, currentRole, students, addStudent, updateStudent, issueCertificate } = useIMS();
 
-  const isStudentRole = currentRole === 'Student';
-  const myStudent = students[0]; // Logged-in student context
+  const isStudentRole = currentRole === 'Student' || currentRole === 'Parent';
+  const myStudent = currentRole === 'Parent'
+    ? (students.find(
+        (s) =>
+          s.id === authUser?.childStudentId ||
+          s.rollNo === authUser?.childStudentId ||
+          (authUser?.name && s.parentName.toLowerCase().includes(authUser.name.toLowerCase().replace('(parent)', '').trim()))
+      ) || students[0])
+    : (students.find((s) => s.id === authUser?.empIdOrRollNo || s.rollNo === authUser?.empIdOrRollNo) || students[0]);
 
   // Admin View Filters
   const [filterBatch, setFilterBatch] = useState('All');
@@ -434,9 +441,9 @@ export function StudentManagement() {
         {/* ID Card Modal */}
         {selectedStudentForIdCard && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-                <h3 className="font-bold text-sm text-white">Student Official ID Card</h3>
+            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl printable-area">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
+                <h3 className="font-bold text-sm text-white">Student Identification Card</h3>
                 <button onClick={() => setSelectedStudentForIdCard(null)} className="text-slate-400 hover:text-white">
                   <X className="h-4 w-4" />
                 </button>
@@ -465,7 +472,7 @@ export function StudentManagement() {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-end gap-2">
+              <div className="mt-4 flex items-center justify-end gap-2 no-print">
                 <button
                   onClick={() => window.print()}
                   className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5"
@@ -779,8 +786,8 @@ export function StudentManagement() {
       {/* ID Card Generator Modal */}
       {selectedStudentForIdCard && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl printable-area">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
               <h3 className="font-bold text-sm text-white">Student Official ID Card</h3>
               <button onClick={() => setSelectedStudentForIdCard(null)} className="text-slate-400 hover:text-white">
                 <X className="h-4 w-4" />
@@ -810,7 +817,7 @@ export function StudentManagement() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-end gap-2">
+            <div className="mt-4 flex items-center justify-end gap-2 no-print">
               <button
                 onClick={() => window.print()}
                 className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition flex items-center gap-1.5"
@@ -825,8 +832,8 @@ export function StudentManagement() {
       {/* Transfer Certificate Modal */}
       {selectedStudentForTc && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-lg w-full shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-lg w-full shadow-2xl printable-area">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
               <h3 className="font-bold text-sm text-white flex items-center gap-2">
                 <FileCheck className="h-4 w-4 text-purple-400" /> Transfer Certificate (TC) Issued
               </h3>
@@ -846,7 +853,7 @@ export function StudentManagement() {
               </div>
             </div>
 
-            <div className="mt-4 flex items-center justify-end gap-2">
+            <div className="mt-4 flex items-center justify-end gap-2 no-print">
               <button
                 onClick={() => window.print()}
                 className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition flex items-center gap-1.5"

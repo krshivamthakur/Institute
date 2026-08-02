@@ -7,7 +7,6 @@ import {
   Search,
   Bell,
   Bot,
-  Smartphone,
   Building2,
   GraduationCap,
   School,
@@ -30,8 +29,6 @@ export function Header() {
     setSearchQuery,
     isAiBotOpen,
     setIsAiBotOpen,
-    isMobilePreviewOpen,
-    setIsMobilePreviewOpen,
     isMobileMenuOpen,
     setIsMobileMenuOpen,
     notifications,
@@ -152,16 +149,6 @@ export function Header() {
             <Bot className="h-4 w-4 text-purple-400 animate-pulse" />
             <span className="hidden sm:inline">EduBot AI</span>
             <Sparkles className="h-3 w-3 text-amber-300" />
-          </button>
-
-          {/* Mobile App Simulator Button */}
-          <button
-            onClick={() => setIsMobilePreviewOpen(!isMobilePreviewOpen)}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 text-xs font-medium transition"
-            title="Preview Mobile Apps (Student/Parent/Teacher)"
-          >
-            <Smartphone className="h-4 w-4 text-emerald-400" />
-            <span className="hidden md:inline">Mobile App View</span>
           </button>
 
           {/* Notifications Center Button */}

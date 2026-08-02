@@ -6,8 +6,7 @@ import { FinancialEntry } from '@/lib/ims-data';
 import { DollarSign, TrendingUp, TrendingDown, FileSpreadsheet, Plus, X, CheckCircle2 } from 'lucide-react';
 
 export function FinanceModule() {
-  const { financials, addAuditLog } = useIMS();
-  const [financialsList, setFinancialsList] = useState<FinancialEntry[]>(financials);
+  const { financials, addFinancialEntry, addAuditLog } = useIMS();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [notification, setNotification] = useState('');
 
@@ -23,14 +22,13 @@ export function FinanceModule() {
     gstAmount: 8100,
   });
 
-  const totalIncome = financialsList.filter((f) => f.type === 'Income').reduce((a, b) => a + b.amount, 0);
-  const totalExpense = financialsList.filter((f) => f.type === 'Expense').reduce((a, b) => a + b.amount, 0);
+  const totalIncome = financials.filter((f) => f.type === 'Income').reduce((a, b) => a + b.amount, 0);
+  const totalExpense = financials.filter((f) => f.type === 'Expense').reduce((a, b) => a + b.amount, 0);
   const netProfit = totalIncome - totalExpense;
 
   const handleCreateEntry = (e: React.FormEvent) => {
     e.preventDefault();
-    const created: FinancialEntry = {
-      id: `FIN-${Math.floor(100 + Math.random() * 900)}`,
+    addFinancialEntry({
       type: newEntry.type,
       category: newEntry.category,
       description: newEntry.description,
@@ -39,10 +37,8 @@ export function FinanceModule() {
       paymentMode: newEntry.paymentMode,
       branch: newEntry.branch,
       gstAmount: Number(newEntry.gstAmount),
-    };
-    setFinancialsList((prev) => [created, ...prev]);
+    });
     setIsAddModalOpen(false);
-    addAuditLog('FINANCE_ADD', `Logged ${newEntry.type} entry of ₹${newEntry.amount} for ${newEntry.description}`);
     setNotification(`Financial ${newEntry.type} of ₹${newEntry.amount.toLocaleString()} recorded successfully!`);
     setTimeout(() => setNotification(''), 3000);
   };
@@ -104,7 +100,7 @@ export function FinanceModule() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
-            {financialsList.map((f) => (
+            {financials.map((f) => (
               <tr key={f.id}>
                 <td className="p-3.5 font-bold text-white">{f.category}</td>
                 <td className="p-3.5 text-slate-300">{f.description}</td>

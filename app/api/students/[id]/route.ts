@@ -17,7 +17,18 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Academic Coordinator'],
+    allowedRoles: [
+      'Super Admin',
+      'Director',
+      'Principal',
+      'Academic Coordinator',
+      'Teacher',
+      'Student',
+      'Parent',
+      'Accountant',
+      'HR',
+      'Receptionist',
+    ],
   });
   if (securityError) return securityError;
 

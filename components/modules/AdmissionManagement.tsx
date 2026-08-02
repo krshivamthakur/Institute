@@ -5,7 +5,7 @@ import { useIMS } from '@/context/IMSContext';
 import { UserPlus, Search, CheckCircle, Clock, XCircle, Plus, FileCheck } from 'lucide-react';
 
 export function AdmissionManagement() {
-  const { leads, addLead } = useIMS();
+  const { leads, approveAdmission } = useIMS();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('All');
 
@@ -90,9 +90,18 @@ export function AdmissionManagement() {
                   </span>
                 </td>
                 <td className="p-3.5 text-right">
-                  <button className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition">
-                    Approve Admission
-                  </button>
+                  {lead.status === 'Approved' ? (
+                    <span className="px-3 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold text-[11px]">
+                      Admitted ✓
+                    </span>
+                  ) : (
+                    <button
+                      onClick={() => approveAdmission(lead.id)}
+                      className="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition"
+                    >
+                      Approve Admission
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

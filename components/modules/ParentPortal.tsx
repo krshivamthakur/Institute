@@ -5,8 +5,14 @@ import { useIMS } from '@/context/IMSContext';
 import { UserCheck, CheckCircle2, CreditCard, Award, BookOpen, MessageSquare, Send, Calendar, FileText, ChevronRight, CheckCircle } from 'lucide-react';
 
 export function ParentPortal() {
-  const { students, setActiveModule } = useIMS();
-  const child = students[0]; // Aarav Sharma
+  const { authUser, students, setActiveModule } = useIMS();
+  const child =
+    students.find(
+      (s) =>
+        s.id === authUser?.childStudentId ||
+        s.rollNo === authUser?.childStudentId ||
+        (authUser?.name && s.parentName.toLowerCase().includes(authUser.name.toLowerCase().replace('(parent)', '').trim()))
+    ) || students[0];
 
   const [messageSent, setMessageSent] = useState(false);
   const [msgInput, setMsgInput] = useState('');
@@ -88,17 +94,19 @@ export function ParentPortal() {
 
         <div
           onClick={() => setActiveModule('fees')}
-          className="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-blue-500/50 transition cursor-pointer space-y-2 group"
+          className="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-emerald-500/50 transition cursor-pointer space-y-2 group relative overflow-hidden"
         >
           <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Fee Dues & Statements</span>
-            <CreditCard className="h-4 w-4 text-blue-400" />
+            <span>Child Fee Dues & Payment</span>
+            <CreditCard className="h-4 w-4 text-emerald-400" />
           </div>
           <p className="text-3xl font-black text-white">₹{child.feeDue.toLocaleString()}</p>
           <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1">
-            <span className="text-emerald-400 font-bold">Status: {child.feeStatus}</span>
-            <span className="text-blue-400 font-bold group-hover:underline flex items-center gap-0.5">
-              Receipts <ChevronRight className="h-3 w-3" />
+            <span className={child.feeDue > 0 ? 'text-amber-400 font-bold' : 'text-emerald-400 font-bold'}>
+              Status: {child.feeStatus} {child.feeDue > 0 ? '(Pending)' : '(Cleared)'}
+            </span>
+            <span className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[10px] transition flex items-center gap-1">
+              <CreditCard className="h-3 w-3" /> Pay Fee Online
             </span>
           </div>
         </div>

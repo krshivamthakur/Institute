@@ -5,7 +5,7 @@ import { useIMS } from '@/context/IMSContext';
 import { Home, Users, UserPlus, AlertCircle, Plus, CheckCircle2, X, Wrench } from 'lucide-react';
 
 export function HostelManagement() {
-  const { hostelRooms, students, addAuditLog } = useIMS();
+  const { hostelRooms, allocateHostelBed, students, addAuditLog } = useIMS();
 
   const [complaints, setComplaints] = useState([
     { id: 'CMP-101', room: 'Block A - 101', issue: 'AC cooling issue in Room 101', status: 'In Progress' },
@@ -53,8 +53,8 @@ export function HostelManagement() {
 
   const handleAllocateBed = (e: React.FormEvent) => {
     e.preventDefault();
+    allocateHostelBed(allocation.block, allocation.roomNo, allocation.bedNo, allocation.studentName);
     setIsAllocateModalOpen(false);
-    addAuditLog('HOSTEL_ALLOCATION', `Allocated Bed ${allocation.bedNo} in ${allocation.block} ${allocation.roomNo} to ${allocation.studentName}`);
     setNotification(`Bed ${allocation.bedNo} allocated to ${allocation.studentName}!`);
     setTimeout(() => setNotification(''), 3000);
   };

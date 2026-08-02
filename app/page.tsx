@@ -5,7 +5,6 @@ import { IMSProvider, useIMS } from '@/context/IMSContext';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { AiBotDrawer } from '@/components/layout/AiBotDrawer';
-import { MobilePreviewModal } from '@/components/layout/MobilePreviewModal';
 import { LoginScreen } from '@/components/auth/LoginScreen';
 
 // Module Components
@@ -153,7 +152,6 @@ function AppLayout() {
         <MainContent />
       </div>
       <AiBotDrawer />
-      <MobilePreviewModal />
       <MobileBottomNav />
     </div>
   );

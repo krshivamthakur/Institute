@@ -6,8 +6,7 @@ import { InventoryItem } from '@/lib/ims-data';
 import { Package, Plus, CheckCircle, AlertTriangle, CheckCircle2, X } from 'lucide-react';
 
 export function InventoryManagement() {
-  const { inventoryItems, addAuditLog } = useIMS();
-  const [itemsList, setItemsList] = useState<InventoryItem[]>(inventoryItems);
+  const { inventoryItems, addInventoryItem, updateInventoryItem, addAuditLog } = useIMS();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [notification, setNotification] = useState('');
 
@@ -25,8 +24,7 @@ export function InventoryManagement() {
 
   const handleCreateAsset = (e: React.FormEvent) => {
     e.preventDefault();
-    const created: InventoryItem = {
-      id: `INV-${Math.floor(100 + Math.random() * 900)}`,
+    addInventoryItem({
       name: newItem.name,
       category: newItem.category,
       quantity: Number(newItem.quantity),
@@ -35,18 +33,14 @@ export function InventoryManagement() {
       assetCode: newItem.assetCode,
       condition: newItem.condition,
       lastInspected: newItem.lastInspected,
-    };
-    setItemsList((prev) => [created, ...prev]);
+    });
     setIsAddModalOpen(false);
-    addAuditLog('INVENTORY_ADD', `Added asset ${newItem.name} (${newItem.assetCode})`);
     setNotification(`Asset "${newItem.name}" added to inventory catalog!`);
     setTimeout(() => setNotification(''), 3000);
   };
 
   const handleUpdateStock = (id: string, delta: number) => {
-    setItemsList((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, quantity: Math.max(0, i.quantity + delta) } : i))
-    );
+    updateInventoryItem(id, delta);
     setNotification('Asset stock quantity updated!');
     setTimeout(() => setNotification(''), 2500);
   };
@@ -80,7 +74,7 @@ export function InventoryManagement() {
 
       {/* Assets Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {itemsList.map((item) => (
+        {inventoryItems.map((item) => (
           <div key={item.id} className="p-5 rounded-2xl glass-panel border border-slate-800 space-y-3">
             <div className="flex justify-between items-start">
               <span className="font-bold text-white text-sm">{item.name}</span>

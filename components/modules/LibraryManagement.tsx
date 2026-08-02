@@ -2,14 +2,29 @@
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
-import { Library, Search, QrCode, BookOpen, Plus, CheckCircle, Lock, User, Clock, Download } from 'lucide-react';
+import { Book } from '@/lib/ims-data';
+import { Library, Search, QrCode, BookOpen, Plus, CheckCircle, Lock, User, Clock, Download, X, CheckCircle2 } from 'lucide-react';
 
 export function LibraryManagement() {
-  const { currentRole, books, students } = useIMS();
+  const { currentRole, books, addBook, issueBook, students } = useIMS();
   const isStudentRole = currentRole === 'Student';
   const myStudent = students[0];
 
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [notification, setNotification] = useState('');
+
+  // Add Book form state
+  const [newBook, setNewBook] = useState({
+    title: 'Clean Architecture in TypeScript',
+    author: 'Robert C. Martin',
+    isbn: '978-0134494166',
+    category: 'Computer Science',
+    rackLocation: 'Rack B-04',
+    copiesTotal: 10,
+    copiesAvailable: 10,
+    status: 'Available' as const,
+  });
 
   const filteredBooks = books.filter(
     (b) =>
@@ -36,6 +51,34 @@ export function LibraryManagement() {
     },
   ];
 
+  const handleCreateBook = (e: React.FormEvent) => {
+    e.preventDefault();
+    addBook({
+      title: newBook.title,
+      author: newBook.author,
+      isbn: newBook.isbn,
+      category: newBook.category,
+      rackLocation: newBook.rackLocation,
+      copiesTotal: Number(newBook.copiesTotal),
+      copiesAvailable: Number(newBook.copiesAvailable),
+      status: newBook.status,
+      isDigital: false,
+    });
+    setIsAddModalOpen(false);
+    setNotification(`Book "${newBook.title}" added to catalog!`);
+    setTimeout(() => setNotification(''), 3000);
+  };
+
+  const handleIssueBook = (b: Book) => {
+    if (b.copiesAvailable <= 0) {
+      alert('No copies available for issue.');
+      return;
+    }
+    issueBook(b.id, myStudent?.name || 'Aarav Sharma');
+    setNotification(`Book "${b.title}" issued to student!`);
+    setTimeout(() => setNotification(''), 3000);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -61,11 +104,20 @@ export function LibraryManagement() {
         </div>
 
         {!isStudentRole && (
-          <button className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg shadow-blue-500/20">
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg shadow-blue-500/20"
+          >
             <Plus className="h-4 w-4" /> Add New Book Title
           </button>
         )}
       </div>
+
+      {notification && (
+        <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2">
+          <CheckCircle2 className="h-4 w-4 text-emerald-400" /> {notification}
+        </div>
+      )}
 
       {/* Student View: My Borrowed Books Card */}
       {isStudentRole && (
@@ -132,7 +184,10 @@ export function LibraryManagement() {
             </div>
 
             {!isStudentRole ? (
-              <button className="w-full py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white font-bold text-xs transition">
+              <button
+                onClick={() => handleIssueBook(b)}
+                className="w-full py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white font-bold text-xs transition"
+              >
                 Issue Book to Student
               </button>
             ) : (
@@ -143,6 +198,110 @@ export function LibraryManagement() {
           </div>
         ))}
       </div>
+
+      {/* Add Book Modal */}
+      {isAddModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <h3 className="font-bold text-sm text-white">Add New Book to Library Catalog</h3>
+              <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-white">
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateBook} className="space-y-3 text-xs">
+              <div>
+                <label className="block text-slate-400 font-semibold mb-1">Book Title</label>
+                <input
+                  type="text"
+                  required
+                  value={newBook.title}
+                  onChange={(e) => setNewBook({ ...newBook, title: e.target.value })}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-400 font-semibold mb-1">Author Name</label>
+                <input
+                  type="text"
+                  required
+                  value={newBook.author}
+                  onChange={(e) => setNewBook({ ...newBook, author: e.target.value })}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">ISBN Code</label>
+                  <input
+                    type="text"
+                    required
+                    value={newBook.isbn}
+                    onChange={(e) => setNewBook({ ...newBook, isbn: e.target.value })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Rack Location</label>
+                  <input
+                    type="text"
+                    required
+                    value={newBook.rackLocation}
+                    onChange={(e) => setNewBook({ ...newBook, rackLocation: e.target.value })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Category</label>
+                  <input
+                    type="text"
+                    required
+                    value={newBook.category}
+                    onChange={(e) => setNewBook({ ...newBook, category: e.target.value })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Total Copies</label>
+                  <input
+                    type="number"
+                    required
+                    min={1}
+                    value={newBook.copiesTotal}
+                    onChange={(e) => {
+                      const num = Number(e.target.value);
+                      setNewBook({ ...newBook, copiesTotal: num, copiesAvailable: num });
+                    }}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-3 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsAddModalOpen(false)}
+                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-600/30"
+                >
+                  Add Book to Catalog
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

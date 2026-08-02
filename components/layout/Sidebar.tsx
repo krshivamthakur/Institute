@@ -88,7 +88,6 @@ const MASTER_MODULE_ITEMS: ModuleNavItem[] = [
   { id: 'notifications', label: 'Notifications', icon: BellRing, category: 'AI & System' },
   { id: 'rbac', label: 'Role Access (RBAC)', icon: ShieldAlert, category: 'AI & System' },
   { id: 'ai-features', label: 'AI Features Suite', icon: Sparkles, category: 'AI & System', badge: 'AI' },
-  { id: 'mobile-preview', label: 'Mobile App View', icon: Smartphone, category: 'AI & System' },
   { id: 'security', label: 'Security & Logs', icon: Lock, category: 'AI & System' },
   { id: 'integrations', label: 'API & Integrations', icon: Link, category: 'AI & System' },
   { id: 'multi-branch', label: 'Multi-Branch Admin', icon: GitFork, category: 'AI & System' },

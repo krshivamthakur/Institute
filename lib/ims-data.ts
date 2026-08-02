@@ -237,6 +237,8 @@ export interface AuthUser {
   avatar?: string;
   empIdOrRollNo?: string;
   branch: string;
+  password?: string;
+  childStudentId?: string;
 }
 
 export interface SystemSettings {
@@ -328,7 +330,7 @@ export const PRESET_USERS: AuthUser[] = [
   { id: 'AC-101', name: 'Dr. Anita Roy', email: 'academic@auraims.edu', role: 'Academic Coordinator', empIdOrRollNo: 'AC-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150' },
   { id: 'TCH-201', name: 'Dr. Meenakshi Sundaram', email: 'meenakshi@auraims.edu', role: 'Teacher', empIdOrRollNo: 'EMP-201', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150' },
   { id: 'STU-1001', name: 'Aarav Sharma', email: 'aarav.sharma@institute.edu', role: 'Student', empIdOrRollNo: '2026-CS-001', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150' },
-  { id: 'PAR-1001', name: 'Rajesh Sharma (Parent)', email: 'parent.sharma@gmail.com', role: 'Parent', empIdOrRollNo: 'PAR-STU-1001', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150' },
+  { id: 'PAR-1001', name: 'Rajesh Sharma (Parent)', email: 'parent.sharma@gmail.com', role: 'Parent', empIdOrRollNo: 'PAR-STU-1001', branch: 'Main Campus - New Delhi', childStudentId: 'STU-1001', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150' },
   { id: 'ACC-101', name: 'Ramesh Patel', email: 'accountant@auraims.edu', role: 'Accountant', empIdOrRollNo: 'ACC-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=150' },
   { id: 'HR-101', name: 'Kavita Singhania', email: 'hr@auraims.edu', role: 'HR', empIdOrRollNo: 'HR-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=150' },
   { id: 'RCP-101', name: 'Priya Sharma', email: 'reception@auraims.edu', role: 'Receptionist', empIdOrRollNo: 'RCP-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=150' },

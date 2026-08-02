@@ -6,8 +6,7 @@ import { TransportRoute } from '@/lib/ims-data';
 import { Bus, MapPin, PhoneCall, Plus, Radio, Users, CheckCircle2, X } from 'lucide-react';
 
 export function TransportManagement() {
-  const { transportRoutes, addAuditLog } = useIMS();
-  const [routesList, setRoutesList] = useState<TransportRoute[]>(transportRoutes);
+  const { transportRoutes, addTransportRoute, addAuditLog } = useIMS();
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [notification, setNotification] = useState('');
 
@@ -24,8 +23,7 @@ export function TransportManagement() {
 
   const handleCreateRoute = (e: React.FormEvent) => {
     e.preventDefault();
-    const created: TransportRoute = {
-      id: `TR-${Math.floor(100 + Math.random() * 900)}`,
+    addTransportRoute({
       routeName: newRoute.routeName,
       busNumber: newRoute.busNumber,
       driverName: newRoute.driverName,
@@ -35,10 +33,8 @@ export function TransportManagement() {
       stops: newRoute.stops,
       currentLocationLatLong: { lat: 28.6139, lng: 77.209 },
       status: 'In Transit',
-    };
-    setRoutesList((prev) => [created, ...prev]);
+    });
     setIsAddModalOpen(false);
-    addAuditLog('TRANSPORT_ADD', `Added bus route ${newRoute.routeName} (${newRoute.busNumber})`);
     setNotification(`New bus route "${newRoute.routeName}" added to GPS fleet!`);
     setTimeout(() => setNotification(''), 3000);
   };
@@ -72,7 +68,7 @@ export function TransportManagement() {
 
       {/* Routes Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {routesList.map((r) => (
+        {transportRoutes.map((r) => (
           <div key={r.id} className="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-yellow-500/40 transition space-y-3">
             <div className="flex justify-between items-center">
               <span className="px-2.5 py-1 rounded-lg bg-yellow-500/10 text-yellow-300 font-mono font-bold text-xs flex items-center gap-1">

@@ -23,9 +23,17 @@ import {
 } from 'lucide-react';
 
 export function AttendanceManagement() {
-  const { currentRole, students, attendance, markAttendance } = useIMS();
+  const { authUser, currentRole, students, attendance, markAttendance } = useIMS();
   const isPersonalScope = currentRole === 'Student' || currentRole === 'Parent';
-  const myStudent = students[0]; // Logged-in student / child context
+
+  const myStudent = currentRole === 'Parent'
+    ? (students.find(
+        (s) =>
+          s.id === authUser?.childStudentId ||
+          s.rollNo === authUser?.childStudentId ||
+          (authUser?.name && s.parentName.toLowerCase().includes(authUser.name.toLowerCase().replace('(parent)', '').trim()))
+      ) || students[0])
+    : (students.find((s) => s.id === authUser?.empIdOrRollNo || s.rollNo === authUser?.empIdOrRollNo) || students[0]);
 
   // Admin View state
   const [selectedBatch, setSelectedBatch] = useState('B.Tech CS - Sem 4');

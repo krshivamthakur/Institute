@@ -21,14 +21,17 @@ import {
 } from 'lucide-react';
 
 export function LMSModule() {
-  const { currentRole, lmsMaterials, addAuditLog } = useIMS();
+  const { currentRole, lmsMaterials, addLmsMaterial, addAuditLog } = useIMS();
 
   // Roles allowed to upload & edit courseware
   const canUpload = ['Teacher', 'Super Admin', 'Director', 'Principal', 'Branch Head', 'Academic Coordinator'].includes(currentRole);
 
   const [activeTab, setActiveTab] = useState<'Video' | 'PDF Notes' | 'Assignment' | 'Quiz'>('Video');
-  const [materialsList, setMaterialsList] = useState<LMSCourseMaterial[]>(lmsMaterials);
-  const [selectedMaterial, setSelectedMaterial] = useState<LMSCourseMaterial>(lmsMaterials[0] || {
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string>(lmsMaterials[0]?.id || '');
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadSuccessMsg, setUploadSuccessMsg] = useState('');
+
+  const selectedMaterial = lmsMaterials.find((m) => m.id === selectedMaterialId) || lmsMaterials[0] || {
     id: 'LMS-01',
     subject: 'Data Structures & Algorithms',
     classBatch: 'B.Tech CS - Sem 4',
@@ -38,10 +41,7 @@ export function LMSModule() {
     date: '2026-08-01',
     url: 'https://www.w3schools.com/html/mov_bbb.mp4',
     durationOrPages: '45 Mins',
-  });
-
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [uploadSuccessMsg, setUploadSuccessMsg] = useState('');
+  };
 
   // Upload Form State
   const [newMaterial, setNewMaterial] = useState({
@@ -54,14 +54,13 @@ export function LMSModule() {
     durationOrPages: '30 Mins',
   });
 
-  const filtered = materialsList.filter((m) => m.type === activeTab);
+  const filtered = lmsMaterials.filter((m) => m.type === activeTab);
 
   const handleUploadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!canUpload) return;
 
-    const item: LMSCourseMaterial = {
-      id: `LMS-${Date.now().toString().slice(-4)}`,
+    addLmsMaterial({
       title: newMaterial.title,
       subject: newMaterial.subject,
       classBatch: newMaterial.classBatch,
@@ -70,10 +69,8 @@ export function LMSModule() {
       date: new Date().toISOString().split('T')[0],
       url: newMaterial.url,
       durationOrPages: newMaterial.durationOrPages,
-    };
+    });
 
-    setMaterialsList((prev) => [item, ...prev]);
-    setSelectedMaterial(item);
     setIsUploadModalOpen(false);
     setNewMaterial({
       title: '',
@@ -158,9 +155,9 @@ export function LMSModule() {
             filtered.map((mat) => (
               <div
                 key={mat.id}
-                onClick={() => setSelectedMaterial(mat)}
+                onClick={() => setSelectedMaterialId(mat.id)}
                 className={`p-4 rounded-2xl border text-xs cursor-pointer transition ${
-                  selectedMaterial.id === mat.id ? 'bg-purple-950/60 border-purple-500 shadow-lg' : 'glass-panel border-slate-800 hover:border-slate-700'
+                  selectedMaterial?.id === mat.id ? 'bg-purple-950/60 border-purple-500 shadow-lg' : 'glass-panel border-slate-800 hover:border-slate-700'
                 }`}
               >
                 <h3 className="font-bold text-white text-sm">{mat.title}</h3>

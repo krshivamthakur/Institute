@@ -213,7 +213,7 @@ export function CertificateManagement() {
             </div>
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end no-print">
             <button
               onClick={() => window.print()}
               className="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-purple-600/30 transition"

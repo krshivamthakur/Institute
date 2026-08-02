@@ -22,12 +22,23 @@ import {
 import confetti from 'canvas-confetti';
 
 export function FeeManagement() {
-  const { currentRole, students, feeTransactions, addFeeTransaction } = useIMS();
+  const { authUser, currentRole, students, feeTransactions, addFeeTransaction } = useIMS();
   const isStudentRole = currentRole === 'Student';
-  const myStudent = students[0]; // Logged-in student context
+  const isParentRole = currentRole === 'Parent';
+  const isPersonalScope = isStudentRole || isParentRole;
+
+  const targetStudent = isParentRole
+    ? (students.find(
+        (s) =>
+          s.id === authUser?.childStudentId ||
+          s.rollNo === authUser?.childStudentId ||
+          (authUser?.name && s.parentName.toLowerCase().includes(authUser.name.toLowerCase().replace('(parent)', '').trim()))
+      ) || students[0])
+    : (students.find((s) => s.id === 'STU-1001') || students[0]);
 
   const [selectedStudentId, setSelectedStudentId] = useState(students[0]?.id || '');
-  const [paymentAmount, setPaymentAmount] = useState('25000');
+  const [paymentAmount, setPaymentAmount] = useState(targetStudent?.feeDue ? String(targetStudent.feeDue) : '25000');
+  const [paymentFeeType, setPaymentFeeType] = useState<'Tuition Fee' | 'Exam Fee' | 'Hostel Fee' | 'Transport Fee' | 'Lab Fee'>('Tuition Fee');
   const [paymentMode, setPaymentMode] = useState<'Online (Razorpay)' | 'UPI (PhonePe)' | 'Bank Transfer'>('Online (Razorpay)');
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [activeReceipt, setActiveReceipt] = useState<FeeTransaction | null>(null);
@@ -38,29 +49,33 @@ export function FeeManagement() {
     e.preventDefault();
     const amount = Number(paymentAmount);
     const txnId = `pay_${Math.random().toString(36).substring(2, 11)}`;
+    const currentStudentObj = isPersonalScope ? targetStudent : selectedStudent;
 
-    addFeeTransaction({
-      studentId: isStudentRole ? (myStudent?.id || 'STU-1001') : selectedStudent.id,
-      studentName: isStudentRole ? (myStudent?.name || 'Aarav Sharma') : selectedStudent.name,
-      rollNo: isStudentRole ? (myStudent?.rollNo || '2026-CS-001') : selectedStudent.rollNo,
-      classBatch: isStudentRole ? (myStudent?.classBatch || 'B.Tech CS - Sem 4') : selectedStudent.classBatch,
+    const newTx: FeeTransaction = {
+      id: `TX-${Date.now().toString().slice(-4)}`,
+      studentId: currentStudentObj.id,
+      studentName: currentStudentObj.name,
+      rollNo: currentStudentObj.rollNo,
+      classBatch: currentStudentObj.classBatch,
       amount,
-      feeType: 'Tuition Fee',
+      feeType: paymentFeeType,
       paymentMode,
       transactionId: txnId,
       date: new Date().toISOString().split('T')[0],
       status: 'Completed',
-    });
+    };
 
+    addFeeTransaction(newTx);
     confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
     setIsCheckoutOpen(false);
+    setActiveReceipt(newTx);
   };
 
   // -------------------------------------------------------------
-  // 1. STUDENT PERSONAL FEE VIEW (Restricted to Own Record)
+  // 1. STUDENT & PARENT PERSONAL FEE PORTAL
   // -------------------------------------------------------------
-  if (isStudentRole) {
-    const student = myStudent || students[0];
+  if (isPersonalScope) {
+    const student = targetStudent;
     const myTransactions = feeTransactions.filter(
       (tx) => tx.studentId === student.id || tx.rollNo === student.rollNo || tx.studentName === student.name
     );
@@ -75,23 +90,29 @@ export function FeeManagement() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-                  <User className="h-3.5 w-3.5 text-emerald-400" /> Student Fee & Receipt Portal
+                  <User className="h-3.5 w-3.5 text-emerald-400" />
+                  {isParentRole ? 'Parent Child Fee & Payment Portal' : 'Student Fee & Receipt Portal'}
                 </span>
                 <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1">
-                  <Lock className="h-3 w-3" /> Scoped to Your Payment Records Only
+                  <Lock className="h-3 w-3" /> Scoped View: {student.name} ({student.rollNo})
                 </span>
               </div>
               <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-                My Fee Statement & Payment Receipts
+                {isParentRole ? `Fee Statement for ${student.name}` : 'My Fee Statement & Payment Receipts'}
               </h2>
               <p className="text-xs text-slate-300 mt-1 max-w-xl">
-                View your tuition fee statement, track payment receipts, pay outstanding semester dues online, and download official fee receipts.
+                {isParentRole
+                  ? `Review your child ${student.name}'s tuition fee statement, track receipt history, pay pending dues online, and download verified payment receipts.`
+                  : 'View your tuition fee statement, track payment receipts, pay outstanding semester dues online, and download official fee receipts.'}
               </p>
             </div>
 
             {student.feeDue > 0 ? (
               <button
-                onClick={() => setIsCheckoutOpen(true)}
+                onClick={() => {
+                  setPaymentAmount(String(student.feeDue));
+                  setIsCheckoutOpen(true);
+                }}
                 className="px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs transition shadow-xl shadow-emerald-600/30 flex items-center gap-2"
               >
                 <CreditCard className="h-4 w-4" /> Pay Pending Dues (₹{student.feeDue.toLocaleString()})
@@ -195,8 +216,8 @@ export function FeeManagement() {
         {/* Printable Receipt Modal */}
         {activeReceipt && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl printable-area">
+              <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
                 <h3 className="font-bold text-sm text-white">Official Payment Receipt</h3>
                 <button onClick={() => setActiveReceipt(null)} className="text-slate-400 hover:text-white">
                   <X className="h-4 w-4" />
@@ -221,7 +242,7 @@ export function FeeManagement() {
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex justify-end no-print">
                 <button
                   onClick={() => window.print()}
                   className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5"
@@ -320,23 +341,50 @@ export function FeeManagement() {
             </div>
 
             <form onSubmit={handleProcessPayment} className="space-y-4 text-xs">
+              {!isPersonalScope ? (
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Select Student</label>
+                  <select
+                    value={selectedStudentId}
+                    onChange={(e) => {
+                      setSelectedStudentId(e.target.value);
+                      const found = students.find((s) => s.id === e.target.value);
+                      if (found) setPaymentAmount(String(found.feeDue || 25000));
+                    }}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
+                  >
+                    {students.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} ({s.rollNo}) - Due: ₹{s.feeDue.toLocaleString()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <div className="p-3.5 rounded-xl bg-slate-800 border border-slate-700 text-xs">
+                  <span className="text-slate-400 font-semibold block">Paying Fee For:</span>
+                  <p className="font-extrabold text-white text-sm mt-0.5">{targetStudent.name} ({targetStudent.rollNo})</p>
+                  <p className="text-[11px] text-emerald-400 font-mono mt-0.5">Outstanding Balance: ₹{targetStudent.feeDue.toLocaleString()}</p>
+                </div>
+              )}
+
               <div>
-                <label className="block text-slate-400 font-semibold mb-1">Select Student</label>
+                <label className="block text-slate-400 font-semibold mb-1">Fee Head / Type</label>
                 <select
-                  value={selectedStudentId}
-                  onChange={(e) => setSelectedStudentId(e.target.value)}
+                  value={paymentFeeType}
+                  onChange={(e) => setPaymentFeeType(e.target.value as any)}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
                 >
-                  {students.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.name} ({s.rollNo}) - Due: ₹{s.feeDue.toLocaleString()}
-                    </option>
-                  ))}
+                  <option value="Tuition Fee">Tuition Fee</option>
+                  <option value="Exam Fee">Exam Fee</option>
+                  <option value="Hostel Fee">Hostel Fee</option>
+                  <option value="Transport Fee">Transport Fee</option>
+                  <option value="Lab Fee">Lab Fee</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-slate-400 font-semibold mb-1">Amount to Collect (₹)</label>
+                <label className="block text-slate-400 font-semibold mb-1">Amount to Pay (₹)</label>
                 <input
                   type="number"
                   required
@@ -353,7 +401,7 @@ export function FeeManagement() {
                   onChange={(e) => setPaymentMode(e.target.value as any)}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
                 >
-                  <option value="Online (Razorpay)">Online Gateway (Razorpay/UPI)</option>
+                  <option value="Online (Razorpay)">Online Gateway (Razorpay/Cards)</option>
                   <option value="UPI (PhonePe)">UPI (PhonePe / GPay)</option>
                   <option value="Bank Transfer">Bank Transfer / NEFT</option>
                 </select>
@@ -382,8 +430,8 @@ export function FeeManagement() {
       {/* Receipt Modal for Admins */}
       {activeReceipt && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-sm w-full shadow-2xl printable-area">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4 no-print">
               <h3 className="font-bold text-sm text-white">Official Fee Receipt</h3>
               <button onClick={() => setActiveReceipt(null)} className="text-slate-400 hover:text-white">
                 <X className="h-4 w-4" />
@@ -408,7 +456,7 @@ export function FeeManagement() {
               </div>
             </div>
 
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex justify-end no-print">
               <button
                 onClick={() => window.print()}
                 className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1.5"

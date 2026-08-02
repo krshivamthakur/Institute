@@ -216,15 +216,15 @@ export function StudentPortal() {
     <div className="space-y-6 select-none animate-in fade-in duration-300">
       {/* Admin / Switcher Banner Notice */}
       {canSwitchStudent && (
-        <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 flex items-center justify-between gap-4 text-xs">
-          <div className="flex items-center gap-2 text-purple-300 font-semibold">
+        <div className="p-3.5 rounded-2xl bg-purple-950/40 border border-purple-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 text-purple-300 font-semibold min-w-0">
             <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
-            <span>Multi-Account Switcher: Select any student to preview their personal portal:</span>
+            <span className="leading-snug">Multi-Account Switcher: Select any student to preview their personal portal:</span>
           </div>
           <select
             value={selectedStudentId || activeStudent.id}
             onChange={(e) => setSelectedStudentId(e.target.value)}
-            className="bg-slate-900 border border-purple-500/50 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-purple-400 font-bold"
+            className="w-full sm:w-auto bg-slate-900 border border-purple-500/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-purple-400 font-bold truncate"
           >
             {students.map((s) => (
               <option key={s.id} value={s.id}>

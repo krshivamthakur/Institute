@@ -28,30 +28,30 @@ export function ParentPortal() {
   return (
     <div className="space-y-6">
       {/* Banner */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-blue-500/30 glass-panel-glow flex items-center justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <img src={child.avatar} alt={child.name} className="h-16 w-16 rounded-full object-cover border-2 border-blue-400 shadow-xl" />
-          <div>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30">
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-blue-900/60 to-indigo-900/60 border border-blue-500/30 glass-panel-glow flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5 relative overflow-hidden shadow-2xl">
+        <div className="flex items-center gap-4 min-w-0">
+          <img src={child.avatar} alt={child.name} className="h-16 w-16 rounded-2xl object-cover border-2 border-blue-400 shadow-xl shrink-0" />
+          <div className="space-y-1 min-w-0">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-blue-500/20 text-blue-300 border border-blue-500/30 inline-block">
               Parent Scoped Dashboard
             </span>
-            <h2 className="text-xl font-extrabold text-white mt-1">Child Academic Overview: {child.name}</h2>
-            <p className="text-xs text-slate-300">Roll No: {child.rollNo} • Batch: {child.classBatch} • Section A</p>
+            <h2 className="text-lg sm:text-xl font-extrabold text-white leading-tight tracking-tight">Child Academic Overview: {child.name}</h2>
+            <p className="text-xs text-slate-300 font-medium truncate">Roll No: {child.rollNo} • Batch: {child.classBatch} • Section A</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full lg:w-auto">
           <button
             onClick={() => setActiveModule('attendance')}
-            className="px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white font-bold text-xs border border-emerald-500/30 transition flex items-center gap-1.5"
+            className="flex-1 lg:flex-none px-4 py-2.5 rounded-xl bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white font-bold text-xs border border-emerald-500/30 transition flex items-center justify-center gap-1.5"
           >
-            <Calendar className="h-4 w-4" /> View Attendance
+            <Calendar className="h-4 w-4 text-emerald-400" /> View Attendance
           </button>
           <button
-            onClick={() => setActiveModule('exam')}
-            className="px-4 py-2.5 rounded-xl bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white font-bold text-xs border border-amber-500/30 transition flex items-center gap-1.5"
+            onClick={() => setActiveModule('exams')}
+            className="flex-1 lg:flex-none px-4 py-2.5 rounded-xl bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white font-bold text-xs border border-amber-500/30 transition flex items-center justify-center gap-1.5"
           >
-            <Award className="h-4 w-4" /> View Marksheet & Exam
+            <Award className="h-4 w-4 text-amber-400" /> View Marksheet & Exam
           </button>
         </div>
       </div>

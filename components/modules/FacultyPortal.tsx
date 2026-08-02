@@ -202,15 +202,15 @@ export function FacultyPortal() {
     <div className="space-y-6 select-none animate-in fade-in duration-300">
       {/* Admin / Switcher Banner Notice */}
       {canSwitchTeacher && (
-        <div className="p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 flex items-center justify-between gap-4 text-xs">
-          <div className="flex items-center gap-2 text-indigo-300 font-semibold">
+        <div className="p-3.5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div className="flex items-center gap-2 text-indigo-300 font-semibold min-w-0">
             <Sparkles className="h-4 w-4 text-amber-400 shrink-0" />
-            <span>Admin View Active: Select any faculty member to inspect their portal:</span>
+            <span className="leading-snug">Admin View Active: Select any faculty member to inspect their portal:</span>
           </div>
           <select
             value={selectedTeacherId || activeTeacher.id}
             onChange={(e) => setSelectedTeacherId(e.target.value)}
-            className="bg-slate-900 border border-indigo-500/50 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 font-bold"
+            className="w-full sm:w-auto bg-slate-900 border border-indigo-500/50 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-2 focus:ring-indigo-400 font-bold truncate"
           >
             {teachers.map((t) => (
               <option key={t.id} value={t.id}>

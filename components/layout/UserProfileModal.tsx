@@ -106,31 +106,31 @@ export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto select-none">
-      <div className="max-w-lg w-full max-h-[90vh] flex flex-col glass-panel-glow border border-slate-700/80 rounded-3xl shadow-2xl relative my-auto overflow-hidden animate-in fade-in zoom-in-95">
+    <div className="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] flex items-center justify-center p-2.5 sm:p-4 overflow-y-auto select-none">
+      <div className="w-full max-w-lg max-h-[85vh] sm:max-h-[88vh] flex flex-col glass-panel-glow border border-slate-700/80 rounded-2xl sm:rounded-3xl shadow-2xl relative overflow-hidden animate-in fade-in zoom-in-95 my-auto">
         
         {/* Sticky Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-800 bg-slate-900/90 backdrop-blur-md shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-purple-600/30">
-              <User className="h-5 w-5" />
+        <div className="flex items-center justify-between p-3.5 sm:p-5 border-b border-slate-800 bg-slate-900/95 backdrop-blur-md shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="h-9 w-9 sm:h-10 sm:w-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-lg shadow-purple-600/30 shrink-0">
+              <User className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
-            <div>
-              <h3 className="font-extrabold text-white text-base tracking-tight">Edit Profile Account</h3>
-              <p className="text-[11px] text-slate-400">Update personal details, avatar photo & security</p>
+            <div className="min-w-0">
+              <h3 className="font-extrabold text-white text-sm sm:text-base tracking-tight truncate">Edit Profile Account</h3>
+              <p className="text-[10px] sm:text-[11px] text-slate-400 truncate">Update personal details, avatar photo & security</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition"
+            className="p-1.5 sm:p-2 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white hover:bg-slate-700 transition shrink-0"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </div>
 
         {/* Scrollable Form Body */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-4 text-xs">
+        <div className="p-4 sm:p-6 overflow-y-auto space-y-4 text-xs flex-1">
           {/* Success Alert */}
           {successMsg && (
             <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center gap-2 animate-in slide-in-from-top-2">

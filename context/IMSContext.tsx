@@ -111,7 +111,10 @@ interface IMSContextType {
   approveAdmission: (leadId: string) => void;
   addExam: (exam: Omit<ExamRecord, 'id'>) => void;
   updateExam: (id: string, updatedFields: Partial<ExamRecord>) => void;
+  deleteExam: (id: string) => void;
+  updateExamStudentResult: (examId: string, studentId: string, resultData: { marksObtained: number; grade: string; rank?: number }) => void;
   addLmsMaterial: (material: Omit<LMSCourseMaterial, 'id'>) => void;
+  updateLmsMaterial: (id: string, updatedFields: Partial<LMSCourseMaterial>) => void;
   deleteLmsMaterial: (id: string) => void;
   addBook: (book: Omit<Book, 'id'>) => void;
   issueBook: (bookId: string, studentName?: string) => void;
@@ -120,6 +123,8 @@ interface IMSContextType {
   addTransportRoute: (route: Omit<TransportRoute, 'id'>) => void;
   addInventoryItem: (item: Omit<InventoryItem, 'id'>) => void;
   updateInventoryItem: (id: string, delta: number) => void;
+  editInventoryItem: (id: string, updatedFields: Partial<InventoryItem>) => void;
+  deleteInventoryItem: (id: string) => void;
   addFinancialEntry: (entry: Omit<FinancialEntry, 'id'>) => void;
   addAuditLog: (action: string, details: string) => void;
   markNotificationAsRead: (id: string) => void;
@@ -737,6 +742,45 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     addAuditLog('EXAM_UPDATE', `Updated examination ID ${id}`);
   };
 
+  const deleteExam = (id: string) => {
+    setExams((prev) => prev.filter((e) => e.id !== id));
+    addAuditLog('EXAM_DELETE', `Deleted examination ID ${id}`);
+  };
+
+  const updateExamStudentResult = (
+    examId: string,
+    studentId: string,
+    resultData: { marksObtained: number; grade: string; rank?: number }
+  ) => {
+    setExams((prev) =>
+      prev.map((exam) => {
+        if (exam.id !== examId) return exam;
+        const studentObj = students.find((s) => s.id === studentId || s.rollNo === studentId);
+        const existingIdx = exam.results.findIndex(
+          (r) => r.studentId === studentId || r.rollNo === studentId || (studentObj && r.studentName === studentObj.name)
+        );
+        let updatedResults = [...exam.results];
+        if (existingIdx >= 0) {
+          updatedResults[existingIdx] = {
+            ...updatedResults[existingIdx],
+            ...resultData,
+          };
+        } else if (studentObj) {
+          updatedResults.push({
+            studentId: studentObj.id,
+            studentName: studentObj.name,
+            rollNo: studentObj.rollNo,
+            marksObtained: resultData.marksObtained,
+            grade: resultData.grade,
+            rank: resultData.rank || 1,
+          });
+        }
+        return { ...exam, results: updatedResults };
+      })
+    );
+    addAuditLog('EXAM_MARKS_UPDATE', `Updated student marks for exam ID ${examId}`);
+  };
+
   const addLmsMaterial = (material: Omit<LMSCourseMaterial, 'id'>) => {
     const id = `LMS-${Date.now().toString().slice(-4)}`;
     const created: LMSCourseMaterial = { id, ...material };
@@ -747,6 +791,13 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       method: 'POST',
       body: JSON.stringify(material),
     }, authUser?.role).catch((err) => console.error('LMS add API failed', err));
+  };
+
+  const updateLmsMaterial = (id: string, updatedFields: Partial<LMSCourseMaterial>) => {
+    setLmsMaterials((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, ...updatedFields } : m))
+    );
+    addAuditLog('LMS_UPDATE', `Updated courseware material ID ${id}`);
   };
 
   const deleteLmsMaterial = (id: string) => {
@@ -847,6 +898,18 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       prev.map((i) => (i.id === id ? { ...i, quantity: Math.max(0, i.quantity + delta) } : i))
     );
     addAuditLog('INVENTORY_UPDATE', `Updated stock quantity for asset ${id}`);
+  };
+
+  const editInventoryItem = (id: string, updatedFields: Partial<InventoryItem>) => {
+    setInventoryItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, ...updatedFields } : item))
+    );
+    addAuditLog('INVENTORY_EDIT', `Updated asset details for ID ${id}`);
+  };
+
+  const deleteInventoryItem = (id: string) => {
+    setInventoryItems((prev) => prev.filter((item) => item.id !== id));
+    addAuditLog('INVENTORY_DELETE', `Deleted asset item ID ${id}`);
   };
 
   const addFinancialEntry = (entry: Omit<FinancialEntry, 'id'>) => {
@@ -962,7 +1025,10 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         approveAdmission,
         addExam,
         updateExam,
+        deleteExam,
+        updateExamStudentResult,
         addLmsMaterial,
+        updateLmsMaterial,
         deleteLmsMaterial,
         addBook,
         issueBook,
@@ -971,6 +1037,8 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         addTransportRoute,
         addInventoryItem,
         updateInventoryItem,
+        editInventoryItem,
+        deleteInventoryItem,
         addFinancialEntry,
         addAuditLog,
         markNotificationAsRead,

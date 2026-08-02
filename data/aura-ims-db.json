@@ -753,6 +753,46 @@
   ],
   "certificates": [
     {
+      "id": "CRT-875",
+      "certificateNo": "AURA-CERT-2026-4655",
+      "studentId": "STU-1002",
+      "studentName": "Ananya Verma",
+      "type": "Course Completion",
+      "issueDate": "2026-08-02",
+      "purpose": "Official Administrative Documentation",
+      "issuedBy": "Office of the Registrar"
+    },
+    {
+      "id": "CRT-933",
+      "certificateNo": "AURA-CERT-2026-2007",
+      "studentId": "STU-1002",
+      "studentName": "Ananya Verma",
+      "type": "Character",
+      "issueDate": "2026-08-02",
+      "purpose": "Official Administrative Documentation",
+      "issuedBy": "Office of the Registrar"
+    },
+    {
+      "id": "CRT-816",
+      "certificateNo": "AURA-CERT-2026-7568",
+      "studentId": "STU-1002",
+      "studentName": "Ananya Verma",
+      "type": "Character",
+      "issueDate": "2026-08-02",
+      "purpose": "Official Administrative Documentation",
+      "issuedBy": "Office of the Registrar"
+    },
+    {
+      "id": "CRT-808",
+      "certificateNo": "AURA-CERT-2026-9980",
+      "studentId": "STU-1002",
+      "studentName": "Ananya Verma",
+      "type": "Character",
+      "issueDate": "2026-08-02",
+      "purpose": "Official Administrative Documentation",
+      "issuedBy": "Office of the Registrar"
+    },
+    {
       "id": "CRT-801",
       "certificateNo": "IMS-2026-BON-091",
       "studentId": "STU-1001",

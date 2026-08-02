@@ -89,6 +89,15 @@ export interface FeeTransaction {
   receiptUrl?: string;
 }
 
+export interface ExamResult {
+  studentId: string;
+  studentName: string;
+  rollNo: string;
+  marksObtained: number;
+  grade: string;
+  rank: number;
+}
+
 export interface ExamRecord {
   id: string;
   examName: string;
@@ -98,14 +107,7 @@ export interface ExamRecord {
   subject: string;
   totalMarks: number;
   passingMarks: number;
-  results: {
-    studentId: string;
-    studentName: string;
-    rollNo: string;
-    marksObtained: number;
-    grade: string;
-    rank: number;
-  }[];
+  results: ExamResult[];
   published: boolean;
 }
 

@@ -19,6 +19,7 @@ import {
   NotificationItem,
   AuditLog,
   SystemSettings,
+  AuthUser,
   INITIAL_STUDENTS,
   INITIAL_TEACHERS,
   INITIAL_COURSES,
@@ -37,6 +38,7 @@ import {
   INITIAL_NOTIFICATIONS,
   INITIAL_AUDIT_LOGS,
   INITIAL_SYSTEM_SETTINGS,
+  PRESET_USERS,
 } from '@/lib/ims-data';
 
 export interface DatabaseSchema {
@@ -58,6 +60,7 @@ export interface DatabaseSchema {
   notifications: NotificationItem[];
   auditLogs: AuditLog[];
   settings: SystemSettings;
+  users: AuthUser[];
 }
 
 const DB_DIR = path.join(process.cwd(), 'data');
@@ -83,6 +86,7 @@ function createInitialDb(): DatabaseSchema {
     notifications: INITIAL_NOTIFICATIONS,
     auditLogs: INITIAL_AUDIT_LOGS,
     settings: INITIAL_SYSTEM_SETTINGS,
+    users: PRESET_USERS,
   };
 }
 

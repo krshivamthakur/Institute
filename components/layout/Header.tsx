@@ -42,6 +42,9 @@ export function Header() {
   const unreadCount = notifications.filter((n) => !n.read).length;
   const notifRef = useRef<HTMLDivElement>(null);
 
+  const [dismissedNotifIds, setDismissedNotifIds] = useState<string[]>([]);
+  const [activeToastNotif, setActiveToastNotif] = useState<(typeof notifications)[number] | null>(null);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
@@ -55,6 +58,25 @@ export function Header() {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [isNotifOpen]);
+
+  useEffect(() => {
+    const latestUnread = notifications.find((n) => !n.read && !dismissedNotifIds.includes(n.id));
+    if (latestUnread) {
+      setActiveToastNotif(latestUnread);
+    } else {
+      setActiveToastNotif(null);
+    }
+  }, [notifications, dismissedNotifIds]);
+
+  const handleToastMarkAsRead = (id: string) => {
+    markNotificationAsRead(id);
+    setActiveToastNotif(null);
+  };
+
+  const handleToastDismiss = (id: string) => {
+    setDismissedNotifIds((prev) => [...prev, id]);
+    setActiveToastNotif(null);
+  };
 
   // Logo Icon Resolver
   const renderHeaderLogo = () => {
@@ -264,6 +286,41 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {/* Real-time Floating Notification Popup Alert */}
+      {activeToastNotif && (
+        <div className="fixed top-16 right-5 z-50 max-w-sm w-full bg-slate-900/95 border border-blue-500/60 rounded-2xl p-4 shadow-2xl animate-in fade-in slide-in-from-top-4 flex flex-col gap-2.5 glass-panel-glow backdrop-blur-md">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-extrabold uppercase text-blue-400 flex items-center gap-1.5 bg-blue-500/20 px-2.5 py-0.5 rounded-full border border-blue-500/30">
+              <Bell className="h-3 w-3 text-blue-400 animate-bounce" /> New System Notification
+            </span>
+            <button
+              onClick={() => handleToastDismiss(activeToastNotif.id)}
+              className="text-slate-400 hover:text-white transition p-1"
+              title="Dismiss popup"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div>
+            <h5 className="font-bold text-white text-xs flex items-center gap-1.5">
+              <span>{activeToastNotif.title}</span>
+            </h5>
+            <p className="text-[11px] text-slate-300 mt-1 leading-relaxed line-clamp-2">{activeToastNotif.message}</p>
+          </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-[10px]">
+            <span className="text-slate-500 font-mono">{activeToastNotif.date}</span>
+            <button
+              onClick={() => handleToastMarkAsRead(activeToastNotif.id)}
+              className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-md shadow-emerald-600/30 flex items-center gap-1"
+            >
+              <CheckCircle2 className="h-3 w-3" /> Mark as Read
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

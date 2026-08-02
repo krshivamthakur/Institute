@@ -211,12 +211,13 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         requestJson<FinancialEntry[]>('/api/finance', {}, authUser.role),
         requestJson<NotificationItem[]>('/api/notifications', {}, authUser.role),
         requestJson<SystemSettings>('/api/settings', {}, authUser.role),
+        requestJson<AuthUser[]>('/api/users', {}, authUser.role),
       ]);
 
       const [
         studentsRes, teachersRes, coursesRes, attendanceRes, feeRes, examsRes,
         lmsRes, booksRes, hostelRes, transportRes, leadsRes, certsRes,
-        inventoryRes, financeRes, notifsRes, settingsRes
+        inventoryRes, financeRes, notifsRes, settingsRes, usersRes
       ] = results;
 
       if (studentsRes.status === 'fulfilled' && studentsRes.value?.length) setStudents(studentsRes.value);
@@ -235,6 +236,7 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       if (financeRes.status === 'fulfilled' && financeRes.value?.length) setFinancials(financeRes.value);
       if (notifsRes.status === 'fulfilled' && notifsRes.value?.length) setNotifications(notifsRes.value);
       if (settingsRes.status === 'fulfilled' && settingsRes.value) setSystemSettings(settingsRes.value);
+      if (usersRes.status === 'fulfilled' && usersRes.value?.length) setUsers(usersRes.value);
     } catch (error) {
       console.error('Failed to load remote IMS data', error);
     }
@@ -472,6 +474,17 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     const created: AuthUser = { id, ...newUser };
     setUsers((prev) => [created, ...prev]);
     addAuditLog('USER_ADD', `Created user account for ${newUser.name} (${newUser.role})`);
+
+    void requestJson<AuthUser>('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(created),
+    }, authUser?.role).then((savedUser) => {
+      if (savedUser && savedUser.id) {
+        setUsers((prev) => [savedUser, ...prev.filter((u) => u.id !== created.id)]);
+      }
+    }).catch((error) => {
+      console.error('User create API failed', error);
+    });
   };
 
   const updateUser = (id: string, updatedFields: Partial<AuthUser>) => {
@@ -480,11 +493,25 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       setAuthUser((prev) => (prev ? { ...prev, ...updatedFields } : prev));
     }
     addAuditLog('USER_UPDATE', `Updated user account ID: ${id}`);
+
+    void requestJson('/api/users', {
+      method: 'PUT',
+      body: JSON.stringify({ id, ...updatedFields }),
+    }, authUser?.role).catch((error) => {
+      console.error('User update API failed', error);
+    });
   };
 
   const deleteUser = (id: string) => {
     setUsers((prev) => prev.filter((u) => u.id !== id));
     addAuditLog('USER_DELETE', `Deleted user account ID: ${id}`);
+
+    void requestJson('/api/users', {
+      method: 'DELETE',
+      body: JSON.stringify({ id }),
+    }, authUser?.role).catch((error) => {
+      console.error('User delete API failed', error);
+    });
   };
 
   const updateUserRole = (id: string, newRole: UserRole) => {
@@ -493,6 +520,13 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       setAuthUser((prev) => (prev ? { ...prev, role: newRole } : prev));
     }
     addAuditLog('USER_ROLE_UPDATE', `Updated role for user ${id} to ${newRole}`);
+
+    void requestJson('/api/users', {
+      method: 'PUT',
+      body: JSON.stringify({ id, role: newRole }),
+    }, authUser?.role).catch((error) => {
+      console.error('User role update API failed', error);
+    });
   };
 
   const updateUserPassword = (id: string, newPassword: string) => {
@@ -501,6 +535,13 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       setAuthUser((prev) => (prev ? { ...prev, password: newPassword } : prev));
     }
     addAuditLog('USER_PASSWORD_UPDATE', `Updated password for user account ID: ${id}`);
+
+    void requestJson('/api/users', {
+      method: 'PUT',
+      body: JSON.stringify({ id, password: newPassword }),
+    }, authUser?.role).catch((error) => {
+      console.error('User password update API failed', error);
+    });
   };
 
   const linkParentToChild = (parentId: string, studentId: string) => {
@@ -518,6 +559,13 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       }
     }
     addAuditLog('PARENT_CHILD_LINK', `Linked parent user ${parentId} to child student ${studentId}`);
+
+    void requestJson('/api/users', {
+      method: 'PUT',
+      body: JSON.stringify({ id: parentId, childStudentId: studentId }),
+    }, authUser?.role).catch((error) => {
+      console.error('Link parent-child API failed', error);
+    });
   };
 
   const addStudent = (newStudent: Omit<Student, 'id'>) => {
@@ -613,7 +661,24 @@ export function IMSProvider({ children }: { children: ReactNode }) {
   const markAttendance = (record: Omit<AttendanceRecord, 'id'>) => {
     const id = `ATT-${Date.now().toString().slice(-4)}`;
     const optimisticRecord = { id, ...record };
-    setAttendance((prev) => [optimisticRecord, ...prev]);
+
+    setAttendance((prev) => [
+      optimisticRecord,
+      ...prev.filter((a) => !(a.studentId === record.studentId && a.date === record.date)),
+    ]);
+
+    setStudents((prev) =>
+      prev.map((s) => {
+        if (s.id === record.studentId || s.name === record.studentName) {
+          const delta = record.status === 'Present' ? 0.5 : -1.0;
+          const newPct = Math.min(100, Math.max(40, Number(((s.attendancePct || 85) + delta).toFixed(1))));
+          return { ...s, attendancePct: newPct };
+        }
+        return s;
+      })
+    );
+
+    addAuditLog('ATTENDANCE_MARK', `Marked ${record.studentName} as ${record.status} on ${record.date}`);
 
     void requestJson<AttendanceRecord>('/api/attendance', {
       method: 'POST',
@@ -970,19 +1035,44 @@ export function IMSProvider({ children }: { children: ReactNode }) {
   const addNotification = (notification: Omit<NotificationItem, 'id'>) => {
     const newNotif: NotificationItem = {
       ...notification,
-      id: `NOTIF-${Date.now()}`,
+      id: `NOTIF-${Date.now().toString().slice(-4)}`,
     };
     setNotifications((prev) => [newNotif, ...prev]);
     addAuditLog('NOTIFICATION_BROADCAST', `Broadcasted notification: ${notification.title}`);
+
+    void requestJson<NotificationItem>('/api/notifications', {
+      method: 'POST',
+      body: JSON.stringify(newNotif),
+    }, authUser?.role).then((savedNotif) => {
+      if (savedNotif && savedNotif.id) {
+        setNotifications((prev) => [savedNotif, ...prev.filter((n) => n.id !== newNotif.id)]);
+      }
+    }).catch((error) => {
+      console.error('Notification save failed', error);
+    });
   };
 
   const markNotificationAsRead = (id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+
+    void requestJson('/api/notifications', {
+      method: 'PUT',
+      body: JSON.stringify({ id, read: true }),
+    }, authUser?.role).catch((error) => {
+      console.error('Notification mark read API failed', error);
+    });
   };
 
   const markAllNotificationsAsRead = () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     addAuditLog('NOTIFICATION_READ_ALL', 'Marked all notifications as read');
+
+    void requestJson('/api/notifications', {
+      method: 'PUT',
+      body: JSON.stringify({ markAllRead: true }),
+    }, authUser?.role).catch((error) => {
+      console.error('Notification mark all read API failed', error);
+    });
   };
 
   return (

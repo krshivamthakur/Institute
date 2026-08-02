@@ -23,8 +23,23 @@ import {
 } from 'lucide-react';
 
 export function AttendanceManagement() {
-  const { authUser, currentRole, students, attendance, markAttendance } = useIMS();
+  const { authUser, currentRole, students, courses, attendance, markAttendance } = useIMS();
   const isPersonalScope = currentRole === 'Student' || currentRole === 'Parent';
+
+  const dynamicClassOptions = Array.from(
+    new Set([
+      'All Classes',
+      'B.Tech CS - Year 2',
+      'B.Tech ECE - Year 2',
+      'MBA - Year 1',
+      'BCA - Year 1',
+      ...courses.flatMap((c) => [
+        `${c.code} - Year 1`,
+        `${c.code} - Year 2`,
+      ]),
+      ...students.map((s) => s.classBatch),
+    ])
+  );
 
   const myStudent = currentRole === 'Parent'
     ? (students.find(
@@ -36,10 +51,11 @@ export function AttendanceManagement() {
     : (students.find((s) => s.id === authUser?.empIdOrRollNo || s.rollNo === authUser?.empIdOrRollNo) || students[0]);
 
   // Admin View state
-  const [selectedBatch, setSelectedBatch] = useState('B.Tech CS - Sem 4');
-  const [selectedDate, setSelectedDate] = useState('2026-08-01');
+  const [selectedBatch, setSelectedBatch] = useState('All Classes');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [activeTab, setActiveTab] = useState<'register' | 'qrcode' | 'biometric'>('register');
   const [qrScanSuccess, setQrScanSuccess] = useState(false);
+  const [notificationMsg, setNotificationMsg] = useState('');
 
   // Student/Parent Leave Request state
   const [leaveDate, setLeaveDate] = useState(new Date().toISOString().split('T')[0]);
@@ -47,16 +63,22 @@ export function AttendanceManagement() {
   const [leaveNotes, setLeaveNotes] = useState('');
   const [leaveSubmitted, setLeaveSubmitted] = useState(false);
 
-  const handleQuickMark = (studentId: string, studentName: string, status: 'Present' | 'Absent' | 'Late') => {
+  const filteredStudents = selectedBatch === 'All Classes'
+    ? students
+    : students.filter((s) => s.classBatch === selectedBatch || s.classBatch.includes(selectedBatch));
+
+  const handleQuickMark = (studentId: string, studentName: string, status: 'Present' | 'Absent' | 'Late', classBatch: string) => {
     markAttendance({
       date: selectedDate,
       studentId,
       studentName,
-      classBatch: selectedBatch,
+      classBatch,
       status,
       timeIn: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       method: 'Manual',
     });
+    setNotificationMsg(`Marked ${studentName} as ${status} for ${selectedDate}!`);
+    setTimeout(() => setNotificationMsg(''), 3000);
   };
 
   const handleSimulateQr = () => {
@@ -355,6 +377,12 @@ export function AttendanceManagement() {
 
       {activeTab === 'register' && (
         <div className="space-y-4">
+          {notificationMsg && (
+            <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" /> {notificationMsg}
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 rounded-xl glass-panel border border-slate-800 text-xs">
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <span className="font-bold text-slate-300">Select Date:</span>
@@ -372,9 +400,11 @@ export function AttendanceManagement() {
                 onChange={(e) => setSelectedBatch(e.target.value)}
                 className="bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-white"
               >
-                <option value="B.Tech CS - Sem 4">B.Tech CS - Sem 4</option>
-                <option value="B.Tech ECE - Sem 4">B.Tech ECE - Sem 4</option>
-                <option value="MBA - Sem 2">MBA - Sem 2</option>
+                {dynamicClassOptions.map((opt) => (
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
@@ -382,45 +412,82 @@ export function AttendanceManagement() {
           <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden shadow-xl">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[550px] text-left text-xs text-slate-300">
-              <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
-                <tr>
-                  <th className="p-3.5">Student</th>
-                  <th className="p-3.5">Roll Number</th>
-                  <th className="p-3.5">Attendance Rate</th>
-                  <th className="p-3.5 text-right">Quick Mark Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800">
-                {students.map((s) => (
-                  <tr key={s.id}>
-                    <td className="p-3.5 font-bold text-white flex items-center gap-2">
-                      <img src={s.avatar} alt={s.name} className="h-7 w-7 rounded-full object-cover" />
-                      <span>{s.name}</span>
-                    </td>
-                    <td className="p-3.5 font-mono text-slate-400">{s.rollNo}</td>
-                    <td className="p-3.5 font-bold text-emerald-400">{s.attendancePct}%</td>
-                    <td className="p-3.5 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <button
-                          onClick={() => handleQuickMark(s.id, s.name, 'Present')}
-                          className="px-3 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white font-bold transition text-[11px]"
-                        >
-                          Present ✓
-                        </button>
-                        <button
-                          onClick={() => handleQuickMark(s.id, s.name, 'Absent')}
-                          className="px-3 py-1 rounded-lg bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white font-bold transition text-[11px]"
-                        >
-                          Absent ✗
-                        </button>
-                      </div>
-                    </td>
+                <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
+                  <tr>
+                    <th className="p-3.5">Student</th>
+                    <th className="p-3.5">Roll Number</th>
+                    <th className="p-3.5">Class / Batch</th>
+                    <th className="p-3.5">Attendance Rate</th>
+                    <th className="p-3.5 text-right">Quick Mark Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {filteredStudents.length > 0 ? (
+                    filteredStudents.map((s) => {
+                      const todayRecord = attendance.find(
+                        (a) => (a.studentId === s.id || a.studentName === s.name) && a.date === selectedDate
+                      );
+                      const isPresent = todayRecord?.status === 'Present';
+                      const isLate = todayRecord?.status === 'Late';
+                      const isAbsent = todayRecord?.status === 'Absent';
+
+                      return (
+                        <tr key={s.id} className="hover:bg-slate-800/30 transition">
+                          <td className="p-3.5 font-bold text-white flex items-center gap-2">
+                            <img src={s.avatar} alt={s.name} className="h-7 w-7 rounded-full object-cover" />
+                            <span>{s.name}</span>
+                          </td>
+                          <td className="p-3.5 font-mono text-slate-400">{s.rollNo}</td>
+                          <td className="p-3.5 text-slate-300 font-medium">{s.classBatch}</td>
+                          <td className="p-3.5 font-bold text-emerald-400">{s.attendancePct || 90}%</td>
+                          <td className="p-3.5 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              <button
+                                onClick={() => handleQuickMark(s.id, s.name, 'Present', s.classBatch)}
+                                className={`px-3 py-1 rounded-lg font-bold transition text-[11px] ${
+                                  isPresent
+                                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/40 ring-1 ring-emerald-400'
+                                    : 'bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white'
+                                }`}
+                              >
+                                Present ✓
+                              </button>
+                              <button
+                                onClick={() => handleQuickMark(s.id, s.name, 'Late', s.classBatch)}
+                                className={`px-3 py-1 rounded-lg font-bold transition text-[11px] ${
+                                  isLate
+                                    ? 'bg-amber-600 text-white shadow-lg shadow-amber-600/40 ring-1 ring-amber-400'
+                                    : 'bg-amber-600/20 hover:bg-amber-600 text-amber-300 hover:text-white'
+                                }`}
+                              >
+                                Late 🕒
+                              </button>
+                              <button
+                                onClick={() => handleQuickMark(s.id, s.name, 'Absent', s.classBatch)}
+                                className={`px-3 py-1 rounded-lg font-bold transition text-[11px] ${
+                                  isAbsent
+                                    ? 'bg-rose-600 text-white shadow-lg shadow-rose-600/40 ring-1 ring-rose-400'
+                                    : 'bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white'
+                                }`}
+                              >
+                                Absent ✗
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="p-6 text-center text-slate-400 font-medium">
+                        No students enrolled in <strong className="text-white">{selectedBatch}</strong>.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
         </div>
       )}
 

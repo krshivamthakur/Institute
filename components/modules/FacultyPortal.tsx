@@ -43,6 +43,7 @@ export function FacultyPortal() {
     addLmsMaterial,
     updateExamStudentResult,
     setActiveModule,
+    openProfileModal,
   } = useIMS();
 
   const [selectedTeacherId, setSelectedTeacherId] = useState<string>('');
@@ -50,7 +51,6 @@ export function FacultyPortal() {
   const [selectedDay, setSelectedDay] = useState<string>('All');
 
   // Modals state
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [newMaterial, setNewMaterial] = useState({
     title: '',
@@ -267,7 +267,7 @@ export function FacultyPortal() {
         {/* Quick Actions Header Buttons */}
         <div className="flex items-center gap-2.5 z-10 w-full md:w-auto flex-wrap sm:flex-nowrap">
           <button
-            onClick={() => setIsProfileModalOpen(true)}
+            onClick={openProfileModal}
             className="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-purple-600/30 hover:bg-purple-600 text-purple-200 hover:text-white font-bold text-xs border border-purple-500/40 shadow-lg flex items-center justify-center gap-2 transition"
           >
             <Edit3 className="h-4 w-4 text-purple-400" /> Edit Profile
@@ -286,9 +286,6 @@ export function FacultyPortal() {
           </button>
         </div>
       </div>
-
-      {/* User Profile Modal */}
-      <UserProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
 
       {/* Success Notification Alert */}
       {attendanceSuccessMsg && (

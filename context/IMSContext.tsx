@@ -63,6 +63,10 @@ interface IMSContextType {
   setIsMobilePreviewOpen: (open: boolean) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (open: boolean) => void;
+  isProfileModalOpen: boolean;
+  setIsProfileModalOpen: (open: boolean) => void;
+  openProfileModal: () => void;
+  closeProfileModal: () => void;
 
   // System Settings
   systemSettings: SystemSettings;
@@ -169,6 +173,7 @@ export function IMSProvider({ children }: { children: ReactNode }) {
   const [isAiBotOpen, setIsAiBotOpen] = useState<boolean>(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
 
   // Entities
   const [students, setStudents] = useState<Student[]>(INITIAL_STUDENTS);
@@ -1095,6 +1100,10 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         setIsMobilePreviewOpen,
         isMobileMenuOpen,
         setIsMobileMenuOpen,
+        isProfileModalOpen,
+        setIsProfileModalOpen,
+        openProfileModal: () => setIsProfileModalOpen(true),
+        closeProfileModal: () => setIsProfileModalOpen(false),
         systemSettings,
         updateSystemSettings,
         resetSystemSettings,

@@ -49,13 +49,13 @@ export function StudentPortal() {
     addFeeTransaction,
     updateStudent,
     setActiveModule,
+    openProfileModal,
   } = useIMS();
 
   const [selectedStudentId, setSelectedStudentId] = useState<string>('');
   const [activeTab, setActiveTab] = useState<'timetable' | 'exams' | 'lms' | 'fees' | 'certificates' | 'services'>('timetable');
 
   // Modals state
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isPayFeeModalOpen, setIsPayFeeModalOpen] = useState(false);
   const [payAmount, setPayAmount] = useState<number>(0);
   const [paymentMode, setPaymentMode] = useState<'Online (Razorpay)' | 'UPI (PhonePe)' | 'Bank Transfer'>('Online (Razorpay)');
@@ -279,7 +279,7 @@ export function StudentPortal() {
         {/* Quick Action Header Buttons */}
         <div className="flex items-center gap-2.5 z-10 w-full md:w-auto flex-wrap sm:flex-nowrap">
           <button
-            onClick={() => setIsProfileModalOpen(true)}
+            onClick={openProfileModal}
             className="flex-1 md:flex-none px-4 py-2.5 rounded-xl bg-purple-600/30 hover:bg-purple-600 text-purple-200 hover:text-white font-bold text-xs border border-purple-500/40 shadow-lg flex items-center justify-center gap-2 transition"
           >
             <Edit3 className="h-4 w-4 text-purple-400" /> Edit Profile
@@ -301,9 +301,6 @@ export function StudentPortal() {
           </button>
         </div>
       </div>
-
-      {/* User Profile Modal */}
-      <UserProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
 
       {/* Success Notification Alert */}
       {paymentSuccessMsg && (

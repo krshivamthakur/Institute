@@ -5,6 +5,7 @@ import { IMSProvider, useIMS } from '@/context/IMSContext';
 import { Header } from '@/components/layout/Header';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { AiBotDrawer } from '@/components/layout/AiBotDrawer';
+import { UserProfileModal } from '@/components/layout/UserProfileModal';
 import { LoginScreen } from '@/components/auth/LoginScreen';
 
 // Module Components
@@ -122,7 +123,7 @@ function MainContent() {
 }
 
 function AppLayout() {
-  const { authUser, isInitialized } = useIMS();
+  const { authUser, isInitialized, isProfileModalOpen, closeProfileModal } = useIMS();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -153,6 +154,7 @@ function AppLayout() {
       </div>
       <AiBotDrawer />
       <MobileBottomNav />
+      <UserProfileModal isOpen={isProfileModalOpen} onClose={closeProfileModal} />
     </div>
   );
 }

@@ -26,6 +26,7 @@ export function Header() {
   const {
     authUser,
     logout,
+    openProfileModal,
     currentBranch,
     setCurrentBranch,
     searchQuery,
@@ -257,7 +258,7 @@ export function Header() {
           {authUser && (
             <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
               <div
-                onClick={() => setIsProfileModalOpen(true)}
+                onClick={openProfileModal}
                 className="flex items-center gap-2.5 bg-slate-900/90 border border-slate-700/80 hover:border-purple-500/50 rounded-xl px-3 py-1.5 text-xs shadow-md cursor-pointer transition group"
                 title="Click to Edit Profile"
               >
@@ -285,7 +286,7 @@ export function Header() {
               </div>
 
               <button
-                onClick={() => setIsProfileModalOpen(true)}
+                onClick={openProfileModal}
                 className="p-2 rounded-xl bg-slate-900 hover:bg-purple-600/20 text-slate-400 hover:text-purple-300 border border-slate-800 hover:border-purple-500/40 transition sm:hidden"
                 title="Edit Profile"
               >
@@ -299,9 +300,6 @@ export function Header() {
               >
                 <LogOut className="h-4 w-4 text-slate-400 hover:text-rose-400" />
               </button>
-
-              {/* User Profile Edit Modal */}
-              <UserProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
             </div>
           )}
         </div>

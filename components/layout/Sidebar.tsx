@@ -40,6 +40,7 @@ import {
   Layers,
   Settings,
   X,
+  Edit3,
 } from 'lucide-react';
 
 interface ModuleNavItem {
@@ -113,7 +114,7 @@ const ROLE_ALLOWED_MODULES: Record<UserRole, string[]> = {
 };
 
 export function Sidebar() {
-  const { currentRole, activeModule, setActiveModule, isMobileMenuOpen, setIsMobileMenuOpen } = useIMS();
+  const { currentRole, activeModule, setActiveModule, isMobileMenuOpen, setIsMobileMenuOpen, authUser, openProfileModal } = useIMS();
 
   // Filter modules strictly based on current authenticated user role
   const allowedModuleIds = ROLE_ALLOWED_MODULES[currentRole] || MASTER_MODULE_ITEMS.map((m) => m.id);
@@ -127,58 +128,89 @@ export function Sidebar() {
   };
 
   const navContent = (
-    <div className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-      {categories.map((cat) => {
-        const items = activeModuleItems.filter((item) => item.category === cat);
-        if (items.length === 0) return null;
+    <div className="flex-1 flex flex-col justify-between overflow-y-auto">
+      <div className="px-3 py-4 space-y-5">
+        {categories.map((cat) => {
+          const items = activeModuleItems.filter((item) => item.category === cat);
+          if (items.length === 0) return null;
 
-        return (
-          <div key={cat} className="space-y-1">
-            <h3 className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
-              <span>{cat}</span>
-              <span className="text-[9px] text-slate-400 font-normal">({items.length})</span>
-            </h3>
-            <div className="space-y-1">
-              {items.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeModule === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => handleModuleClick(item.id)}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition duration-150 group ${
-                      isActive
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-semibold ring-1 ring-white/20'
-                        : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <Icon
-                        className={`h-4 w-4 shrink-0 transition ${
-                          isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'
-                        }`}
-                      />
-                      <span className="truncate">{item.label}</span>
-                    </div>
+          return (
+            <div key={cat} className="space-y-1">
+              <h3 className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center justify-between">
+                <span>{cat}</span>
+                <span className="text-[9px] text-slate-400 font-normal">({items.length})</span>
+              </h3>
+              <div className="space-y-1">
+                {items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = activeModule === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleModuleClick(item.id)}
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition duration-150 group ${
+                        isActive
+                          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20 font-semibold ring-1 ring-white/20'
+                          : 'text-slate-300 hover:bg-slate-800/70 hover:text-white'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <Icon
+                          className={`h-4 w-4 shrink-0 transition ${
+                            isActive ? 'text-white' : 'text-slate-400 group-hover:text-blue-400'
+                          }`}
+                        />
+                        <span className="truncate">{item.label}</span>
+                      </div>
 
-                    {item.badge ? (
-                      <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
-                        {item.badge}
-                      </span>
-                    ) : (
-                      <ChevronRight
-                        className={`h-3 w-3 text-slate-600 transition ${
-                          isActive ? 'text-white opacity-100' : 'opacity-0 group-hover:opacity-100'
-                        }`}
-                      />
-                    )}
-                  </button>
-                );
-              })}
+                      {item.badge ? (
+                        <span className="px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                          {item.badge}
+                        </span>
+                      ) : (
+                        <ChevronRight
+                          className={`h-3 w-3 text-slate-600 transition ${
+                            isActive ? 'text-white opacity-100' : 'opacity-0 group-hover:opacity-100'
+                          }`}
+                        />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+
+      {/* Bottom User Profile Shortcut */}
+      {authUser && (
+        <div className="p-3 border-t border-slate-800 bg-slate-900/60 sticky bottom-0">
+          <button
+            onClick={() => {
+              openProfileModal();
+              setIsMobileMenuOpen(false);
+            }}
+            className="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-purple-950/40 border border-slate-800 hover:border-purple-500/40 text-xs text-slate-200 transition group"
+            title="Edit Profile Account"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              {authUser.avatar ? (
+                <img src={authUser.avatar} alt={authUser.name} className="h-7 w-7 rounded-lg object-cover ring-1 ring-purple-500/40 shrink-0" />
+              ) : (
+                <div className="h-7 w-7 rounded-lg bg-purple-600/30 text-purple-300 border border-purple-500/40 flex items-center justify-center font-bold text-xs shrink-0">
+                  {authUser.name.charAt(0)}
+                </div>
+              )}
+              <div className="text-left min-w-0">
+                <p className="font-bold text-white text-xs truncate group-hover:text-purple-300 transition">{authUser.name}</p>
+                <p className="text-[9px] text-purple-400 font-bold uppercase tracking-wider truncate">{authUser.role}</p>
+              </div>
+            </div>
+            <Edit3 className="h-3.5 w-3.5 text-slate-400 group-hover:text-purple-300 shrink-0" />
+          </button>
+        </div>
+      )}
     </div>
   );
 

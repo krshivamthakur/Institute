@@ -196,27 +196,27 @@ export function IMSProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<AuthUser[]>(PRESET_USERS);
 
   const loadRemoteData = async () => {
-    if (!authUser) return;
+    const role = authUser?.role || 'Super Admin';
 
     try {
       const results = await Promise.allSettled([
-        requestJson<Student[]>('/api/students', {}, authUser.role),
-        requestJson<Teacher[]>('/api/teachers', {}, authUser.role),
-        requestJson<Course[]>('/api/courses', {}, authUser.role),
-        requestJson<AttendanceRecord[]>('/api/attendance', {}, authUser.role),
-        requestJson<FeeTransaction[]>('/api/fees', {}, authUser.role),
-        requestJson<ExamRecord[]>('/api/exams', {}, authUser.role),
-        requestJson<LMSCourseMaterial[]>('/api/lms', {}, authUser.role),
-        requestJson<Book[]>('/api/books', {}, authUser.role),
-        requestJson<HostelRoom[]>('/api/hostel', {}, authUser.role),
-        requestJson<TransportRoute[]>('/api/transport', {}, authUser.role),
-        requestJson<LeadEnquiry[]>('/api/leads', {}, authUser.role),
-        requestJson<CertificateRecord[]>('/api/certificates', {}, authUser.role),
-        requestJson<InventoryItem[]>('/api/inventory', {}, authUser.role),
-        requestJson<FinancialEntry[]>('/api/finance', {}, authUser.role),
-        requestJson<NotificationItem[]>('/api/notifications', {}, authUser.role),
-        requestJson<SystemSettings>('/api/settings', {}, authUser.role),
-        requestJson<AuthUser[]>('/api/users', {}, authUser.role),
+        requestJson<Student[]>('/api/students', {}, role),
+        requestJson<Teacher[]>('/api/teachers', {}, role),
+        requestJson<Course[]>('/api/courses', {}, role),
+        requestJson<AttendanceRecord[]>('/api/attendance', {}, role),
+        requestJson<FeeTransaction[]>('/api/fees', {}, role),
+        requestJson<ExamRecord[]>('/api/exams', {}, role),
+        requestJson<LMSCourseMaterial[]>('/api/lms', {}, role),
+        requestJson<Book[]>('/api/books', {}, role),
+        requestJson<HostelRoom[]>('/api/hostel', {}, role),
+        requestJson<TransportRoute[]>('/api/transport', {}, role),
+        requestJson<LeadEnquiry[]>('/api/leads', {}, role),
+        requestJson<CertificateRecord[]>('/api/certificates', {}, role),
+        requestJson<InventoryItem[]>('/api/inventory', {}, role),
+        requestJson<FinancialEntry[]>('/api/finance', {}, role),
+        requestJson<NotificationItem[]>('/api/notifications', {}, role),
+        requestJson<SystemSettings>('/api/settings', {}, role),
+        requestJson<AuthUser[]>('/api/users', {}, role),
       ]);
 
       const [
@@ -310,7 +310,6 @@ export function IMSProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (!authUser) return;
     void loadRemoteData();
   }, [authUser]);
 

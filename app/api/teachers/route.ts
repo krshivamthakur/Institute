@@ -86,3 +86,26 @@ export async function PUT(req: NextRequest) {
     return apiError(`Failed to update teacher: ${err.message}`, 500);
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const securityError = await guardApiRoute(req, {
+    allowedRoles: ['Super Admin', 'Director', 'HR', 'Principal'],
+  });
+  if (securityError) return securityError;
+
+  try {
+    const body = await req.json();
+    if (!body.id) {
+      return apiError('Teacher ID is required for deletion', 400);
+    }
+
+    const db = getDb();
+    const existingTeachers = db.teachers || [];
+    const updatedTeachers = existingTeachers.filter((t) => t.id !== body.id && t.empId !== body.id);
+
+    saveDb({ teachers: updatedTeachers });
+    return apiResponse({ success: true, deletedId: body.id }, 200, 'Teacher deleted successfully');
+  } catch (err: any) {
+    return apiError(`Failed to delete teacher: ${err.message}`, 500);
+  }
+}

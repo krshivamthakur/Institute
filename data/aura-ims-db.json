@@ -1210,7 +1210,7 @@
     {
       "id": "ADM-001",
       "name": "Super Admin",
-      "email": "admin@auraims.edu",
+      "email": "admin@institute.edu",
       "role": "Super Admin",
       "empIdOrRollNo": "ADM-001",
       "branch": "Main Campus - New Delhi",
@@ -1220,7 +1220,7 @@
     {
       "id": "DIR-001",
       "name": "Dr. Vikram Malhotra",
-      "email": "director@auraims.edu",
+      "email": "director@institute.edu",
       "role": "Director",
       "empIdOrRollNo": "DIR-001",
       "branch": "Main Campus - New Delhi",
@@ -1230,7 +1230,7 @@
     {
       "id": "PRN-001",
       "name": "Prof. S. N. Roy",
-      "email": "principal@auraims.edu",
+      "email": "principal@institute.edu",
       "role": "Principal",
       "empIdOrRollNo": "PRN-001",
       "branch": "Main Campus - New Delhi",
@@ -1240,7 +1240,7 @@
     {
       "id": "BRH-001",
       "name": "Anil Kulkarni",
-      "email": "head.pune@auraims.edu",
+      "email": "head.pune@institute.edu",
       "role": "Branch Head",
       "empIdOrRollNo": "BRH-001",
       "branch": "Tech Campus - Pune",
@@ -1250,7 +1250,7 @@
     {
       "id": "ACD-001",
       "name": "Dr. Kavita Rao",
-      "email": "acad@auraims.edu",
+      "email": "acad@institute.edu",
       "role": "Academic Coordinator",
       "empIdOrRollNo": "ACD-001",
       "branch": "Main Campus - New Delhi",
@@ -1260,7 +1260,7 @@
     {
       "id": "FAC-101",
       "name": "Dr. Meenakshi S.",
-      "email": "meenakshi@auraims.edu",
+      "email": "meenakshi@institute.edu",
       "role": "Teacher",
       "empIdOrRollNo": "FAC-101",
       "branch": "Main Campus - New Delhi",
@@ -1291,7 +1291,7 @@
     {
       "id": "ACT-301",
       "name": "Ramesh Kumar",
-      "email": "accountant@auraims.edu",
+      "email": "accountant@institute.edu",
       "role": "Accountant",
       "empIdOrRollNo": "ACT-301",
       "branch": "Main Campus - New Delhi",
@@ -1311,7 +1311,7 @@
     {
       "id": "HST-501",
       "name": "Suresh Warden",
-      "email": "warden@auraims.edu",
+      "email": "warden@institute.edu",
       "role": "Hostel Warden",
       "empIdOrRollNo": "HST-501",
       "branch": "Main Campus - New Delhi",
@@ -1321,7 +1321,7 @@
     {
       "id": "TRN-601",
       "name": "Mahesh Driver",
-      "email": "transport@auraims.edu",
+      "email": "transport@institute.edu",
       "role": "Transport Manager",
       "empIdOrRollNo": "TRN-601",
       "branch": "Main Campus - New Delhi",
@@ -1331,7 +1331,7 @@
     {
       "id": "HRM-701",
       "name": "Pooja Mehta",
-      "email": "hr@auraims.edu",
+      "email": "hr@institute.edu",
       "role": "HR",
       "empIdOrRollNo": "HRM-701",
       "branch": "Main Campus - New Delhi",
@@ -1341,7 +1341,7 @@
     {
       "id": "INV-801",
       "name": "Vikash Assets",
-      "email": "inventory@auraims.edu",
+      "email": "inventory@institute.edu",
       "role": "Inventory Manager",
       "empIdOrRollNo": "INV-801",
       "branch": "Main Campus - New Delhi",

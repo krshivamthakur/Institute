@@ -320,25 +320,28 @@ export const MOCK_ROLES = [
   'Library Staff',
   'Transport Manager',
   'Hostel Warden',
+  'Inventory Manager',
 ] as const;
 
 export type UserRole = typeof MOCK_ROLES[number];
 
 export const PRESET_USERS: AuthUser[] = [
-  { id: 'ADM-001', name: 'Super Admin', email: 'admin@auraims.edu', role: 'Super Admin', empIdOrRollNo: 'ADM-001', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150' },
-  { id: 'DIR-001', name: 'Dr. Vikram Malhotra', email: 'director@auraims.edu', role: 'Director', empIdOrRollNo: 'DIR-001', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150' },
-  { id: 'PRN-001', name: 'Prof. Sunita Deshmukh', email: 'principal@auraims.edu', role: 'Principal', empIdOrRollNo: 'PRN-001', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150' },
-  { id: 'BH-101', name: 'Rajesh K. Varma', email: 'branchhead@auraims.edu', role: 'Branch Head', empIdOrRollNo: 'BH-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150' },
-  { id: 'AC-101', name: 'Dr. Anita Roy', email: 'academic@auraims.edu', role: 'Academic Coordinator', empIdOrRollNo: 'AC-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150' },
-  { id: 'TCH-201', name: 'Dr. Meenakshi Sundaram', email: 'meenakshi@auraims.edu', role: 'Teacher', empIdOrRollNo: 'EMP-201', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150' },
-  { id: 'STU-1001', name: 'Aarav Sharma', email: 'aarav.sharma@institute.edu', role: 'Student', empIdOrRollNo: '2026-CS-001', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150' },
-  { id: 'PAR-1001', name: 'Rajesh Sharma (Parent)', email: 'parent.sharma@gmail.com', role: 'Parent', empIdOrRollNo: 'PAR-STU-1001', branch: 'Main Campus - New Delhi', childStudentId: 'STU-1001', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150' },
-  { id: 'ACC-101', name: 'Ramesh Patel', email: 'accountant@auraims.edu', role: 'Accountant', empIdOrRollNo: 'ACC-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=150' },
-  { id: 'HR-101', name: 'Kavita Singhania', email: 'hr@auraims.edu', role: 'HR', empIdOrRollNo: 'HR-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=150' },
-  { id: 'RCP-101', name: 'Priya Sharma', email: 'reception@auraims.edu', role: 'Receptionist', empIdOrRollNo: 'RCP-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=150' },
-  { id: 'LIB-101', name: 'Sanjay Kumar', email: 'library@auraims.edu', role: 'Library Staff', empIdOrRollNo: 'LIB-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=150' },
-  { id: 'TRP-101', name: 'Ramesh Chander', email: 'transport@auraims.edu', role: 'Transport Manager', empIdOrRollNo: 'TRP-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150' },
-  { id: 'HST-101', name: 'Col. Gurmeet Singh', email: 'hostel@auraims.edu', role: 'Hostel Warden', empIdOrRollNo: 'HST-101', branch: 'Main Campus - New Delhi', avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&q=80&w=150' },
+  { id: 'USR-5010', name: 'Sumit Saourav', email: 'info@gyanvidyamandir.in', role: 'Teacher', empIdOrRollNo: 'TEH-001', branch: 'Main Campus - New Delhi', password: 'admin123', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150' },
+  { id: 'USR-6717', name: 'Sumit', email: 'sumit@edu.com', role: 'Parent', empIdOrRollNo: 'par123', branch: 'Main Campus - New Delhi', childStudentId: 'STU-1002', password: 'admin123', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150' },
+  { id: 'ADM-001', name: 'Super Admin', email: 'admin@auraims.edu', role: 'Super Admin', empIdOrRollNo: 'ADM-001', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150' },
+  { id: 'DIR-001', name: 'Dr. Vikram Malhotra', email: 'director@auraims.edu', role: 'Director', empIdOrRollNo: 'DIR-001', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150' },
+  { id: 'PRN-001', name: 'Prof. S. N. Roy', email: 'principal@auraims.edu', role: 'Principal', empIdOrRollNo: 'PRN-001', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150' },
+  { id: 'BRH-001', name: 'Anil Kulkarni', email: 'head.pune@auraims.edu', role: 'Branch Head', empIdOrRollNo: 'BRH-001', branch: 'Tech Campus - Pune', password: 'admin', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150' },
+  { id: 'ACD-001', name: 'Dr. Kavita Rao', email: 'acad@auraims.edu', role: 'Academic Coordinator', empIdOrRollNo: 'ACD-001', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150' },
+  { id: 'FAC-101', name: 'Dr. Meenakshi S.', email: 'meenakshi@auraims.edu', role: 'Teacher', empIdOrRollNo: 'FAC-101', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150' },
+  { id: 'STU-1001', name: 'Aarav Sharma', email: 'aarav.sharma@institute.edu', role: 'Student', empIdOrRollNo: '2026-CS-001', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150' },
+  { id: 'PAR-9001', name: 'Rajesh Sharma (Parent)', email: 'rajesh.parent@gmail.com', role: 'Parent', empIdOrRollNo: 'PAR-9001', childStudentId: '2026-CS-001', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=150' },
+  { id: 'ACT-301', name: 'Ramesh Kumar', email: 'accountant@auraims.edu', role: 'Accountant', empIdOrRollNo: 'ACT-301', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=150' },
+  { id: 'LIB-401', name: 'Sunita Verma', email: 'librarian@auraims.edu', role: 'Library Staff', empIdOrRollNo: 'LIB-401', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150' },
+  { id: 'HST-501', name: 'Suresh Warden', email: 'warden@auraims.edu', role: 'Hostel Warden', empIdOrRollNo: 'HST-501', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150' },
+  { id: 'TRN-601', name: 'Mahesh Driver', email: 'transport@auraims.edu', role: 'Transport Manager', empIdOrRollNo: 'TRN-601', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&q=80&w=150' },
+  { id: 'HRM-701', name: 'Pooja Mehta', email: 'hr@auraims.edu', role: 'HR', empIdOrRollNo: 'HRM-701', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=150' },
+  { id: 'INV-801', name: 'Vikash Assets', email: 'inventory@auraims.edu', role: 'Inventory Manager', empIdOrRollNo: 'INV-801', branch: 'Main Campus - New Delhi', password: 'admin', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150' },
 ];
 
 export const INITIAL_STUDENTS: Student[] = [
@@ -375,7 +378,7 @@ export const INITIAL_STUDENTS: Student[] = [
     dob: '2004-09-22',
     admissionDate: '2024-08-01',
     status: 'Active',
-    parentName: 'Suresh Verma',
+    parentName: 'Sumit',
     parentPhone: '+91 98765 00002',
     attendancePct: 88.0,
     feeStatus: 'Partial',
@@ -521,6 +524,21 @@ export const INITIAL_TEACHERS: Teacher[] = [
 ];
 
 export const INITIAL_COURSES: Course[] = [
+  {
+    id: 'CRS-5244',
+    code: 'F11B',
+    title: 'foundation Batch',
+    department: 'pcm',
+    durationMonths: 48,
+    semesters: 2,
+    fees: 180000,
+    activeBatches: 1,
+    enrolledStudents: 60,
+    syllabus: [
+      { semester: 1, topics: ['Physics - introduction 1'] },
+      { semester: 2, topics: ['Deep Learning & PyTorch', 'Computer Vision', 'NLP'] },
+    ],
+  },
   {
     id: 'CRS-01',
     code: 'BTECH-CS',

@@ -106,6 +106,7 @@ const ROLE_ALLOWED_MODULES: Record<UserRole, string[]> = {
   'Library Staff': ['dashboard', 'library', 'students', 'inventory', 'communication', 'notifications'],
   'Transport Manager': ['dashboard', 'transport', 'students', 'communication', 'notifications'],
   'Hostel Warden': ['dashboard', 'hostel', 'students', 'communication', 'notifications'],
+  'Inventory Manager': ['dashboard', 'inventory', 'reports', 'notifications'],
   'Branch Head': ['dashboard', 'students', 'teachers', 'courses', 'classes', 'attendance', 'exams', 'lms', 'admissions', 'reports', 'notifications'],
   'Academic Coordinator': ['dashboard', 'students', 'teachers', 'courses', 'classes', 'attendance', 'exams', 'lms', 'reports', 'notifications'],
   'Super Admin': MASTER_MODULE_ITEMS.map((m) => m.id),

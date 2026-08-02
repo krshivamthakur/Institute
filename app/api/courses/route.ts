@@ -66,3 +66,24 @@ export async function PUT(req: NextRequest) {
     return apiError(`Failed to update course: ${err.message}`, 500);
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const securityError = await guardApiRoute(req, {
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Academic Coordinator'],
+  });
+  if (securityError) return securityError;
+
+  try {
+    const body = await req.json();
+    if (!body.id) {
+      return apiError('Missing required field: id is mandatory for deleting course', 400);
+    }
+
+    const db = getDb();
+    const updatedCourses = db.courses.filter((c) => c.id !== body.id && c.code !== body.id);
+    saveDb({ courses: updatedCourses });
+    return apiResponse({ success: true, deletedId: body.id }, 200, 'Course deleted successfully');
+  } catch (err: any) {
+    return apiError(`Failed to delete course: ${err.message}`, 500);
+  }
+}

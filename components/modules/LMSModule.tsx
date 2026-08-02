@@ -77,12 +77,25 @@ export function LMSModule() {
   const [newMaterial, setNewMaterial] = useState({
     title: '',
     subject: 'Data Structures & Algorithms',
-    classBatch: 'B.Tech CS - Sem 4',
+    classBatch: 'B.Tech CS - Year 2',
     type: 'Video' as LMSCourseMaterial['type'],
     author: currentRole === 'Teacher' ? 'Prof. Faculty User' : `${currentRole} Manager`,
-    url: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    url: '',
     durationOrPages: '30 Mins',
   });
+
+  const handleOpenUploadModal = () => {
+    setNewMaterial({
+      title: '',
+      subject: subjectOptions[0] || 'Data Structures & Algorithms',
+      classBatch: courseOptions[0] || 'B.Tech CS - Year 2',
+      type: 'Video' as LMSCourseMaterial['type'],
+      author: currentRole === 'Teacher' ? 'Faculty Member' : `${currentRole} User`,
+      url: '',
+      durationOrPages: '30 Mins',
+    });
+    setIsUploadModalOpen(true);
+  };
 
   // Edit Form State
   const [editMaterialForm, setEditMaterialForm] = useState({
@@ -221,7 +234,7 @@ export function LMSModule() {
 
         {canManageLMS ? (
           <button
-            onClick={() => setIsUploadModalOpen(true)}
+            onClick={handleOpenUploadModal}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition shadow-lg shadow-purple-600/30"
           >
             <Upload className="h-4 w-4" /> + Upload Courseware

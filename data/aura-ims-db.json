@@ -196,9 +196,9 @@
       "title": "foundation Batch",
       "department": "pcm",
       "durationMonths": 48,
-      "semesters": 4,
+      "semesters": 2,
       "fees": 180000,
-      "activeBatches": 2,
+      "activeBatches": 1,
       "enrolledStudents": 60,
       "syllabus": [
         {
@@ -213,12 +213,6 @@
             "Deep Learning & PyTorch",
             "Computer Vision",
             "NLP"
-          ]
-        },
-        {
-          "semester": 3,
-          "topics": [
-            "New Semester 3 Core Subject"
           ]
         }
       ]
@@ -853,7 +847,7 @@
       "id": "FIN-1",
       "type": "Income",
       "category": "Tuition Fees",
-      "description": "Semester 4 Tuition Collection Batch CS-A",
+      "description": "Year 2 Tuition Collection Batch CS-A",
       "amount": 1850000,
       "date": "2026-07-31",
       "paymentMode": "Online Payment Gateway",
@@ -887,7 +881,7 @@
     {
       "id": "NOTIF-1",
       "title": "Fee Due Reminder",
-      "message": "Semester 4 tuition installment is due for 14 students in B.Tech ECE.",
+      "message": "Year 2 tuition installment is due for 14 students in B.Tech ECE.",
       "type": "Fee Due",
       "date": "10 mins ago",
       "read": false,

@@ -40,15 +40,29 @@ export function InventoryManagement() {
 
   // Add Asset Form State
   const [newItem, setNewItem] = useState({
-    name: 'Dell OptiPlex Desktop i7',
+    name: '',
     category: 'IT Hardware' as const,
-    quantity: 25,
-    unitPrice: 55000,
-    location: 'Computer Lab 3',
-    assetCode: 'AST-IT-9012',
+    quantity: 1,
+    unitPrice: 0,
+    location: 'Main Store',
+    assetCode: 'AST-1001',
     condition: 'Good' as const,
     lastInspected: new Date().toISOString().split('T')[0],
   });
+
+  const handleOpenAddModal = () => {
+    setNewItem({
+      name: '',
+      category: 'IT Hardware' as const,
+      quantity: 1,
+      unitPrice: 0,
+      location: 'Main Store',
+      assetCode: `AST-${Math.floor(1000 + Math.random() * 9000)}`,
+      condition: 'Good' as const,
+      lastInspected: new Date().toISOString().split('T')[0],
+    });
+    setIsAddModalOpen(true);
+  };
 
   // Edit Asset Form State
   const [editItemForm, setEditItemForm] = useState<{
@@ -175,7 +189,7 @@ export function InventoryManagement() {
 
         {canManageInventory && (
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={handleOpenAddModal}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30"
           >
             <Plus className="h-4 w-4" /> Add Asset Item

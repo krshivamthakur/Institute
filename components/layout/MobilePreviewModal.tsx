@@ -127,7 +127,7 @@ export function MobilePreviewModal() {
               <div className="space-y-2">
                 <h4 className="text-[10px] font-bold uppercase text-slate-400">Fee Status & Payments</h4>
                 <div className="p-3 rounded-xl bg-slate-800 border border-slate-700 text-xs">
-                  <p className="text-[10px] text-slate-400">Semester 4 Tuition Fee</p>
+                  <p className="text-[10px] text-slate-400">Year 2 Tuition Fee</p>
                   <p className="text-base font-bold text-emerald-400">₹60,000 (Paid)</p>
                   <p className="text-[9px] text-slate-500 mt-1">Txn ID: pay_N8zL90kQx12</p>
                 </div>

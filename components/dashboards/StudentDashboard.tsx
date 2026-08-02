@@ -115,7 +115,7 @@ export function StudentDashboard() {
             <h3 className="font-extrabold text-white text-base flex items-center gap-2">
               <Calendar className="h-5 w-5 text-emerald-400" /> Today's Lecture Schedule
             </h3>
-            <span className="text-xs text-slate-400">Semester 4</span>
+            <span className="text-xs text-slate-400">Year 2</span>
           </div>
 
           <div className="space-y-3">

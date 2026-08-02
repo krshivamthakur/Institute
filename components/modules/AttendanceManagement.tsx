@@ -380,7 +380,8 @@ export function AttendanceManagement() {
           </div>
 
           <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden shadow-xl">
-            <table className="w-full text-left text-xs text-slate-300">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[550px] text-left text-xs text-slate-300">
               <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
                 <tr>
                   <th className="p-3.5">Student</th>
@@ -419,6 +420,7 @@ export function AttendanceManagement() {
               </tbody>
             </table>
           </div>
+        </div>
         </div>
       )}
 

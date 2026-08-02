@@ -76,9 +76,9 @@ export function ExamManagement() {
 
   // Form for New Exam
   const [newExam, setNewExam] = useState({
-    examName: 'Final Semester Examinations 2026',
+    examName: 'Final Year Examinations 2026',
     course: 'B.Tech Computer Science',
-    batch: 'B.Tech CS - Sem 4',
+    batch: 'B.Tech CS - Year 2',
     date: '2026-06-15',
     subject: 'Operating Systems & Kernels',
     totalMarks: 100,
@@ -241,7 +241,7 @@ export function ExamManagement() {
                 {currentRole === 'Parent' ? `${student.name}'s Admit Card & Marksheet Portal` : "My Admit Card & Examination Portal"}
               </h2>
               <p className="text-xs text-slate-300 mt-1 max-w-xl">
-                Download official hall ticket admit card for upcoming examinations and review published semester marksheet and gradebook.
+                Download official hall ticket admit card for upcoming examinations and review published year marksheet and gradebook.
               </p>
             </div>
 
@@ -355,7 +355,7 @@ export function ExamManagement() {
           {/* Column 3: Personal Published Marksheet */}
           <div className="p-5 rounded-2xl glass-panel border border-slate-800 space-y-4">
             <h3 className="font-extrabold text-white text-base border-b border-slate-800 pb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4 text-purple-400" /> Published Semester Marksheet
+              <FileText className="h-4 w-4 text-purple-400" /> Published Year Marksheet
             </h3>
 
             <div className="space-y-3">
@@ -508,7 +508,7 @@ export function ExamManagement() {
             <Award className="h-5 w-5 text-amber-400" /> Examination & Marksheet Management
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Schedule exams, edit candidate marks, calculate GPA grades, publish semester marksheets, and generate hall tickets.
+            Schedule exams, edit candidate marks, calculate GPA grades, publish year marksheets, and generate hall tickets.
           </p>
         </div>
 
@@ -609,7 +609,7 @@ export function ExamManagement() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
+            <table className="w-full min-w-[600px] text-left text-xs text-slate-300">
               <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
                 <tr>
                   <th className="p-3">Rank</th>

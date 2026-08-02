@@ -636,13 +636,13 @@ export const INITIAL_INVENTORY: InventoryItem[] = [
 ];
 
 export const INITIAL_FINANCIALS: FinancialEntry[] = [
-  { id: 'FIN-1', type: 'Income', category: 'Tuition Fees', description: 'Semester 4 Tuition Collection Batch CS-A', amount: 1850000, date: '2026-07-31', paymentMode: 'Online Payment Gateway', branch: 'Main Campus - New Delhi', gstAmount: 0 },
+  { id: 'FIN-1', type: 'Income', category: 'Tuition Fees', description: 'Year 2 Tuition Collection Batch CS-A', amount: 1850000, date: '2026-07-31', paymentMode: 'Online Payment Gateway', branch: 'Main Campus - New Delhi', gstAmount: 0 },
   { id: 'FIN-2', type: 'Expense', category: 'Payroll', description: 'Monthly Faculty & Staff Salary Disbursement', amount: 980000, date: '2026-07-30', paymentMode: 'Direct Bank NEFT Transfer', branch: 'Main Campus - New Delhi', gstAmount: 0 },
   { id: 'FIN-3', type: 'Expense', category: 'Lab Supplies', description: 'Procurement of High-End GPU Servers', amount: 375000, date: '2026-07-28', paymentMode: 'Corporate Account Transfer', branch: 'Main Campus - New Delhi', gstAmount: 67500 },
 ];
 
 export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  { id: 'NOTIF-1', title: 'Fee Due Reminder', message: 'Semester 4 tuition installment is due for 14 students in B.Tech ECE.', type: 'Fee Due', date: '10 mins ago', read: false, targetRole: 'Accountant' },
+  { id: 'NOTIF-1', title: 'Fee Due Reminder', message: 'Year 2 tuition installment is due for 14 students in B.Tech ECE.', type: 'Fee Due', date: '10 mins ago', read: false, targetRole: 'Accountant' },
   { id: 'NOTIF-2', title: 'Upcoming Mid-Term Schedule Published', message: 'Mid-term exams commence on August 20, 2026. Admit cards ready for download.', type: 'Exam', date: '1 hour ago', read: false, targetRole: 'Student' },
   { id: 'NOTIF-3', title: 'Low Attendance Alert', message: 'Student Rohan Gupta (2026-EC-015) has dropped below 75% attendance threshold.', type: 'Attendance', date: '3 hours ago', read: false, targetRole: 'Teacher' },
   { id: 'NOTIF-4', title: 'Annual Cultural Fest Circular', message: 'Submissions open for TechFest 2026 project exhibitions.', type: 'Announcement', date: '1 day ago', read: true, targetRole: 'All' },

@@ -35,19 +35,37 @@ export function CourseManagement() {
 
   // Add Form State
   const [newCourse, setNewCourse] = useState({
-    code: 'B.Tech-AI',
-    title: 'B.Tech Artificial Intelligence & Data Science',
-    department: 'Computer Science',
+    code: '',
+    title: '',
+    department: 'Computer Science & Engineering',
     durationMonths: 48,
-    semesters: 8,
-    fees: 180000,
-    activeBatches: 2,
-    enrolledStudents: 120,
+    semesters: 4,
+    fees: 100000,
+    activeBatches: 1,
+    enrolledStudents: 0,
     syllabus: [
-      { semester: 1, topics: ['Python Programming', 'Linear Algebra', 'Data Analytics Basic'] },
-      { semester: 2, topics: ['Deep Learning & PyTorch', 'Computer Vision', 'NLP'] },
+      { semester: 1, topics: ['Core Subject Module 1', 'Core Subject Module 2'] },
+      { semester: 2, topics: ['Advanced Specialization Topic 1'] },
     ],
   });
+
+  const handleOpenAddModal = () => {
+    setNewCourse({
+      code: '',
+      title: '',
+      department: 'Computer Science & Engineering',
+      durationMonths: 48,
+      semesters: 4,
+      fees: 100000,
+      activeBatches: 1,
+      enrolledStudents: 0,
+      syllabus: [
+        { semester: 1, topics: ['Core Subject Module 1', 'Core Subject Module 2'] },
+        { semester: 2, topics: ['Advanced Specialization Topic 1'] },
+      ],
+    });
+    setIsAddModalOpen(true);
+  };
 
   // Edit Form State
   const [editForm, setEditForm] = useState({
@@ -126,7 +144,7 @@ export function CourseManagement() {
 
     updateCourse(selectedCourse.id, { syllabus: updatedSyllabus });
     setNewTopicName('');
-    setNotification(`Added subject component "${newTopicName.trim()}" to Semester ${semesterNo}!`);
+    setNotification(`Added subject component "${newTopicName.trim()}" to Year ${semesterNo}!`);
     setTimeout(() => setNotification(''), 3000);
   };
 
@@ -141,7 +159,7 @@ export function CourseManagement() {
     });
 
     updateCourse(selectedCourse.id, { syllabus: updatedSyllabus });
-    setNotification(`Removed subject component from Semester ${semesterNo}`);
+    setNotification(`Removed subject component from Year ${semesterNo}`);
     setTimeout(() => setNotification(''), 3000);
   };
 
@@ -150,11 +168,21 @@ export function CourseManagement() {
     const nextSemNo = selectedCourse.syllabus.length + 1;
     const updatedSyllabus = [
       ...selectedCourse.syllabus,
-      { semester: nextSemNo, topics: [`New Semester ${nextSemNo} Core Subject`] },
+      { semester: nextSemNo, topics: [`New Year ${nextSemNo} Core Subject`] },
     ];
     updateCourse(selectedCourse.id, { syllabus: updatedSyllabus });
-    setNotification(`Added Semester ${nextSemNo} structure to ${selectedCourse.code}!`);
+    setNotification(`Added Year ${nextSemNo} structure to ${selectedCourse.code}!`);
     setTimeout(() => setNotification(''), 3000);
+  };
+
+  const handleDeleteYearModule = (yearNo: number) => {
+    if (!selectedCourse || !canEditCourse) return;
+    if (window.confirm(`Are you sure you want to delete the Year ${yearNo} Module block and all its subjects?`)) {
+      const updatedSyllabus = selectedCourse.syllabus.filter((sem) => sem.semester !== yearNo);
+      updateCourse(selectedCourse.id, { syllabus: updatedSyllabus });
+      setNotification(`Deleted Year ${yearNo} Module block from ${selectedCourse.code}.`);
+      setTimeout(() => setNotification(''), 3000);
+    }
   };
 
   const handleDeleteCourse = (course: Course) => {
@@ -186,13 +214,13 @@ export function CourseManagement() {
             <BookOpen className="h-5 w-5 text-indigo-400" /> Course & Curriculum Management
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Configure degree courses, subject syllabi, semester structure, and uploaded study materials.
+            Configure degree courses, subject syllabi, year structure, and uploaded study materials.
           </p>
         </div>
 
         {canEditCourse && (
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={handleOpenAddModal}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30"
           >
             <Plus className="h-4 w-4" /> Create New Course
@@ -226,7 +254,7 @@ export function CourseManagement() {
               </div>
               <p className="text-slate-300 font-medium mt-1">{c.title}</p>
               <div className="mt-3 pt-3 border-t border-slate-800 flex justify-between items-center text-[11px] text-slate-400">
-                <span>{c.semesters} Semesters</span>
+                <span>{c.semesters} Years</span>
                 <span>{c.enrolledStudents} Students</span>
               </div>
             </div>
@@ -245,7 +273,7 @@ export function CourseManagement() {
                   </span>
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
-                  Dept: {selectedCourse.department} • Annual Fee: ₹{selectedCourse.fees.toLocaleString()} • {selectedCourse.semesters} Semesters
+                  Dept: {selectedCourse.department} • Annual Fee: ₹{selectedCourse.fees.toLocaleString()} • {selectedCourse.semesters} Years
                 </p>
               </div>
 
@@ -279,7 +307,7 @@ export function CourseManagement() {
                     onClick={handleAddSemester}
                     className="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-indigo-300 font-bold text-[11px] transition border border-slate-700 flex items-center gap-1"
                   >
-                    + Add Semester Breakdown
+                    + Add Year Breakdown
                   </button>
                 )}
               </div>
@@ -288,8 +316,19 @@ export function CourseManagement() {
                 {selectedCourse.syllabus.map((sem) => (
                   <div key={sem.semester} className="p-4 rounded-xl bg-slate-900 border border-slate-800 text-xs space-y-3">
                     <div className="flex justify-between items-center font-bold text-slate-200">
-                      <span>Semester {sem.semester} Modules</span>
-                      <span className="text-indigo-400">{sem.topics.length} Subjects</span>
+                      <span>Year {sem.semester} Modules</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-indigo-400">{sem.topics.length} Subjects</span>
+                        {canEditCourse && (
+                          <button
+                            onClick={() => handleDeleteYearModule(sem.semester)}
+                            className="p-1 rounded-lg bg-rose-600/10 hover:bg-rose-600/30 text-rose-400 hover:text-rose-200 transition flex items-center gap-1 text-[11px]"
+                            title={`Delete Year ${sem.semester} Module Block`}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        )}
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -315,7 +354,7 @@ export function CourseManagement() {
                       ))}
                     </div>
 
-                    {/* Add Component to this semester */}
+                    {/* Add Component to this year */}
                     {canEditCourse && (
                       <form
                         onSubmit={(e) => {
@@ -325,7 +364,7 @@ export function CourseManagement() {
                       >
                         <input
                           type="text"
-                          placeholder={`+ Add subject component to Semester ${sem.semester}...`}
+                          placeholder={`+ Add subject component to Year ${sem.semester}...`}
                           value={newTopicSemester === sem.semester ? newTopicName : ''}
                           onChange={(e) => {
                             setNewTopicSemester(sem.semester);
@@ -410,7 +449,7 @@ export function CourseManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 font-semibold mb-1">Total Semesters</label>
+                  <label className="block text-slate-400 font-semibold mb-1">Total Years</label>
                   <input
                     type="number"
                     required
@@ -503,7 +542,7 @@ export function CourseManagement() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-400 font-semibold mb-1">Total Semesters</label>
+                  <label className="block text-slate-400 font-semibold mb-1">Total Years</label>
                   <input
                     type="number"
                     required

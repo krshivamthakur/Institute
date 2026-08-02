@@ -2,42 +2,68 @@
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
-import { BellRing, CheckCircle2, Clock, Plus, X, Send } from 'lucide-react';
+import { NotificationItem } from '@/lib/ims-data';
+import { BellRing, CheckCircle2, Plus, X, Send, Lock, Megaphone, Award, DollarSign, UserCheck } from 'lucide-react';
 
 export function NotificationsModule() {
-  const { notifications, markNotificationAsRead } = useIMS();
-  const [notifList, setNotifList] = useState(notifications);
+  const {
+    currentRole,
+    notifications,
+    addNotification,
+    markNotificationAsRead,
+    markAllNotificationsAsRead,
+  } = useIMS();
+
+  const canBroadcast = ['Super Admin', 'Director', 'Principal', 'Branch Head', 'Academic Coordinator', 'Teacher', 'Accountant', 'HR'].includes(currentRole);
+
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [notificationMsg, setNotificationMsg] = useState('');
 
   const [newNotice, setNewNotice] = useState({
-    title: 'Mid-Term Exam Timetable Published',
-    message: 'All students can download their admit card from the Exam & Marksheet portal.',
-    targetRole: 'All Students',
+    title: '',
+    message: '',
+    type: 'Announcement' as NotificationItem['type'],
+    targetRole: 'All',
   });
 
+  const handleOpenAddModal = () => {
+    setNewNotice({
+      title: '',
+      message: '',
+      type: 'Announcement',
+      targetRole: 'All',
+    });
+    setIsAddModalOpen(true);
+  };
+
   const handleMarkAllRead = () => {
-    setNotifList((prev) => prev.map((n) => ({ ...n, read: true })));
+    markAllNotificationsAsRead();
     setNotificationMsg('All notifications marked as read!');
     setTimeout(() => setNotificationMsg(''), 2500);
   };
 
   const handleCreateNotice = (e: React.FormEvent) => {
     e.preventDefault();
-    const created = {
-      id: `NOTIF-${Math.floor(100 + Math.random() * 900)}`,
+    addNotification({
       title: newNotice.title,
       message: newNotice.message,
-      type: 'Announcement' as const,
-      date: new Date().toISOString().split('T')[0],
+      type: newNotice.type,
+      date: 'Just now',
       read: false,
       targetRole: newNotice.targetRole,
-    };
-    setNotifList((prev) => [created, ...prev]);
+    });
     setIsAddModalOpen(false);
+    setNewNotice({
+      title: '',
+      message: '',
+      type: 'Announcement',
+      targetRole: 'All',
+    });
     setNotificationMsg('New announcement broadcasted successfully!');
     setTimeout(() => setNotificationMsg(''), 3000);
   };
+
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <div className="space-y-6">
@@ -48,53 +74,59 @@ export function NotificationsModule() {
             <BellRing className="h-5 w-5 text-amber-400" /> Notifications & Triggered Reminders
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Automated triggers for fee due alerts, low attendance warnings, exam notifications, and birthday wishes.
+            Automated triggers for fee due alerts, low attendance warnings, exam notifications, and broadcast circulars. ({unreadCount} Unread)
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={handleMarkAllRead}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700"
-          >
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" /> Mark All as Read
-          </button>
-          <button
-            onClick={() => setIsAddModalOpen(true)}
-            className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition shadow-lg shadow-amber-600/30"
-          >
-            <Plus className="h-4 w-4" /> Broadcast Announcement
-          </button>
+          {unreadCount > 0 && (
+            <button
+              onClick={handleMarkAllRead}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700"
+            >
+              <CheckCircle2 className="h-4 w-4 text-emerald-400" /> Mark All as Read
+            </button>
+          )}
+          {canBroadcast && (
+            <button
+              onClick={handleOpenAddModal}
+              className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold transition shadow-lg shadow-amber-600/30"
+            >
+              <Plus className="h-4 w-4" /> Broadcast Announcement
+            </button>
+          )}
         </div>
       </div>
 
       {notificationMsg && (
         <div className="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2">
-          <CheckCircle2 className="h-4 w-4 text-emerald-400" /> {notificationMsg}
+          <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" /> {notificationMsg}
         </div>
       )}
 
-      {/* List */}
+      {/* Notifications List */}
       <div className="space-y-3">
-        {notifList.map((n) => (
+        {notifications.map((n) => (
           <div
             key={n.id}
-            onClick={() => {
-              markNotificationAsRead(n.id);
-              setNotifList((prev) => prev.map((item) => (item.id === n.id ? { ...item, read: true } : item)));
-            }}
+            onClick={() => markNotificationAsRead(n.id)}
             className={`p-4 rounded-2xl border text-xs cursor-pointer transition ${
               n.read
                 ? 'bg-slate-900/40 border-slate-800 text-slate-400'
                 : 'bg-blue-950/40 border-blue-700 text-slate-100 font-medium shadow-md'
             }`}
           >
-            <div className="flex justify-between font-bold">
+            <div className="flex justify-between items-center font-bold">
               <span className="text-blue-300 text-sm flex items-center gap-2">
                 {!n.read && <span className="h-2 w-2 rounded-full bg-blue-400 animate-ping" />}
                 {n.title}
               </span>
-              <span className="text-[10px] text-slate-500">{n.date}</span>
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded-full text-[10px] uppercase font-mono bg-slate-800 text-slate-300 border border-slate-700">
+                  {n.type || 'Notice'}
+                </span>
+                <span className="text-[10px] text-slate-500 font-mono">{n.date}</span>
+              </div>
             </div>
             <p className="mt-1 text-slate-300">{n.message}</p>
           </div>
@@ -118,24 +150,41 @@ export function NotificationsModule() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Mid-Term Examination Timetable"
+                  placeholder="e.g. Mid-Term Examination Schedule"
                   value={newNotice.title}
                   onChange={(e) => setNewNotice({ ...newNotice, title: e.target.value })}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
                 />
               </div>
 
-              <div>
-                <label className="block text-slate-400 font-semibold mb-1">Target Role Audience</label>
-                <select
-                  value={newNotice.targetRole}
-                  onChange={(e) => setNewNotice({ ...newNotice, targetRole: e.target.value })}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white"
-                >
-                  <option value="All Students">All Students</option>
-                  <option value="Faculty & Staff">Faculty & Staff</option>
-                  <option value="Parents">Parents</option>
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Notification Type</label>
+                  <select
+                    value={newNotice.type}
+                    onChange={(e) => setNewNotice({ ...newNotice, type: e.target.value as NotificationItem['type'] })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white"
+                  >
+                    <option value="Announcement">Announcement</option>
+                    <option value="Fee Due">Fee Due</option>
+                    <option value="Exam">Exam</option>
+                    <option value="Attendance">Attendance</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-400 font-semibold mb-1">Target Role Audience</label>
+                  <select
+                    value={newNotice.targetRole}
+                    onChange={(e) => setNewNotice({ ...newNotice, targetRole: e.target.value })}
+                    className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white"
+                  >
+                    <option value="All">All Roles</option>
+                    <option value="Student">Students</option>
+                    <option value="Teacher">Faculty</option>
+                    <option value="Accountant">Accountants</option>
+                  </select>
+                </div>
               </div>
 
               <div>

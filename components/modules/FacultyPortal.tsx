@@ -46,7 +46,7 @@ export function FacultyPortal() {
         >
           <Award className="h-6 w-6 text-amber-400" />
           <h3 className="font-bold text-white text-sm">Marks Entry Gradebook</h3>
-          <p className="text-xs text-slate-400">Input mid-term and semester exam marks for auto grade calculation.</p>
+          <p className="text-xs text-slate-400">Input mid-term and year exam marks for auto grade calculation.</p>
         </div>
 
         <div

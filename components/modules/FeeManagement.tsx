@@ -103,7 +103,7 @@ export function FeeManagement() {
               <p className="text-xs text-slate-300 mt-1 max-w-xl">
                 {isParentRole
                   ? `Review your child ${student.name}'s tuition fee statement, track receipt history, pay pending dues online, and download verified payment receipts.`
-                  : 'View your tuition fee statement, track payment receipts, pay outstanding semester dues online, and download official fee receipts.'}
+                  : 'View your tuition fee statement, track payment receipts, pay outstanding year dues online, and download official fee receipts.'}
               </p>
             </div>
 
@@ -180,37 +180,39 @@ export function FeeManagement() {
             <h3 className="font-bold text-sm text-white">My Payment Transactions & Receipts</h3>
             <span className="text-xs text-emerald-400 font-bold">● Secure SSL Gateway</span>
           </div>
-          <table className="w-full text-left text-xs text-slate-300">
-            <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
-              <tr>
-                <th className="p-3.5">Txn ID</th>
-                <th className="p-3.5">Fee Type</th>
-                <th className="p-3.5">Amount Paid</th>
-                <th className="p-3.5">Payment Mode</th>
-                <th className="p-3.5">Date</th>
-                <th className="p-3.5 text-right">Receipt</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-800">
-              {myTransactions.map((tx) => (
-                <tr key={tx.id}>
-                  <td className="p-3.5 font-mono text-slate-400">{tx.transactionId}</td>
-                  <td className="p-3.5 font-bold text-white">{tx.feeType}</td>
-                  <td className="p-3.5 font-bold text-emerald-300 font-mono">₹{tx.amount.toLocaleString()}</td>
-                  <td className="p-3.5 text-slate-400">{tx.paymentMode}</td>
-                  <td className="p-3.5 text-slate-400">{tx.date}</td>
-                  <td className="p-3.5 text-right">
-                    <button
-                      onClick={() => setActiveReceipt(tx)}
-                      className="px-3 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white font-bold text-[11px] transition flex items-center gap-1.5 ml-auto"
-                    >
-                      <Download className="h-3 w-3" /> View / Download Receipt
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px] text-left text-xs text-slate-300">
+              <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
+                <tr>
+                  <th className="p-3.5">Txn ID</th>
+                  <th className="p-3.5">Fee Type</th>
+                  <th className="p-3.5">Amount Paid</th>
+                  <th className="p-3.5">Payment Mode</th>
+                  <th className="p-3.5">Date</th>
+                  <th className="p-3.5 text-right">Receipt</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-slate-800">
+                {myTransactions.map((tx) => (
+                  <tr key={tx.id}>
+                    <td className="p-3.5 font-mono text-slate-400">{tx.transactionId}</td>
+                    <td className="p-3.5 font-bold text-white">{tx.feeType}</td>
+                    <td className="p-3.5 font-bold text-emerald-300 font-mono">₹{tx.amount.toLocaleString()}</td>
+                    <td className="p-3.5 text-slate-400">{tx.paymentMode}</td>
+                    <td className="p-3.5 text-slate-400">{tx.date}</td>
+                    <td className="p-3.5 text-right">
+                      <button
+                        onClick={() => setActiveReceipt(tx)}
+                        className="px-3 py-1 rounded-lg bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white font-bold text-[11px] transition flex items-center gap-1.5 ml-auto whitespace-nowrap"
+                      >
+                        <Download className="h-3 w-3" /> View / Download Receipt
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Printable Receipt Modal */}
@@ -292,7 +294,7 @@ export function FeeManagement() {
           <h3 className="font-bold text-sm text-white">Recent Payment Transactions</h3>
           <span className="text-xs text-emerald-400 font-bold">● Payment Gateways Active</span>
         </div>
-        <table className="w-full text-left text-xs text-slate-300">
+        <table className="w-full min-w-[650px] text-left text-xs text-slate-300">
           <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
             <tr>
               <th className="p-3.5">Txn ID</th>

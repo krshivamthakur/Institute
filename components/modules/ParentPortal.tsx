@@ -80,7 +80,7 @@ export function ParentPortal() {
           className="p-5 rounded-2xl glass-panel border border-slate-800 hover:border-amber-500/50 transition cursor-pointer space-y-2 group"
         >
           <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-            <span>Semester Gradebook / Marksheet</span>
+            <span>Year Gradebook / Marksheet</span>
             <Award className="h-4 w-4 text-amber-400" />
           </div>
           <p className="text-3xl font-black text-amber-300">{child.gpa} / 4.0 GPA</p>

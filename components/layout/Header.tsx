@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useIMS } from '@/context/IMSContext';
 import { MOCK_BRANCHES } from '@/lib/ims-data';
 import {
@@ -17,6 +17,7 @@ import {
   User as UserIcon,
   Menu,
   X,
+  CheckCircle2,
 } from 'lucide-react';
 
 export function Header() {
@@ -33,11 +34,27 @@ export function Header() {
     setIsMobileMenuOpen,
     notifications,
     markNotificationAsRead,
+    markAllNotificationsAsRead,
     systemSettings,
   } = useIMS();
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(event.target as Node)) {
+        setIsNotifOpen(false);
+      }
+    };
+    if (isNotifOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNotifOpen]);
 
   // Logo Icon Resolver
   const renderHeaderLogo = () => {
@@ -152,7 +169,7 @@ export function Header() {
           </button>
 
           {/* Notifications Center Button */}
-          <div className="relative hidden md:block">
+          <div ref={notifRef} className="relative hidden md:block">
             <button
               onClick={() => setIsNotifOpen(!isNotifOpen)}
               className="relative p-2 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/80 text-slate-300 transition"
@@ -172,7 +189,20 @@ export function Header() {
                   <h4 className="text-xs font-bold text-slate-200 flex items-center gap-2">
                     <Bell className="h-3.5 w-3.5 text-blue-400" /> Notifications & Alerts
                   </h4>
-                  <span className="text-[10px] text-slate-400">{unreadCount} unread</span>
+                  <div className="flex items-center gap-2">
+                    {unreadCount > 0 && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          markAllNotificationsAsRead();
+                        }}
+                        className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-0.5"
+                      >
+                        <CheckCircle2 className="h-3 w-3" /> Mark Read All
+                      </button>
+                    )}
+                    <span className="text-[10px] text-slate-400">{unreadCount} unread</span>
+                  </div>
                 </div>
                 <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
                   {notifications.map((n) => (

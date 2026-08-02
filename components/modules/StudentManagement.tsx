@@ -27,7 +27,21 @@ import {
 } from 'lucide-react';
 
 export function StudentManagement() {
-  const { authUser, currentRole, students, addStudent, updateStudent, issueCertificate } = useIMS();
+  const { authUser, currentRole, students, courses, addStudent, updateStudent, issueCertificate } = useIMS();
+
+  const dynamicBatchOptions = Array.from(
+    new Set([
+      'B.Tech CS - Year 2',
+      'B.Tech ECE - Year 2',
+      'MBA - Year 1',
+      'BCA - Year 1',
+      ...courses.flatMap((c) => [
+        `${c.code} - Year 1`,
+        `${c.code} - Year 2`,
+      ]),
+      ...students.map((s) => s.classBatch),
+    ])
+  );
 
   const isStudentRole = currentRole === 'Student' || currentRole === 'Parent';
   const myStudent = currentRole === 'Parent'
@@ -71,7 +85,7 @@ export function StudentManagement() {
     name: '',
     email: '',
     phone: '',
-    classBatch: 'B.Tech CS - Sem 4',
+    classBatch: 'B.Tech CS - Year 2',
     branch: 'Main Campus - New Delhi',
     gender: 'Male' as const,
     dob: '2004-01-01',
@@ -84,8 +98,31 @@ export function StudentManagement() {
     feeDue: 0,
     gpa: 3.8,
     avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150',
-    documentsUploaded: { aadhar: true, marksheet: true, photo: true },
+    documentsUploaded: { aadhar: false, marksheet: false, photo: false },
   });
+
+  const handleOpenAdmissionModal = () => {
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      classBatch: 'B.Tech CS - Year 2',
+      branch: 'Main Campus - New Delhi',
+      gender: 'Male' as const,
+      dob: '2004-01-01',
+      admissionDate: new Date().toISOString().split('T')[0],
+      status: 'Active' as const,
+      parentName: '',
+      parentPhone: '',
+      attendancePct: 100,
+      feeStatus: 'Paid' as const,
+      feeDue: 0,
+      gpa: 3.8,
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150',
+      documentsUploaded: { aadhar: false, marksheet: false, photo: false },
+    });
+    setIsAddModalOpen(true);
+  };
 
   // Filter students for admin view
   const filteredStudents = students.filter((s) => {
@@ -510,7 +547,7 @@ export function StudentManagement() {
 
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={handleOpenAdmissionModal}
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition shadow-lg shadow-blue-500/20"
           >
             <UserPlus className="h-4 w-4" /> + Register New Student
@@ -590,7 +627,7 @@ export function StudentManagement() {
       {/* Students Data Table */}
       <div className="rounded-2xl glass-panel border border-slate-800 overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs text-slate-300">
+          <table className="w-full min-w-[650px] text-left text-xs text-slate-300">
             <thead className="bg-slate-900/90 text-slate-400 uppercase font-bold text-[10px] tracking-wider border-b border-slate-800">
               <tr>
                 <th className="p-3.5">Student Info</th>
@@ -746,10 +783,14 @@ export function StudentManagement() {
                   onChange={(e) => setEditingStudent({ ...editingStudent, classBatch: e.target.value })}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white"
                 >
-                  <option value="B.Tech CS - Sem 4">B.Tech CS - Sem 4</option>
-                  <option value="B.Tech ECE - Sem 4">B.Tech ECE - Sem 4</option>
-                  <option value="MBA - Sem 2">MBA - Sem 2</option>
-                  <option value="BCA - Sem 2">BCA - Sem 2</option>
+                  {dynamicBatchOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                  {!dynamicBatchOptions.includes(editingStudent.classBatch) && (
+                    <option value={editingStudent.classBatch}>{editingStudent.classBatch}</option>
+                  )}
                 </select>
               </div>
 
@@ -919,9 +960,11 @@ export function StudentManagement() {
                     onChange={(e) => setFormData({ ...formData, classBatch: e.target.value })}
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2 text-white"
                   >
-                    <option value="B.Tech CS - Sem 4">B.Tech CS - Sem 4</option>
-                    <option value="B.Tech ECE - Sem 4">B.Tech ECE - Sem 4</option>
-                    <option value="MBA - Sem 2">MBA - Sem 2</option>
+                    {dynamicBatchOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div>

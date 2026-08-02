@@ -107,6 +107,7 @@ interface IMSContextType {
   addFeeTransaction: (tx: Omit<FeeTransaction, 'id'>) => void;
   issueCertificate: (cert: Omit<CertificateRecord, 'id'>) => void;
   addLead: (lead: Omit<LeadEnquiry, 'id'>) => void;
+  updateLead: (id: string, updatedFields: Partial<LeadEnquiry>) => void;
   updateLeadStatus: (id: string, status: string) => void;
   approveAdmission: (leadId: string) => void;
   addExam: (exam: Omit<ExamRecord, 'id'>) => void;
@@ -127,7 +128,9 @@ interface IMSContextType {
   deleteInventoryItem: (id: string) => void;
   addFinancialEntry: (entry: Omit<FinancialEntry, 'id'>) => void;
   addAuditLog: (action: string, details: string) => void;
+  addNotification: (notification: Omit<NotificationItem, 'id'>) => void;
   markNotificationAsRead: (id: string) => void;
+  markAllNotificationsAsRead: () => void;
 }
 
 const IMSContext = createContext<IMSContextType | undefined>(undefined);
@@ -688,6 +691,11 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const updateLead = (id: string, updatedFields: Partial<LeadEnquiry>) => {
+    setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, ...updatedFields } : l)));
+    addAuditLog('LEAD_EDIT', `Updated candidate enquiry details for ID ${id}`);
+  };
+
   const updateLeadStatus = (id: string, status: string) => {
     const validStatus = status as LeadEnquiry['status'];
     setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status: validStatus } : l)));
@@ -959,8 +967,22 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const addNotification = (notification: Omit<NotificationItem, 'id'>) => {
+    const newNotif: NotificationItem = {
+      ...notification,
+      id: `NOTIF-${Date.now()}`,
+    };
+    setNotifications((prev) => [newNotif, ...prev]);
+    addAuditLog('NOTIFICATION_BROADCAST', `Broadcasted notification: ${notification.title}`);
+  };
+
   const markNotificationAsRead = (id: string) => {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  };
+
+  const markAllNotificationsAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    addAuditLog('NOTIFICATION_READ_ALL', 'Marked all notifications as read');
   };
 
   return (
@@ -1021,6 +1043,7 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         addFeeTransaction,
         issueCertificate,
         addLead,
+        updateLead,
         updateLeadStatus,
         approveAdmission,
         addExam,
@@ -1041,7 +1064,9 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         deleteInventoryItem,
         addFinancialEntry,
         addAuditLog,
+        addNotification,
         markNotificationAsRead,
+        markAllNotificationsAsRead,
       }}
     >
       {children}

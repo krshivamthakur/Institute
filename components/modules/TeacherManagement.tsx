@@ -179,7 +179,7 @@ export function TeacherManagement() {
             <DollarSign className="h-4 w-4 text-emerald-400" /> Monthly Payroll Calculator & Disbursement
           </h3>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
+            <table className="w-full min-w-[650px] text-left text-xs text-slate-300">
               <thead className="bg-slate-900 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-800">
                 <tr>
                   <th className="p-3">Faculty Name</th>

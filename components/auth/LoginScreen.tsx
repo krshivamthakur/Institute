@@ -94,7 +94,7 @@ export function LoginScreen() {
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-md w-full glass-panel-glow border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 space-y-6 animate-in fade-in zoom-in-95">
-        
+
         {/* Brand & Logo Header */}
         <div className="flex flex-col items-center text-center space-y-3">
           {renderLogoIcon()}
@@ -106,9 +106,7 @@ export function LoginScreen() {
               {systemSettings?.projectTagline || 'Next-Gen Institute Management Platform'}
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center gap-1.5">
-            <Lock className="h-3 w-3 text-purple-400" /> Protected Access Portal
-          </span>
+
         </div>
 
         {/* Error Alert */}
@@ -174,50 +172,6 @@ export function LoginScreen() {
             )}
           </button>
         </form>
-
-        {/* Quick Demo Login Selector Chips */}
-        <div className="pt-3 border-t border-slate-800/80 space-y-2.5">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
-              <Sparkles className="h-3.5 w-3.5 text-amber-400" /> 1-Click Quick Demo Login:
-            </span>
-            <span className="text-[10px] text-slate-500 font-mono">Pass: admin123</span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {[
-              { label: '⚡ Super Admin', role: 'Super Admin' },
-              { label: '🎓 Student (Aarav)', role: 'Student' },
-              { label: '👨‍🏫 Teacher (Dr. Meenakshi)', role: 'Teacher' },
-              { label: '💰 Accountant', role: 'Accountant' },
-              { label: '👔 Director', role: 'Director' },
-              { label: '👨‍👩‍👦 Parent', role: 'Parent' },
-            ].map((chip) => {
-              const presetUser = PRESET_USERS.find((u) => u.role === chip.role) || PRESET_USERS[0];
-              return (
-                <button
-                  key={chip.label}
-                  type="button"
-                  onClick={() => handleQuickLogin(presetUser)}
-                  className="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-purple-950/40 text-slate-300 hover:text-white border border-slate-800 hover:border-purple-500/40 text-[10px] font-bold transition text-left truncate"
-                  title={`Log in as ${presetUser.name} (${presetUser.id})`}
-                >
-                  {chip.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Security Notice */}
-        <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 text-[10px] text-slate-400 space-y-1">
-          <p className="font-bold text-slate-300 flex items-center gap-1">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" /> System Authentication Policy
-          </p>
-          <p>
-            Users are authenticated based on their ID & Password. Role permissions are enforced automatically upon login.
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -15,8 +15,14 @@ import {
 } from 'lucide-react';
 
 export function ParentDashboard() {
-  const { students, feeTransactions, setActiveModule } = useIMS();
-  const child = students[0]; // Ward context
+  const { authUser, students, feeTransactions, setActiveModule } = useIMS();
+  const child =
+    students.find(
+      (s) =>
+        s.id === authUser?.childStudentId ||
+        s.rollNo === authUser?.childStudentId ||
+        (authUser?.name && s.parentName.toLowerCase().includes(authUser.name.toLowerCase().replace('(parent)', '').trim()))
+    ) || students[0];
 
   return (
     <div className="space-y-6">

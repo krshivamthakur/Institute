@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useIMS } from '@/context/IMSContext';
 import { MOCK_BRANCHES } from '@/lib/ims-data';
+import { UserProfileModal } from '@/components/layout/UserProfileModal';
 import {
   Search,
   Bell,
@@ -18,6 +19,7 @@ import {
   Menu,
   X,
   CheckCircle2,
+  Edit3,
 } from 'lucide-react';
 
 export function Header() {
@@ -37,6 +39,8 @@ export function Header() {
     markAllNotificationsAsRead,
     systemSettings,
   } = useIMS();
+
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -249,10 +253,14 @@ export function Header() {
             )}
           </div>
 
-          {/* Authenticated User Profile Badge & Logout Button */}
+          {/* Authenticated User Profile Badge & Edit Profile Button & Logout */}
           {authUser && (
             <div className="flex items-center gap-2 pl-2 border-l border-slate-800">
-              <div className="flex items-center gap-2.5 bg-slate-900/90 border border-slate-700/80 rounded-xl px-3 py-1.5 text-xs shadow-md">
+              <div
+                onClick={() => setIsProfileModalOpen(true)}
+                className="flex items-center gap-2.5 bg-slate-900/90 border border-slate-700/80 hover:border-purple-500/50 rounded-xl px-3 py-1.5 text-xs shadow-md cursor-pointer transition group"
+                title="Click to Edit Profile"
+              >
                 {authUser.avatar ? (
                   <img
                     src={authUser.avatar}
@@ -266,8 +274,9 @@ export function Header() {
                 )}
 
                 <div className="hidden sm:block text-left min-w-0">
-                  <div className="font-bold text-white text-xs truncate flex items-center gap-1">
+                  <div className="font-bold text-white text-xs truncate flex items-center gap-1 group-hover:text-purple-300 transition">
                     <span>{authUser.name}</span>
+                    <Edit3 className="h-3 w-3 text-slate-400 group-hover:text-purple-300" />
                   </div>
                   <span className="text-[10px] text-purple-300 font-extrabold uppercase tracking-wider block">
                     {authUser.role}
@@ -276,12 +285,23 @@ export function Header() {
               </div>
 
               <button
+                onClick={() => setIsProfileModalOpen(true)}
+                className="p-2 rounded-xl bg-slate-900 hover:bg-purple-600/20 text-slate-400 hover:text-purple-300 border border-slate-800 hover:border-purple-500/40 transition sm:hidden"
+                title="Edit Profile"
+              >
+                <Edit3 className="h-4 w-4" />
+              </button>
+
+              <button
                 onClick={logout}
                 className="p-2 rounded-xl bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-500/40 transition"
                 title="Sign Out of Session"
               >
                 <LogOut className="h-4 w-4 text-slate-400 hover:text-rose-400" />
               </button>
+
+              {/* User Profile Edit Modal */}
+              <UserProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
             </div>
           )}
         </div>

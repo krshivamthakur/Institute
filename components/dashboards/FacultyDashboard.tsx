@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
+import { UserProfileModal } from '@/components/layout/UserProfileModal';
 import {
   GraduationCap,
   Calendar,
@@ -16,12 +17,50 @@ import {
   Users,
   Check,
   X,
+  Edit3,
 } from 'lucide-react';
 
 export function FacultyDashboard() {
-  const { timetable, students, markAttendance, addAuditLog, setActiveModule } = useIMS();
+  const { authUser, teachers, timetable, students, lmsMaterials, markAttendance, addAuditLog, setActiveModule } = useIMS();
   const [selectedClass, setSelectedClass] = useState('B.Tech CS - Year 2');
   const [attendanceTaken, setAttendanceTaken] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  // Dynamic Teacher resolution logic based on logged-in user session
+  let activeTeacher: typeof teachers[0];
+  const matched = teachers.find(
+    (t) =>
+      t.id === authUser?.id ||
+      t.empId === authUser?.empIdOrRollNo ||
+      t.id === authUser?.empIdOrRollNo ||
+      t.email.toLowerCase() === authUser?.email?.toLowerCase() ||
+      t.name.toLowerCase().includes(authUser?.name?.toLowerCase() || '') ||
+      (authUser?.name && authUser.name.toLowerCase().includes(t.name.toLowerCase()))
+  );
+
+  if (matched) {
+    activeTeacher = matched;
+  } else if (authUser?.role === 'Teacher') {
+    activeTeacher = {
+      id: authUser?.id || 'TCH-5010',
+      empId: authUser?.empIdOrRollNo || 'TEH-001',
+      name: authUser?.name || 'Sumit Saourav',
+      email: authUser?.email || 'info@gyanvidyamandir.in',
+      phone: '+91 98765 12345',
+      department: 'Computer Science',
+      designation: 'Professor & HOD',
+      subjectSpecialization: ['Data Structures', 'Machine Learning', 'Artificial Intelligence', 'Software Engineering'],
+      branch: authUser?.branch || 'Main Campus - New Delhi',
+      salary: 150000,
+      status: 'Active',
+      attendancePct: 98.5,
+      rating: 4.9,
+      joiningDate: '2019-03-15',
+      avatar: authUser?.avatar || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=150',
+    };
+  } else {
+    activeTeacher = teachers[0];
+  }
 
   const handleQuickAttendance = () => {
     setAttendanceTaken(true);
@@ -33,24 +72,37 @@ export function FacultyDashboard() {
       {/* Faculty Hero Banner */}
       <div className="p-6 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950/80 to-slate-900 border border-purple-500/30 glass-panel shadow-2xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center gap-1.5">
-                <GraduationCap className="h-3.5 w-3.5 text-purple-400" /> Faculty Workspace
-              </span>
-              <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                Active Term: Spring 2026
-              </span>
+          <div className="flex items-center gap-4">
+            <img
+              src={authUser?.avatar || activeTeacher.avatar}
+              alt={activeTeacher.name}
+              className="h-16 w-16 rounded-2xl object-cover border-2 border-purple-400 shadow-xl"
+            />
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center gap-1.5">
+                  <GraduationCap className="h-3.5 w-3.5 text-purple-400" /> Faculty Workspace
+                </span>
+                <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                  EMP ID: {activeTeacher.empId}
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                Welcome, {activeTeacher.name}!
+              </h2>
+              <p className="text-xs text-slate-300 mt-0.5">
+                {activeTeacher.designation} • <span className="text-purple-300">{activeTeacher.department}</span> ({activeTeacher.branch})
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-              Faculty Teaching & Classroom Hub
-            </h2>
-            <p className="text-xs text-slate-300 mt-1 max-w-xl">
-              Access today's lecture schedule, mark student attendance, upload LMS courseware, and grade assignments.
-            </p>
           </div>
 
           <div className="flex flex-wrap gap-2.5">
+            <button
+              onClick={() => setIsProfileModalOpen(true)}
+              className="px-4 py-2.5 rounded-xl bg-purple-600/30 hover:bg-purple-600 text-purple-200 hover:text-white font-bold text-xs border border-purple-500/40 shadow-lg flex items-center justify-center gap-2 transition"
+            >
+              <Edit3 className="h-4 w-4 text-purple-400" /> Edit Profile
+            </button>
             <button
               onClick={() => setActiveModule('attendance')}
               className="px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center gap-2"
@@ -66,6 +118,9 @@ export function FacultyDashboard() {
           </div>
         </div>
       </div>
+
+      {/* User Profile Modal */}
+      <UserProfileModal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)} />
 
       {/* Quick KPI Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

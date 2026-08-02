@@ -5,7 +5,7 @@ import { LeadEnquiry } from '@/lib/ims-data';
 
 export async function GET(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Receptionist', 'Academic Coordinator'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Receptionist', 'Academic Coordinator', 'Teacher', 'Branch Head'],
   });
   if (securityError) return securityError;
 

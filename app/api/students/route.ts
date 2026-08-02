@@ -4,7 +4,7 @@ import { getDb, saveDb } from '@/lib/db';
 import { Student } from '@/lib/ims-data';
 
 export async function GET(req: NextRequest) {
-  // 1. RBAC Guard: Only administrative & faculty roles can view full student directory
+  // 1. RBAC Guard: Allow all authenticated user roles
   const securityError = await guardApiRoute(req, {
     allowedRoles: [
       'Super Admin',
@@ -16,6 +16,11 @@ export async function GET(req: NextRequest) {
       'HR',
       'Receptionist',
       'Teacher',
+      'Student',
+      'Parent',
+      'Library Staff',
+      'Transport Manager',
+      'Hostel Warden',
     ],
   });
   if (securityError) return securityError;

@@ -5,17 +5,17 @@ import { Teacher } from '@/lib/ims-data';
 
 export async function GET(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Academic Coordinator', 'HR', 'Teacher'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Branch Head', 'Academic Coordinator', 'HR', 'Teacher', 'Student', 'Parent', 'Accountant', 'Receptionist', 'Library Staff', 'Transport Manager', 'Hostel Warden'],
   });
   if (securityError) return securityError;
 
   const db = getDb();
-  return apiResponse(db.teachers, 200, 'Teachers retrieved');
+  return apiResponse(db.teachers || [], 200, 'Teachers retrieved');
 }
 
 export async function POST(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'HR'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'HR', 'Teacher', 'Academic Coordinator', 'Branch Head'],
   });
   if (securityError) return securityError;
 
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
     const db = getDb();
     const newTeacher: Teacher = {
-      id: `TCH-${Date.now().toString().slice(-4)}`,
+      id: body.id || `TCH-${Date.now().toString().slice(-4)}`,
       empId: body.empId || `EMP-${Math.floor(100 + Math.random() * 900)}`,
       name: body.name,
       email: body.email,
@@ -48,5 +48,41 @@ export async function POST(req: NextRequest) {
     return apiResponse(newTeacher, 201, 'Teacher added');
   } catch (err: any) {
     return apiError(`Failed to create teacher: ${err.message}`, 500);
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  const securityError = await guardApiRoute(req, {
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Branch Head', 'Academic Coordinator', 'HR', 'Teacher'],
+  });
+  if (securityError) return securityError;
+
+  try {
+    const body = await req.json();
+    if (!body.id) {
+      return apiError('Teacher ID is required for update', 400);
+    }
+
+    const db = getDb();
+    const existingTeachers = db.teachers || [];
+    let updated = false;
+
+    const newTeachers = existingTeachers.map((t) => {
+      if (t.id === body.id) {
+        updated = true;
+        return { ...t, ...body };
+      }
+      return t;
+    });
+
+    if (!updated) {
+      return apiError(`Teacher ID ${body.id} not found`, 404);
+    }
+
+    saveDb({ teachers: newTeachers });
+    const target = newTeachers.find((t) => t.id === body.id);
+    return apiResponse(target, 200, 'Teacher profile updated');
+  } catch (err: any) {
+    return apiError(`Failed to update teacher: ${err.message}`, 500);
   }
 }

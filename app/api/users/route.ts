@@ -5,7 +5,7 @@ import { AuthUser } from '@/lib/ims-data';
 
 export async function GET(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Academic Coordinator', 'HR'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Branch Head', 'Academic Coordinator', 'HR', 'Teacher', 'Student', 'Parent', 'Accountant', 'Receptionist', 'Library Staff', 'Transport Manager', 'Hostel Warden'],
   });
   if (securityError) return securityError;
 
@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'HR'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'HR', 'Branch Head', 'Academic Coordinator', 'Teacher'],
   });
   if (securityError) return securityError;
 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'HR'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Branch Head', 'Academic Coordinator', 'HR', 'Teacher', 'Student', 'Parent', 'Accountant', 'Receptionist', 'Library Staff', 'Transport Manager', 'Hostel Warden'],
   });
   if (securityError) return securityError;
 
@@ -66,8 +66,14 @@ export async function PUT(req: NextRequest) {
     const existingUsers = db.users || [];
     let targetFound = false;
 
-    const updatedUsers = existingUsers.map((u) => {
-      if (u.id === body.id) {
+    const targetKey = String(body.id).toLowerCase();
+
+    let updatedUsers = existingUsers.map((u) => {
+      const matchesId = u.id.toLowerCase() === targetKey;
+      const matchesEmail = u.email.toLowerCase() === targetKey;
+      const matchesEmpRoll = u.empIdOrRollNo?.toLowerCase() === targetKey;
+
+      if (matchesId || matchesEmail || matchesEmpRoll) {
         targetFound = true;
         return { ...u, ...body };
       }
@@ -75,11 +81,29 @@ export async function PUT(req: NextRequest) {
     });
 
     if (!targetFound) {
-      return apiError(`User account ID ${body.id} not found`, 404);
+      // Upsert: Create new user entry dynamically if not previously in seed list
+      const newUser: AuthUser = {
+        id: body.id,
+        name: body.name || body.id.split('@')[0],
+        email: body.email || (body.id.includes('@') ? body.id : `${body.id.toLowerCase()}@institute.edu`),
+        role: body.role || 'Teacher',
+        empIdOrRollNo: body.empIdOrRollNo || body.id,
+        branch: body.branch || 'Main Campus - New Delhi',
+        avatar: body.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150',
+        password: body.password || 'password123',
+      };
+      updatedUsers = [newUser, ...existingUsers];
     }
 
     saveDb({ users: updatedUsers });
-    const updatedUser = updatedUsers.find((u) => u.id === body.id);
+    const updatedUser =
+      updatedUsers.find(
+        (u) =>
+          u.id.toLowerCase() === targetKey ||
+          u.email.toLowerCase() === targetKey ||
+          u.empIdOrRollNo?.toLowerCase() === targetKey
+      ) || updatedUsers[0];
+
     return apiResponse(updatedUser, 200, 'User account updated successfully');
   } catch (err: any) {
     return apiError(`Failed to update user: ${err.message}`, 500);
@@ -100,7 +124,14 @@ export async function DELETE(req: NextRequest) {
 
     const db = getDb();
     const existingUsers = db.users || [];
-    const updatedUsers = existingUsers.filter((u) => u.id !== body.id);
+    const targetKey = String(body.id).toLowerCase();
+
+    const updatedUsers = existingUsers.filter(
+      (u) =>
+        u.id.toLowerCase() !== targetKey &&
+        u.email.toLowerCase() !== targetKey &&
+        u.empIdOrRollNo?.toLowerCase() !== targetKey
+    );
 
     saveDb({ users: updatedUsers });
     return apiResponse({ success: true, deletedId: body.id }, 200, 'User account deleted successfully');

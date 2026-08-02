@@ -5,7 +5,7 @@ import { InventoryItem } from '@/lib/ims-data';
 
 export async function GET(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Accountant', 'HR'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Accountant', 'HR', 'Teacher', 'Academic Coordinator', 'Branch Head'],
   });
   if (securityError) return securityError;
 

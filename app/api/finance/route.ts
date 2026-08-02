@@ -5,7 +5,7 @@ import { FinancialEntry } from '@/lib/ims-data';
 
 export async function GET(req: NextRequest) {
   const securityError = await guardApiRoute(req, {
-    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Accountant'],
+    allowedRoles: ['Super Admin', 'Director', 'Principal', 'Accountant', 'Teacher', 'HR', 'Branch Head', 'Academic Coordinator'],
   });
   if (securityError) return securityError;
 

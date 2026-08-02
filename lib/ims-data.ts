@@ -451,6 +451,23 @@ export const INITIAL_STUDENTS: Student[] = [
 
 export const INITIAL_TEACHERS: Teacher[] = [
   {
+    id: 'USR-5010',
+    empId: 'TEH-001',
+    name: 'Sumit Saourav',
+    email: 'info@gyanvidyamandir.in',
+    phone: '+91 98765 12345',
+    department: 'Computer Science',
+    designation: 'Professor & HOD',
+    subjectSpecialization: ['Data Structures', 'Machine Learning', 'Artificial Intelligence', 'Software Engineering'],
+    branch: 'Main Campus - New Delhi',
+    salary: 150000,
+    status: 'Active',
+    attendancePct: 98.5,
+    rating: 4.9,
+    joiningDate: '2019-03-10',
+    avatar: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=150',
+  },
+  {
     id: 'TCH-201',
     empId: 'EMP-101',
     name: 'Dr. Meenakshi Sundaram',

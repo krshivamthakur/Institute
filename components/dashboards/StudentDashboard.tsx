@@ -18,8 +18,48 @@ import {
 } from 'lucide-react';
 
 export function StudentDashboard() {
-  const { students, timetable, lmsMaterials, feeTransactions, setActiveModule } = useIMS();
-  const student = students[0]; // Active student context
+  const { authUser, students, timetable, lmsMaterials, feeTransactions, setActiveModule } = useIMS();
+
+  // Dynamic Student resolution logic based on logged-in user session
+  let student: typeof students[0];
+  const matched = students.find(
+    (s) =>
+      s.id === authUser?.id ||
+      s.rollNo === authUser?.empIdOrRollNo ||
+      s.id === authUser?.empIdOrRollNo ||
+      s.email.toLowerCase() === authUser?.email?.toLowerCase() ||
+      s.id === authUser?.childStudentId ||
+      s.name.toLowerCase().includes(authUser?.name?.toLowerCase() || '') ||
+      (authUser?.name && authUser.name.toLowerCase().includes(s.name.toLowerCase()))
+  );
+
+  if (matched) {
+    student = matched;
+  } else if (authUser?.role === 'Student') {
+    student = {
+      id: authUser?.id || 'STU-1001',
+      rollNo: authUser?.empIdOrRollNo || '2026-CS-001',
+      name: authUser?.name || 'Aarav Sharma',
+      email: authUser?.email || 'aarav.sharma@institute.edu',
+      phone: '+91 98765 43210',
+      classBatch: 'B.Tech CS - Sem 4',
+      branch: authUser?.branch || 'Main Campus - New Delhi',
+      gender: 'Male',
+      dob: '2004-05-14',
+      admissionDate: '2024-08-01',
+      status: 'Active',
+      parentName: 'Rajesh Sharma',
+      parentPhone: '+91 98765 00001',
+      attendancePct: 92.5,
+      feeStatus: 'Paid',
+      feeDue: 0,
+      gpa: 3.85,
+      avatar: authUser?.avatar || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150',
+      documentsUploaded: { aadhar: true, marksheet: true, photo: true },
+    };
+  } else {
+    student = students[0];
+  }
 
   return (
     <div className="space-y-6">

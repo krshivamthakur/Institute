@@ -34,7 +34,9 @@ export function ExamManagement() {
     updateExam,
     deleteExam,
     updateExamStudentResult,
+    systemSettings,
   } = useIMS();
+  const instituteName = systemSettings?.projectName || 'AURA IMS';
 
   const isPersonalScope = currentRole === 'Student' || currentRole === 'Parent';
   const isSuperAdmin = ['Super Admin', 'Director', 'Principal', 'Academic Coordinator', 'Teacher'].includes(currentRole);
@@ -270,7 +272,7 @@ export function ExamManagement() {
               <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
                 <div>
                   <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans">
-                    AURA INSTITUTE OF TECHNOLOGY
+                    {instituteName.toUpperCase()}
                   </h3>
                   <p className="text-xs font-bold text-amber-400 tracking-wider uppercase mt-0.5">
                     MID-TERM EXAMINATIONS 2026 - CANDIDATE HALL TICKET
@@ -396,7 +398,7 @@ export function ExamManagement() {
                 <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
                   <div>
                     <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans">
-                      AURA INSTITUTE OF TECHNOLOGY
+                      {instituteName.toUpperCase()}
                     </h3>
                     <p className="text-xs font-bold text-amber-400 tracking-wider uppercase mt-0.5">
                       MID-TERM EXAMINATIONS 2026 - CANDIDATE HALL TICKET
@@ -934,7 +936,7 @@ export function ExamManagement() {
               <div className="flex items-center justify-between border-b border-slate-800/80 pb-4">
                 <div>
                   <h3 className="text-xl font-black text-white tracking-wide uppercase font-sans">
-                    AURA INSTITUTE OF TECHNOLOGY
+                    {instituteName.toUpperCase()}
                   </h3>
                   <p className="text-xs font-bold text-amber-400 tracking-wider uppercase mt-0.5">
                     MID-TERM EXAMINATIONS 2026 - CANDIDATE HALL TICKET

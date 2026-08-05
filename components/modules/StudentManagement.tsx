@@ -27,7 +27,8 @@ import {
 } from 'lucide-react';
 
 export function StudentManagement() {
-  const { authUser, currentRole, students, courses, addStudent, updateStudent, issueCertificate } = useIMS();
+  const { authUser, currentRole, students, courses, addStudent, updateStudent, issueCertificate, systemSettings } = useIMS();
+  const instituteName = systemSettings?.projectName || 'AURA IMS';
 
   const dynamicBatchOptions = Array.from(
     new Set([
@@ -487,7 +488,7 @@ export function StudentManagement() {
               </div>
 
               <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900 via-slate-900 to-indigo-950 border-2 border-blue-500/50 shadow-2xl text-center space-y-3 relative overflow-hidden">
-                <h4 className="font-black text-sm text-white tracking-wide uppercase">AURA INSTITUTE OF TECHNOLOGY</h4>
+                <h4 className="font-black text-sm text-white tracking-wide uppercase">{instituteName.toUpperCase()}</h4>
                 <p className="text-[9px] text-blue-300 font-semibold tracking-wider">OFFICIAL STUDENT IDENTIFICATION</p>
 
                 <img
@@ -836,7 +837,7 @@ export function StudentManagement() {
             </div>
 
             <div className="p-5 rounded-2xl bg-gradient-to-b from-blue-900 via-slate-900 to-indigo-950 border-2 border-blue-500/50 shadow-2xl text-center space-y-3 relative overflow-hidden">
-              <h4 className="font-black text-sm text-white tracking-wide uppercase">AURA INSTITUTE OF TECHNOLOGY</h4>
+              <h4 className="font-black text-sm text-white tracking-wide uppercase">{instituteName.toUpperCase()}</h4>
               <p className="text-[9px] text-blue-300 font-semibold tracking-wider">OFFICIAL STUDENT IDENTIFICATION</p>
 
               <img
@@ -885,7 +886,7 @@ export function StudentManagement() {
 
             <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 text-slate-200 text-xs space-y-3 font-serif">
               <h4 className="text-center font-bold text-base text-amber-300">TRANSFER CERTIFICATE</h4>
-              <p className="text-center text-[10px] text-slate-400">Aura Institute of Management & Technology</p>
+              <p className="text-center text-[10px] text-slate-400">{instituteName}</p>
               <p className="pt-2">This is to certify that <strong>{selectedStudentForTc.name}</strong> (Roll No: <strong>{selectedStudentForTc.rollNo}</strong>), son/daughter of <strong>{selectedStudentForTc.parentName}</strong>, was a student of <strong>{selectedStudentForTc.classBatch}</strong>.</p>
               <p>Character & Conduct: <strong>EXCELLENT</strong>. All dues cleared up to date.</p>
               <div className="pt-4 flex justify-between text-[10px] font-sans font-bold">

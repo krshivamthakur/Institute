@@ -427,15 +427,38 @@ export function StudentPortal() {
                   </span>
                 </div>
 
-                {slot.meetingLink && (
-                  <a
-                    href={slot.meetingLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 w-full py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white font-bold text-xs border border-purple-500/30 transition flex items-center justify-center gap-1.5"
-                  >
-                    <Video className="h-3.5 w-3.5 text-purple-400" /> Join Live Online Class
-                  </a>
+                {slot.meetingLink ? (
+                  <div className="mt-2 space-y-1.5">
+                    <div className="flex items-center gap-2">
+                      <a
+                        href={slot.meetingLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600 text-purple-300 hover:text-white font-bold text-xs border border-purple-500/30 transition flex items-center justify-center gap-1.5 shadow-sm group/btn"
+                      >
+                        <Video className="h-4 w-4 text-purple-400 group-hover/btn:animate-pulse" /> Join Live Meeting Class
+                      </a>
+                      <button
+                        onClick={() => {
+                          if (slot.meetingLink) {
+                            navigator.clipboard.writeText(slot.meetingLink);
+                            alert('Meeting link copied to clipboard!');
+                          }
+                        }}
+                        className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 transition"
+                        title="Copy Meeting Link"
+                      >
+                        <Check className="h-3.5 w-3.5 text-purple-400" />
+                      </button>
+                    </div>
+                    <p className="text-[10px] text-purple-400/80 font-mono text-center truncate">
+                      🔗 {slot.meetingLink}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="mt-2 py-1.5 text-center text-[10px] text-slate-500 bg-slate-900/50 rounded-lg">
+                    In-Person Classroom Lecture
+                  </div>
                 )}
               </div>
             ))}

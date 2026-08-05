@@ -107,6 +107,9 @@ interface IMSContextType {
   addCourse: (course: Omit<Course, 'id'>) => void;
   updateCourse: (id: string, updatedFields: Partial<Course>) => void;
   deleteCourse: (id: string) => void;
+  addTimetableSlot: (slot: Omit<TimetableSlot, 'id'>) => void;
+  updateTimetableSlot: (id: string, updatedFields: Partial<TimetableSlot>) => void;
+  deleteTimetableSlot: (id: string) => void;
   markAttendance: (record: Omit<AttendanceRecord, 'id'>) => void;
   addFeeTransaction: (tx: Omit<FeeTransaction, 'id'>) => void;
   issueCertificate: (cert: Omit<CertificateRecord, 'id'>) => void;
@@ -662,6 +665,23 @@ export function IMSProvider({ children }: { children: ReactNode }) {
     addAuditLog('COURSE_DELETE', `Deleted course ID: ${id}`);
   };
 
+  const addTimetableSlot = (slotData: Omit<TimetableSlot, 'id'>) => {
+    const id = `TS-${Math.floor(1000 + Math.random() * 9000)}`;
+    const created: TimetableSlot = { id, ...slotData };
+    setTimetable((prev) => [...prev, created]);
+    addAuditLog('TIMETABLE_ADD', `Added class period slot for ${slotData.subject} on ${slotData.day}`);
+  };
+
+  const updateTimetableSlot = (id: string, updatedFields: Partial<TimetableSlot>) => {
+    setTimetable((prev) => prev.map((t) => (t.id === id ? { ...t, ...updatedFields } : t)));
+    addAuditLog('TIMETABLE_UPDATE', `Updated class period slot ID: ${id}`);
+  };
+
+  const deleteTimetableSlot = (id: string) => {
+    setTimetable((prev) => prev.filter((t) => t.id !== id));
+    addAuditLog('TIMETABLE_DELETE', `Deleted class period slot ID: ${id}`);
+  };
+
   const markAttendance = (record: Omit<AttendanceRecord, 'id'>) => {
     const id = `ATT-${Date.now().toString().slice(-4)}`;
     const optimisticRecord = { id, ...record };
@@ -1137,6 +1157,9 @@ export function IMSProvider({ children }: { children: ReactNode }) {
         addCourse,
         updateCourse,
         deleteCourse,
+        addTimetableSlot,
+        updateTimetableSlot,
+        deleteTimetableSlot,
         markAttendance,
         addFeeTransaction,
         issueCertificate,

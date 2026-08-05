@@ -22,7 +22,8 @@ import {
 import confetti from 'canvas-confetti';
 
 export function FeeManagement() {
-  const { authUser, currentRole, students, feeTransactions, addFeeTransaction } = useIMS();
+  const { authUser, currentRole, students, feeTransactions, addFeeTransaction, systemSettings } = useIMS();
+  const instituteName = systemSettings?.projectName || 'AURA IMS';
   const isStudentRole = currentRole === 'Student';
   const isParentRole = currentRole === 'Parent';
   const isPersonalScope = isStudentRole || isParentRole;
@@ -228,7 +229,7 @@ export function FeeManagement() {
 
               <div className="p-5 rounded-2xl bg-slate-950 border-2 border-emerald-500/40 text-xs space-y-3 font-mono">
                 <div className="text-center border-b border-slate-800 pb-2">
-                  <h4 className="font-extrabold text-sm text-white font-sans">AURA INSTITUTE OF TECHNOLOGY</h4>
+                  <h4 className="font-extrabold text-sm text-white font-sans">{instituteName.toUpperCase()}</h4>
                   <p className="text-[10px] text-emerald-400 font-bold uppercase">FEE PAYMENT RECEIPT</p>
                 </div>
 
@@ -442,7 +443,7 @@ export function FeeManagement() {
 
             <div className="p-5 rounded-2xl bg-slate-950 border-2 border-emerald-500/40 text-xs space-y-3 font-mono">
               <div className="text-center border-b border-slate-800 pb-2">
-                <h4 className="font-extrabold text-sm text-white font-sans">AURA INSTITUTE OF TECHNOLOGY</h4>
+                <h4 className="font-extrabold text-sm text-white font-sans">{instituteName.toUpperCase()}</h4>
                 <p className="text-[10px] text-emerald-400 font-bold uppercase">FEE PAYMENT RECEIPT</p>
               </div>
 

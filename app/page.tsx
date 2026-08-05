@@ -123,12 +123,18 @@ function MainContent() {
 }
 
 function AppLayout() {
-  const { authUser, isInitialized, isProfileModalOpen, closeProfileModal } = useIMS();
+  const { authUser, isInitialized, isProfileModalOpen, closeProfileModal, systemSettings } = useIMS();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Dynamically update browser tab title when projectName changes
+  React.useEffect(() => {
+    const name = systemSettings?.projectName || 'AURA IMS';
+    document.title = `${name} - Institute Management System`;
+  }, [systemSettings?.projectName]);
 
   if (!mounted || !isInitialized) {
     return (

@@ -237,6 +237,16 @@ export function FacultyDashboard() {
                     Open LMS →
                   </button>
                 </div>
+                {slot.meetingLink && (
+                  <a
+                    href={slot.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-1.5 px-3 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-[11px] font-bold transition flex items-center justify-center gap-1.5"
+                  >
+                    <Video className="h-3.5 w-3.5 text-indigo-400" /> Launch Meeting Link
+                  </a>
+                )}
               </div>
             ))}
           </div>

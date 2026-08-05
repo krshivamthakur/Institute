@@ -6,12 +6,13 @@ import { TimetableSlot } from '@/lib/ims-data';
 import { Calendar, Clock, Video, MapPin, Plus, User, CheckCircle2, X, Trash2, Edit } from 'lucide-react';
 
 export function ClassManagement() {
-  const { timetable, addAuditLog, currentRole } = useIMS();
+  const { timetable, addTimetableSlot, updateTimetableSlot, deleteTimetableSlot, addAuditLog, currentRole } = useIMS();
   const isReadOnlyRole = currentRole === 'Student' || currentRole === 'Parent';
 
-  const [timetableState, setTimetableState] = useState<TimetableSlot[]>(timetable);
   const [selectedDay, setSelectedDay] = useState<'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday'>('Monday');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
+  const [editMeetingUrl, setEditMeetingUrl] = useState('');
   const [notification, setNotification] = useState('');
 
   // Form State
@@ -26,12 +27,11 @@ export function ClassManagement() {
   });
 
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] as const;
-  const filteredSlots = timetableState.filter((t) => t.day === selectedDay);
+  const filteredSlots = timetable.filter((t) => t.day === selectedDay);
 
   const handleAddSlot = (e: React.FormEvent) => {
     e.preventDefault();
-    const created: TimetableSlot = {
-      id: `TS-${Math.floor(1000 + Math.random() * 9000)}`,
+    addTimetableSlot({
       day: selectedDay,
       subject: newSlot.subject,
       classBatch: newSlot.classBatch,
@@ -39,9 +39,8 @@ export function ClassManagement() {
       room: newSlot.room,
       time: newSlot.time,
       type: newSlot.type,
-      meetingLink: newSlot.meetingLink,
-    };
-    setTimetableState((prev) => [...prev, created]);
+      meetingLink: newSlot.meetingLink.trim() || undefined,
+    });
     setIsAddModalOpen(false);
     setNewSlot({
       subject: '',
@@ -52,14 +51,20 @@ export function ClassManagement() {
       type: 'Lecture',
       meetingLink: 'https://meet.google.com/abc-defg-hij',
     });
-    addAuditLog('TIMETABLE_ADD', `Added class period slot for ${newSlot.subject} on ${selectedDay}`);
-    setNotification(`Successfully added new class slot for ${selectedDay}!`);
+    setNotification(`Successfully scheduled class period for ${selectedDay} with meeting link!`);
     setTimeout(() => setNotification(''), 3000);
   };
 
   const handleDeleteSlot = (id: string) => {
-    setTimetableState((prev) => prev.filter((t) => t.id !== id));
+    deleteTimetableSlot(id);
     setNotification('Class period slot removed from timetable.');
+    setTimeout(() => setNotification(''), 3000);
+  };
+
+  const handleSaveMeetingLink = (id: string) => {
+    updateTimetableSlot(id, { meetingLink: editMeetingUrl.trim() || undefined });
+    setEditingSlotId(null);
+    setNotification('Meeting link updated successfully!');
     setTimeout(() => setNotification(''), 3000);
   };
 
@@ -72,7 +77,7 @@ export function ClassManagement() {
             <Calendar className="h-5 w-5 text-blue-400" /> Class Scheduling & Timetable
           </h2>
           <p className="text-xs text-slate-400 mt-1">
-            Weekly timetable builder, classroom allocation matrix, and virtual class links (Zoom / Google Meet).
+            Weekly timetable builder, classroom allocation matrix, and virtual class links (Google Meet / Zoom / MS Teams).
           </p>
         </div>
 
@@ -152,15 +157,70 @@ export function ClassManagement() {
                 </div>
               </div>
 
-              {slot.meetingLink && (
-                <a
-                  href={slot.meetingLink}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-full py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 text-xs font-bold transition flex items-center justify-center gap-1.5"
-                >
-                  <Video className="h-4 w-4 text-blue-400" /> Join Live Virtual Class
-                </a>
+              {/* Meeting Link Section */}
+              {editingSlotId === slot.id ? (
+                <div className="p-3 rounded-xl bg-slate-900 border border-blue-500/50 space-y-2 text-xs">
+                  <label className="block text-slate-300 font-bold">Edit Meeting Link:</label>
+                  <input
+                    type="url"
+                    value={editMeetingUrl}
+                    onChange={(e) => setEditMeetingUrl(e.target.value)}
+                    placeholder="https://meet.google.com/xyz..."
+                    className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white font-mono text-[11px]"
+                  />
+                  <div className="flex justify-end gap-1.5 pt-1">
+                    <button
+                      onClick={() => setEditingSlotId(null)}
+                      className="px-2.5 py-1 rounded bg-slate-800 text-slate-300 text-[11px]"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => handleSaveMeetingLink(slot.id)}
+                      className="px-2.5 py-1 rounded bg-blue-600 text-white font-bold text-[11px]"
+                    >
+                      Save Link
+                    </button>
+                  </div>
+                </div>
+              ) : slot.meetingLink ? (
+                <div className="space-y-1.5">
+                  <a
+                    href={slot.meetingLink}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 border border-blue-500/30 text-xs font-bold transition flex items-center justify-center gap-1.5 group/btn"
+                  >
+                    <Video className="h-4 w-4 text-blue-400 group-hover/btn:animate-pulse" /> Join Live Virtual Class
+                  </a>
+                  {!isReadOnlyRole && (
+                    <button
+                      onClick={() => {
+                        setEditingSlotId(slot.id);
+                        setEditMeetingUrl(slot.meetingLink || '');
+                      }}
+                      className="w-full text-center text-[10px] text-slate-400 hover:text-blue-400 transition flex items-center justify-center gap-1"
+                    >
+                      <Edit className="h-3 w-3" /> Edit Meeting Link
+                    </button>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  {!isReadOnlyRole ? (
+                    <button
+                      onClick={() => {
+                        setEditingSlotId(slot.id);
+                        setEditMeetingUrl('https://meet.google.com/abc-defg-hij');
+                      }}
+                      className="w-full py-2 rounded-xl bg-slate-800/80 hover:bg-slate-800 text-slate-400 hover:text-blue-300 border border-dashed border-slate-700 text-xs font-semibold transition flex items-center justify-center gap-1.5"
+                    >
+                      <Plus className="h-3.5 w-3.5 text-blue-400" /> Add Virtual Meeting Link
+                    </button>
+                  ) : (
+                    <p className="text-[11px] text-slate-500 text-center italic">Offline Physical Class Only</p>
+                  )}
+                </div>
               )}
             </div>
           ))
@@ -170,9 +230,11 @@ export function ClassManagement() {
       {/* Add Slot Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
-              <h3 className="font-bold text-sm text-white">Schedule New Class Period ({selectedDay})</h3>
+          <div className="bg-slate-900 border border-slate-700 rounded-3xl p-6 max-w-md w-full shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <h3 className="font-bold text-sm text-white flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-blue-400" /> Schedule New Class Period ({selectedDay})
+              </h3>
               <button onClick={() => setIsAddModalOpen(false)} className="text-slate-400 hover:text-white">
                 <X className="h-4 w-4" />
               </button>
@@ -254,7 +316,46 @@ export function ClassManagement() {
                 />
               </div>
 
-              <div className="pt-3 flex items-center justify-end gap-2">
+              {/* Meeting Link Field for Students */}
+              <div className="p-3 bg-slate-800/60 border border-slate-700/80 rounded-2xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="block text-blue-300 font-extrabold flex items-center gap-1.5">
+                    <Video className="h-3.5 w-3.5 text-blue-400" /> Virtual Meeting Link (For Students to Join)
+                  </label>
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setNewSlot({ ...newSlot, meetingLink: 'https://meet.google.com/abc-defg-hij' })}
+                      className="px-1.5 py-0.5 rounded bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-[10px] font-semibold"
+                    >
+                      + Google Meet
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setNewSlot({ ...newSlot, meetingLink: 'https://zoom.us/j/9876543210' })}
+                      className="px-1.5 py-0.5 rounded bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 text-[10px] font-semibold"
+                    >
+                      + Zoom
+                    </button>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <Video className="absolute left-3 top-2.5 h-4 w-4 text-blue-400 pointer-events-none" />
+                  <input
+                    type="url"
+                    placeholder="https://meet.google.com/abc-defg-hij or Zoom URL"
+                    value={newSlot.meetingLink}
+                    onChange={(e) => setNewSlot({ ...newSlot, meetingLink: e.target.value })}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-white text-xs font-mono focus:border-blue-500 focus:outline-none"
+                  />
+                </div>
+                <p className="text-[10px] text-slate-400">
+                  Students will see a direct <span className="text-blue-300 font-semibold">"Join Live Virtual Class"</span> button in their timetable portal.
+                </p>
+              </div>
+
+              <div className="pt-3 flex items-center justify-end gap-2 border-t border-slate-800">
                 <button
                   type="button"
                   onClick={() => setIsAddModalOpen(false)}
@@ -264,9 +365,9 @@ export function ClassManagement() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold"
+                  className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold flex items-center gap-1.5 shadow-lg shadow-blue-500/20"
                 >
-                  Schedule Period Slot
+                  <CheckCircle2 className="h-4 w-4" /> Schedule Period Slot
                 </button>
               </div>
             </form>

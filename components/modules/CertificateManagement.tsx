@@ -5,7 +5,8 @@ import { useIMS } from '@/context/IMSContext';
 import { FileCheck, Printer, Plus, Award, CheckCircle, Lock, User, Download } from 'lucide-react';
 
 export function CertificateManagement() {
-  const { currentRole, certificates, students, issueCertificate } = useIMS();
+  const { currentRole, certificates, students, issueCertificate, systemSettings } = useIMS();
+  const instituteName = systemSettings?.projectName || 'AURA IMS';
   const isStudentRole = currentRole === 'Student';
   const myStudent = students[0];
 
@@ -182,7 +183,7 @@ export function CertificateManagement() {
 
             <div>
               <h3 className="text-xl font-black tracking-widest text-amber-300 uppercase">
-                AURA INSTITUTE OF TECHNOLOGY
+                {instituteName.toUpperCase()}
               </h3>
               <p className="text-xs text-purple-300 font-serif tracking-wide mt-0.5">
                 (Approved by AICTE & Accredited NAAC Grade A++)
@@ -203,12 +204,12 @@ export function CertificateManagement() {
               <div>
                 <p className="font-mono text-[10px]">SEAL & STAMP</p>
                 <div className="h-12 w-12 rounded-full border border-amber-500/40 flex items-center justify-center text-[9px] text-amber-400 font-bold">
-                  AURA SEAL
+                  SEAL
                 </div>
               </div>
               <div className="text-right">
                 <p className="font-bold text-white">Registrar / Authorized Signatory</p>
-                <p className="text-[10px] text-slate-400">Aura Institute of Technology</p>
+                <p className="text-[10px] text-slate-400">{instituteName}</p>
               </div>
             </div>
           </div>

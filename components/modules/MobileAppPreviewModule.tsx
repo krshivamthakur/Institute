@@ -5,8 +5,10 @@ import { useIMS } from '@/context/IMSContext';
 import { Smartphone, Bell, Calendar, CreditCard, Award, User, CheckCircle2 } from 'lucide-react';
 
 export function MobileAppPreviewModule() {
+  const { systemSettings } = useIMS();
   const [appRole, setAppRole] = useState<'Student' | 'Parent' | 'Teacher'>('Student');
   const [activeTab, setActiveTab] = useState<'home' | 'attendance' | 'fees' | 'results'>('home');
+  const instituteName = systemSettings?.projectName || 'AURA IMS';
 
   return (
     <div className="space-y-6">
@@ -31,7 +33,7 @@ export function MobileAppPreviewModule() {
 
           <div className="p-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between">
             <div>
-              <p className="text-[10px] opacity-80 uppercase tracking-wider font-bold">Aura Native App</p>
+              <p className="text-[10px] opacity-80 uppercase tracking-wider font-bold">{instituteName}</p>
               <p className="text-xs font-bold">{appRole} View</p>
             </div>
             <Bell className="h-4 w-4 text-emerald-200" />

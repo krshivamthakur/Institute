@@ -589,11 +589,11 @@ export const INITIAL_COURSES: Course[] = [
 ];
 
 export const INITIAL_TIMETABLE: TimetableSlot[] = [
-  { id: 'TT-1', day: 'Monday', time: '09:00 AM - 10:00 AM', subject: 'Data Structures', classBatch: 'B.Tech CS - Year 2', teacher: 'Dr. Meenakshi Sundaram', room: 'Hall 301', type: 'Lecture', meetingLink: 'https://zoom.us/j/mock123' },
+  { id: 'TT-1', day: 'Monday', time: '09:00 AM - 10:00 AM', subject: 'Data Structures', classBatch: 'B.Tech CS - Year 2', teacher: 'Dr. Meenakshi Sundaram', room: 'Hall 301', type: 'Lecture', meetingLink: 'https://meet.google.com/abc-defg-hij' },
   { id: 'TT-2', day: 'Monday', time: '10:15 AM - 11:15 AM', subject: 'Operating Systems', classBatch: 'B.Tech CS - Year 2', teacher: 'Prof. Rajesh Khanna', room: 'Lab 402', type: 'Lab', meetingLink: 'https://meet.google.com/mock-abc' },
   { id: 'TT-3', day: 'Tuesday', time: '11:30 AM - 12:30 PM', subject: 'Financial Analytics', classBatch: 'MBA - Year 1', teacher: 'Dr. Kavita Reddy', room: 'Hall 105', type: 'Lecture', meetingLink: 'https://zoom.us/j/mock456' },
-  { id: 'TT-4', day: 'Wednesday', time: '02:00 PM - 03:30 PM', subject: 'Machine Learning Lab', classBatch: 'B.Tech CS - Year 2', teacher: 'Dr. Meenakshi Sundaram', room: 'AI Innovation Lab', type: 'Lab' },
-  { id: 'TT-5', day: 'Thursday', time: '09:00 AM - 10:00 AM', subject: 'Database Systems', classBatch: 'B.Tech CS - Year 2', teacher: 'Prof. Rajesh Khanna', room: 'Hall 301', type: 'Lecture' },
+  { id: 'TT-4', day: 'Wednesday', time: '02:00 PM - 03:30 PM', subject: 'Machine Learning Lab', classBatch: 'B.Tech CS - Year 2', teacher: 'Dr. Meenakshi Sundaram', room: 'AI Innovation Lab', type: 'Lab', meetingLink: 'https://meet.google.com/ml-lab-session' },
+  { id: 'TT-5', day: 'Thursday', time: '09:00 AM - 10:00 AM', subject: 'Database Systems', classBatch: 'B.Tech CS - Year 2', teacher: 'Prof. Rajesh Khanna', room: 'Hall 301', type: 'Lecture', meetingLink: 'https://zoom.us/j/db-systems-live' },
 ];
 
 export const INITIAL_ATTENDANCE: AttendanceRecord[] = [

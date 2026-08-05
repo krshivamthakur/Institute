@@ -160,7 +160,7 @@ export function StudentDashboard() {
 
           <div className="space-y-3">
             {timetable.slice(0, 3).map((slot) => (
-              <div key={slot.id} className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+              <div key={slot.id} className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white">{slot.subject}</span>
                   <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
@@ -171,6 +171,16 @@ export function StudentDashboard() {
                   <span>Faculty: {slot.teacher}</span>
                   <span>Room: {slot.room}</span>
                 </div>
+                {slot.meetingLink && (
+                  <a
+                    href={slot.meetingLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-1.5 px-3 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold transition flex items-center justify-center gap-1.5"
+                  >
+                    <Video className="h-3.5 w-3.5 text-emerald-400" /> Join Virtual Meeting Class
+                  </a>
+                )}
               </div>
             ))}
           </div>

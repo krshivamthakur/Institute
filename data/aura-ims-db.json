@@ -1,4 +1,4 @@
-{
+﻿{
   "students": [
     {
       "id": "STU-1001",
@@ -940,7 +940,7 @@
   "certificates": [
     {
       "id": "CRT-875",
-      "certificateNo": "AURA-CERT-2026-4655",
+      "certificateNo": "GVM-CERT-2026-4655",
       "studentId": "STU-1002",
       "studentName": "Ananya Verma",
       "type": "Course Completion",
@@ -950,7 +950,7 @@
     },
     {
       "id": "CRT-933",
-      "certificateNo": "AURA-CERT-2026-2007",
+      "certificateNo": "GVM-CERT-2026-2007",
       "studentId": "STU-1002",
       "studentName": "Ananya Verma",
       "type": "Character",
@@ -960,7 +960,7 @@
     },
     {
       "id": "CRT-816",
-      "certificateNo": "AURA-CERT-2026-7568",
+      "certificateNo": "GVM-CERT-2026-7568",
       "studentId": "STU-1002",
       "studentName": "Ananya Verma",
       "type": "Character",
@@ -970,7 +970,7 @@
     },
     {
       "id": "CRT-808",
-      "certificateNo": "AURA-CERT-2026-9980",
+      "certificateNo": "GVM-CERT-2026-9980",
       "studentId": "STU-1002",
       "studentName": "Ananya Verma",
       "type": "Character",
@@ -1169,7 +1169,7 @@
       "cash": true
     },
     "autoInvoiceGeneration": true,
-    "receiptHeaderNote": "Official Fee Receipt - Aura Educational Trust",
+    "receiptHeaderNote": "Official Fee Receipt - GVM Educational Trust",
     "minPasswordLength": 8,
     "requireSpecialChar": true,
     "sessionTimeoutMinutes": 30,
@@ -1178,7 +1178,7 @@
     "ipWhitelistEnabled": false,
     "whatsappGatewayStatus": true,
     "smsGateway": "Fast2SMS API",
-    "emailSmtpHost": "smtp.auraims.edu",
+    "emailSmtpHost": "smtp.gvmims.edu",
     "notifyAbsenceInstant": true,
     "notifyFeeDueReminder": true,
     "notifyExamResults": true,
@@ -1301,7 +1301,7 @@
     {
       "id": "LIB-401",
       "name": "Sunita Verma",
-      "email": "librarian@auraims.edu",
+      "email": "librarian@gvmims.edu",
       "role": "Library Staff",
       "empIdOrRollNo": "LIB-401",
       "branch": "Main Campus - New Delhi",

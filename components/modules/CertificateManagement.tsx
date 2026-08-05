@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -6,7 +6,7 @@ import { FileCheck, Printer, Plus, Award, CheckCircle, Lock, User, Download } fr
 
 export function CertificateManagement() {
   const { currentRole, certificates, students, issueCertificate, systemSettings } = useIMS();
-  const instituteName = systemSettings?.projectName || 'AURA IMS';
+  const instituteName = systemSettings?.projectName || 'GVM IMS';
   const isStudentRole = currentRole === 'Student';
   const myStudent = students[0];
 
@@ -24,7 +24,7 @@ export function CertificateManagement() {
 
   const handleGenerateCertificate = (e: React.FormEvent) => {
     e.preventDefault();
-    const certificateNo = `AURA-CERT-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const certificateNo = `GVM-CERT-2026-${Math.floor(1000 + Math.random() * 9000)}`;
     const newCert = {
       certificateNo,
       studentId: selectedStudent.id,
@@ -40,7 +40,7 @@ export function CertificateManagement() {
 
   // Default certificate preview for student
   const activeDisplayCert = previewCert || (myCertificates.length > 0 ? myCertificates[0] : {
-    certificateNo: 'AURA-CERT-2026-9012',
+    certificateNo: 'GVM-CERT-2026-9012',
     studentName: selectedStudent.name,
     type: 'Bonafide',
     issueDate: '2026-08-01',
@@ -138,7 +138,7 @@ export function CertificateManagement() {
             <div className="space-y-3">
               <div
                 onClick={() => setPreviewCert({
-                  certificateNo: 'AURA-CERT-2026-1044',
+                  certificateNo: 'GVM-CERT-2026-1044',
                   studentName: selectedStudent.name,
                   type: 'Bonafide',
                   issueDate: '2026-08-01',
@@ -155,7 +155,7 @@ export function CertificateManagement() {
 
               <div
                 onClick={() => setPreviewCert({
-                  certificateNo: 'AURA-CERT-2026-2088',
+                  certificateNo: 'GVM-CERT-2026-2088',
                   studentName: selectedStudent.name,
                   type: 'Character',
                   issueDate: '2026-08-01',
@@ -177,7 +177,7 @@ export function CertificateManagement() {
         <div className="lg:col-span-2 p-6 rounded-2xl bg-slate-950 border-2 border-purple-500/40 text-slate-100 space-y-4 printable-area">
           <div className="border-4 border-amber-500/30 p-8 rounded-xl bg-slate-900/90 text-center space-y-4 relative">
             <div className="flex justify-between items-center text-[10px] text-slate-400 font-mono">
-              <span>REF NO: {activeDisplayCert?.certificateNo || 'AURA-CERT-2026-9012'}</span>
+              <span>REF NO: {activeDisplayCert?.certificateNo || 'GVM-CERT-2026-9012'}</span>
               <span>DATE: {activeDisplayCert?.issueDate || new Date().toLocaleDateString()}</span>
             </div>
 
@@ -227,3 +227,4 @@ export function CertificateManagement() {
     </div>
   );
 }
+

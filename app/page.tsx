@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { IMSProvider, useIMS } from '@/context/IMSContext';
@@ -132,7 +132,7 @@ function AppLayout() {
 
   // Dynamically update browser tab title when projectName changes
   React.useEffect(() => {
-    const name = systemSettings?.projectName || 'AURA IMS';
+    const name = systemSettings?.projectName || 'GVM IMS';
     document.title = `${name} - Institute Management System`;
   }, [systemSettings?.projectName]);
 
@@ -172,3 +172,4 @@ export default function Home() {
     </IMSProvider>
   );
 }
+

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { UserRole } from '@/lib/ims-data';
 
 // Rate Limiter Memory Store
@@ -86,3 +86,4 @@ export async function guardApiRoute(req: NextRequest, config: ApiSecurityConfig 
 
   return null; // Passed all security checks
 }
+

@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+﻿import { NextRequest } from 'next/server';
 import { apiResponse, apiError, guardApiRoute } from '@/lib/api-security';
 import { UserRole } from '@/lib/ims-data';
 
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     // Authenticate user & assign role
     const assignedRole: UserRole = (role as UserRole) || 'Super Admin';
-    const fakeToken = `aura_jwt_token_${Buffer.from(`${email}:${assignedRole}:${Date.now()}`).toString('base64')}`;
+    const fakeToken = `gvm_jwt_token_${Buffer.from(`${email}:${assignedRole}:${Date.now()}`).toString('base64')}`;
 
     return apiResponse(
       {
@@ -40,3 +40,4 @@ export async function POST(req: NextRequest) {
     return apiError(`Authentication failed: ${err.message}`, 500);
   }
 }
+

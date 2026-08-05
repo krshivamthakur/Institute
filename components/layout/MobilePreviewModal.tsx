@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -59,7 +59,7 @@ export function MobilePreviewModal() {
                 {appRole[0]}
               </div>
               <div>
-                <p className="text-[10px] opacity-80 uppercase tracking-wider font-bold">Aura Mobile</p>
+                <p className="text-[10px] opacity-80 uppercase tracking-wider font-bold">GVM Mobile</p>
                 <p className="text-xs font-bold leading-tight">
                   {appRole === 'Student' ? 'Aarav Sharma' : appRole === 'Parent' ? 'Rajesh Sharma' : 'Dr. Meenakshi S.'}
                 </p>
@@ -180,3 +180,4 @@ export function MobilePreviewModal() {
     </div>
   );
 }
+

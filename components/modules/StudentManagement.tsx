@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -28,7 +28,7 @@ import {
 
 export function StudentManagement() {
   const { authUser, currentRole, students, courses, addStudent, updateStudent, issueCertificate, systemSettings } = useIMS();
-  const instituteName = systemSettings?.projectName || 'AURA IMS';
+  const instituteName = systemSettings?.projectName || 'GVM IMS';
 
   const dynamicBatchOptions = Array.from(
     new Set([
@@ -1002,3 +1002,4 @@ export function StudentManagement() {
     </div>
   );
 }
+

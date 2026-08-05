@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import {
@@ -439,7 +439,7 @@ export function IMSProvider({ children }: { children: ReactNode }) {
       authenticatedUser = {
         id: trimmedId.toUpperCase(),
         name: idOrEmail.includes('@') ? idOrEmail.split('@')[0] : idOrEmail,
-        email: idOrEmail.includes('@') ? idOrEmail : `${trimmedId}@auraims.edu`,
+        email: idOrEmail.includes('@') ? idOrEmail : `${trimmedId}@gvmims.edu`,
         role: detectedRole,
         branch: 'Main Campus - New Delhi',
       };
@@ -1202,3 +1202,4 @@ export function useIMS() {
   }
   return context;
 }
+

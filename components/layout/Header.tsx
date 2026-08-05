@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -111,7 +111,7 @@ export function Header() {
   };
 
   const renderProjectTitle = () => {
-    const title = systemSettings?.projectName || 'AURA IMS';
+    const title = systemSettings?.projectName || 'GVM IMS';
     const parts = title.trim().split(' ');
     if (parts.length > 1) {
       const main = parts.slice(0, -1).join(' ');
@@ -342,3 +342,4 @@ export function Header() {
     </header>
   );
 }
+

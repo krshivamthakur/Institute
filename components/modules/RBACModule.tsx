@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -759,7 +759,7 @@ export function RBACModule() {
                 <input
                   type="email"
                   required
-                  placeholder="e.g. ramesh.gupta@auraims.edu"
+                  placeholder="e.g. ramesh.gupta@gvmims.edu"
                   value={newUser.email}
                   onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                   className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
@@ -990,3 +990,4 @@ export function RBACModule() {
     </div>
   );
 }
+

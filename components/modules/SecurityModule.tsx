@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -23,7 +23,7 @@ export function SecurityModule() {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', `Aura_Audit_Log_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', `GVM_Audit_Log_${new Date().toISOString().split('T')[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -100,3 +100,4 @@ export function SecurityModule() {
     </div>
   );
 }
+

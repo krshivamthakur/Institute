@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -36,7 +36,7 @@ export function ExamManagement() {
     updateExamStudentResult,
     systemSettings,
   } = useIMS();
-  const instituteName = systemSettings?.projectName || 'AURA IMS';
+  const instituteName = systemSettings?.projectName || 'GVM IMS';
 
   const isPersonalScope = currentRole === 'Student' || currentRole === 'Parent';
   const isSuperAdmin = ['Super Admin', 'Director', 'Principal', 'Academic Coordinator', 'Teacher'].includes(currentRole);
@@ -1031,3 +1031,4 @@ export function ExamManagement() {
     </div>
   );
 }
+

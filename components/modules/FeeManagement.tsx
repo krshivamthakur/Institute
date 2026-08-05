@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -23,7 +23,7 @@ import confetti from 'canvas-confetti';
 
 export function FeeManagement() {
   const { authUser, currentRole, students, feeTransactions, addFeeTransaction, systemSettings } = useIMS();
-  const instituteName = systemSettings?.projectName || 'AURA IMS';
+  const instituteName = systemSettings?.projectName || 'GVM IMS';
   const isStudentRole = currentRole === 'Student';
   const isParentRole = currentRole === 'Parent';
   const isPersonalScope = isStudentRole || isParentRole;
@@ -473,3 +473,4 @@ export function FeeManagement() {
     </div>
   );
 }
+

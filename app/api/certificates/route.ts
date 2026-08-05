@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+﻿import { NextRequest } from 'next/server';
 import { apiResponse, apiError, guardApiRoute } from '@/lib/api-security';
 import { getDb, saveDb } from '@/lib/db';
 import { CertificateRecord } from '@/lib/ims-data';
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       return apiError(`Student with ID '${body.studentId}' not found`, 404);
     }
 
-    const certificateNo = body.certificateNo || `AURA-CERT-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const certificateNo = body.certificateNo || `GVM-CERT-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const newCert: CertificateRecord = {
       id: `CRT-${Math.floor(800 + Math.random() * 200)}`,
@@ -54,3 +54,4 @@ export async function POST(req: NextRequest) {
     return apiError(`Failed to generate certificate: ${err.message}`, 500);
   }
 }
+

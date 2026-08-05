@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -100,7 +100,7 @@ export function LoginScreen() {
           {renderLogoIcon()}
           <div>
             <h1 className="font-extrabold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">
-              {systemSettings?.projectName || 'AURA IMS'}
+              {systemSettings?.projectName || 'GVM IMS'}
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">
               {systemSettings?.projectTagline || 'Next-Gen Institute Management Platform'}
@@ -130,7 +130,7 @@ export function LoginScreen() {
                 required
                 value={userIdInput}
                 onChange={(e) => setUserIdInput(e.target.value)}
-                placeholder="Enter User ID (e.g. ADM-001 or STU-1001 or admin@auraims.edu)"
+                placeholder="Enter User ID (e.g. ADM-001 or STU-1001 or admin@gvmims.edu)"
                 className="w-full bg-slate-900 border border-slate-700/80 rounded-xl pl-10 pr-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition font-medium"
               />
             </div>
@@ -176,3 +176,4 @@ export function LoginScreen() {
     </div>
   );
 }
+

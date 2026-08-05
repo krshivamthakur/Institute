@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -8,7 +8,7 @@ import confetti from 'canvas-confetti';
 export function CommunicationModule() {
   const [channel, setChannel] = useState<'WhatsApp' | 'SMS' | 'Email'>('WhatsApp');
   const [recipientGroup, setRecipientGroup] = useState('All Students');
-  const [messageText, setMessageText] = useState('Dear Student/Parent, mid-term examination timetable has been published on the Aura Portal. Please download your admit card.');
+  const [messageText, setMessageText] = useState('Dear Student/Parent, mid-term examination timetable has been published on the GVM Portal. Please download your admit card.');
   const [sentNotice, setSentNotice] = useState(false);
 
   const handleBroadcast = (e: React.FormEvent) => {
@@ -88,3 +88,4 @@ export function CommunicationModule() {
     </div>
   );
 }
+

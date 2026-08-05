@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -316,7 +316,7 @@ export function TeacherManagement() {
                   <input
                     type="email"
                     required
-                    placeholder="anand@auraims.edu"
+                    placeholder="anand@gvmims.edu"
                     value={newFaculty.email}
                     onChange={(e) => setNewFaculty({ ...newFaculty, email: e.target.value })}
                     className="w-full bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-white"
@@ -406,3 +406,4 @@ export function TeacherManagement() {
     </div>
   );
 }
+

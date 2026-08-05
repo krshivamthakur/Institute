@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useRef } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -303,7 +303,7 @@ export function SettingsModule() {
                       required
                       value={formData.projectName}
                       onChange={(e) => handleChange('projectName', e.target.value)}
-                      placeholder="e.g. AURA IMS or Oxford Institute"
+                      placeholder="e.g. GVM IMS or Oxford Institute"
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 font-semibold"
                     />
                     <p className="mt-1 text-[10px] text-slate-500">Displayed in top navigation bar and reports header.</p>
@@ -331,7 +331,7 @@ export function SettingsModule() {
                   </label>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      { name: 'AURA IMS', tagline: 'Next-Gen Institute Management Platform', icon: 'Building2' as const },
+                      { name: 'GVM IMS', tagline: 'Next-Gen Institute Management Platform', icon: 'Building2' as const },
                       { name: 'ST. XAVIER ACADEMY', tagline: 'Excellence in Higher Education & Research', icon: 'GraduationCap' as const },
                       { name: 'SILICON VALLEY STEM', tagline: 'Innovation & Technology Campus', icon: 'Sparkles' as const },
                       { name: 'ROYAL GLOBAL UNIVERSITY', tagline: 'Empowering Future Leaders Worldwide', icon: 'Crown' as const },
@@ -556,7 +556,7 @@ export function SettingsModule() {
                             return formData.projectName;
                           })()
                         ) : (
-                          'AURA IMS'
+                          'GVM IMS'
                         )}
                       </h1>
                       <span className="text-[9px] uppercase font-extrabold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">
@@ -994,3 +994,4 @@ export function SettingsModule() {
     </div>
   );
 }
+

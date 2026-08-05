@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useIMS } from '@/context/IMSContext';
@@ -8,7 +8,7 @@ export function MobileAppPreviewModule() {
   const { systemSettings } = useIMS();
   const [appRole, setAppRole] = useState<'Student' | 'Parent' | 'Teacher'>('Student');
   const [activeTab, setActiveTab] = useState<'home' | 'attendance' | 'fees' | 'results'>('home');
-  const instituteName = systemSettings?.projectName || 'AURA IMS';
+  const instituteName = systemSettings?.projectName || 'GVM IMS';
 
   return (
     <div className="space-y-6">
@@ -56,3 +56,4 @@ export function MobileAppPreviewModule() {
     </div>
   );
 }
+

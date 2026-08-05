@@ -1,4 +1,4 @@
-import fs from 'fs';
+﻿import fs from 'fs';
 import path from 'path';
 import {
   Student,
@@ -123,3 +123,4 @@ export function saveDb(data: Partial<DatabaseSchema>) {
   fs.writeFileSync(DB_FILE, JSON.stringify(updated, null, 2), 'utf-8');
   return updated;
 }
+

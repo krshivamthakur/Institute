@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+﻿import { NextRequest } from 'next/server';
 import { apiResponse, guardApiRoute } from '@/lib/api-security';
 import { getDb } from '@/lib/db';
 
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
 
   return apiResponse({
     status: 'ONLINE',
-    system: 'Aura Institute Management System API Server',
+    system: 'GVM Institute Management System API Server',
     version: 'v4.2.0',
     database: {
       connected: true,
@@ -24,3 +24,4 @@ export async function GET(req: NextRequest) {
     },
   });
 }
+
